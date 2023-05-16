@@ -12,6 +12,7 @@ base_path <- getwd()
 ```
 
 2. Upload your experimental design csv file in `input` directory as follows:
+
 | sample | design    | genome | strand  |
 | ------ | ------    | ------ | ------  |
 | F2014	 | control	 | mm39	  | reverse |
