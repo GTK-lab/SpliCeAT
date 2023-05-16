@@ -45,7 +45,7 @@ in order to populate the directories with the necessary helper files. The follow
 
 ## Running Snakemake
 
-Once the finishes running successfully and the necessary helper files are created, execute a Snakemake dry run with
+Once the above finishes running successfully and the necessary helper files are created, execute a Snakemake dry run with
 ```
 snakemake -np
 ```
