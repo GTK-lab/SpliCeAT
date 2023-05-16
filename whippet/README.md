@@ -83,3 +83,5 @@ All alternative splicing results are found in the `results/delta_psi/<experiment
 ```
 gunzip results/delta_psi/<experiment_name>.diff.gz
 ```
+
+![image](https://github.com/ys-lim/SpliCeAT/assets/68455070/b6a66a2e-e6cc-4eb0-89ad-159460b1cd90)
