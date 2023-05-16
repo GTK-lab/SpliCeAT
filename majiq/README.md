@@ -1,5 +1,8 @@
 # Majiq snakemake
 
+## Useful tools
+- [Majiq command builder](https://biociphers.bitbucket.io/majiq-docs-academic/commandbuilder.html)
+
 ## Necessary packages/tools
 - snakemake
 - majiq/voila
@@ -59,3 +62,26 @@ to check the parameters of the run. Once ready to run, execute
 ```
 snakemake --cores 24
 ```
+
+## Output
+
+In the `results` directory, you should see the following output files:
+`results/majiq_build`:
+- `<sample>.majiq`
+- `<sample>.sj`
+- `majiq.log`
+- `splicegraph.sql`
+
+`results/majiq_delta_psi`:
+- `<group_comparison>.deltapsi.tsv`
+- `<group_comparison>.deltapsi.voila`
+- `deltapsi_majiq.log`
+
+In order to view the interactive results on Voila web server, execute the following on command line:
+```
+cd results/majiq_delta_psi/<experiment_name>
+voila view <group_comparison>.deltapsi.voila results/majiq_build/<experiment_name>/splicegraph.sql -p 5000 --host 0.0.0.0
+```
+View the results on http://<remote_server>:5000/ (e.g. `http://atlas.cbis.nus.edu.sg:5000/`) and they should be displayed as follows:
+![image](https://github.com/ys-lim/SpliCeAT/assets/68455070/83af4e97-5fd7-440b-9f33-28bd2fecc5a2)
+Click on `Download LSVs` to get the list of local splicing variations. 
