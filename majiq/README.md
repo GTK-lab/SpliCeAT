@@ -22,7 +22,7 @@ base_path <- getwd()
  ...
  ```
 
-3. Upload these 2 files in the `input` directory as follows:
+3. Upload the following 2 files in the `input` directory as follows:
 
 `design.csv` : experimental design (change to your own, with the following columns)
 
