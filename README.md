@@ -9,3 +9,8 @@ This repository contains the following snakemakes:
 2. Whippet
 3. Leafcutter
 4. Augmented transcriptome analysis
+
+Start here: 
+```
+git clone https://github.com/ys-lim/SpliCeAT.git
+```
