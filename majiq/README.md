@@ -1,5 +1,10 @@
 # Majiq snakemake
 
+## Necessary packages/tools
+- snakemake
+- majiq/voila
+- dplyr
+
 ## Setting up
 1. Open the `prep.R` file and change the following parameters to suit your experimental design:
 ```
