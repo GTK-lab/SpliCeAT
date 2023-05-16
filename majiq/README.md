@@ -11,7 +11,9 @@ gff3 <- "gencode.vM29.primary_assembly.annotation.gff3" # gff3 file name of spec
 base_path <- getwd()
 ```
 
-2. Upload your experimental design csv file in `input` directory as follows:
+2. Upload these 2 files in the `input` directory as follows:
+
+`design.csv` : experimental design
 
 | sample | design    | genome | strand  |
 | ------ | ------    | ------ | ------  |
@@ -22,5 +24,5 @@ base_path <- getwd()
 | F2010	 | treatment | mm39	  | reverse |
 | F2002	 | treatment | mm39	  | reverse |
 
-3. Place your `gff3` annotation file in `input` directory (e.g. `gencode.vM29.primary_assembly.annotation.gff3`). You may obtain the annotation file from Gencode ([mouse](https://www.gencodegenes.org/mouse/), [human](https://www.gencodegenes.org/human/)).
+`mouse.gff3` : gene annotation file (e.g. `gencode.vM29.primary_assembly.annotation.gff3`) You may obtain the annotation file from Gencode ([mouse](https://www.gencodegenes.org/mouse/), [human](https://www.gencodegenes.org/human/)).
 
