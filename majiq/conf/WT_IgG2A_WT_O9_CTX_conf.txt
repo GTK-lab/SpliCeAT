@@ -1,0 +1,6 @@
+[info]
+bamdirs=/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/STAR
+genome=mm39
+strandness=reverse
+[experiments]
+WT_IgG2A_WT_O9_CTX=F2014_Aligned.sortedByCoord.out,F2011_Aligned.sortedByCoord.out,F2003_Aligned.sortedByCoord.out,F2001_Aligned.sortedByCoord.out,F2010_Aligned.sortedByCoord.out,F2002_Aligned.sortedByCoord.out
