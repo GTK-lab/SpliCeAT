@@ -11,6 +11,7 @@ gff3 <- "gencode.vM29.primary_assembly.annotation.gff3" # gff3 file name of spec
 base_path <- getwd()
 ```
 
+
 2. Upload these 2 files in the `input` directory as follows:
 
 `design.csv` : experimental design
@@ -26,7 +27,8 @@ base_path <- getwd()
 
 `mouse.gff3` : gene annotation file (e.g. `gencode.vM29.primary_assembly.annotation.gff3`) You may obtain the annotation file from Gencode ([mouse](https://www.gencodegenes.org/mouse/), [human](https://www.gencodegenes.org/human/)).
 
-3. Run `prep.R` file on command line with
+
+3. Run `prep.R` on command line with
 ```
 Rscript prep.R
 ```
