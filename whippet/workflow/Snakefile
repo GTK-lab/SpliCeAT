@@ -1,0 +1,14 @@
+configfile: "/mnt/cbis/home/yongshan/whippet_snakemake/config/config.yaml"
+include: "rules/common.smk"
+include: "rules/samtools_merge.smk"
+include: "rules/whippet_index.smk"
+include: "rules/whippet_quantify.smk"
+include: "rules/whippet_delta.smk"
+
+rule all:
+    input:
+        expand(config["bam_dir"]+"{experiment}_treatment_merged.bam",experiment=EXPERIMENTS),
+        expand(config["bam_dir"]+"{experiment}_treatment_merged.bam.bai",experiment=EXPERIMENTS),
+        expand(config["base_path"]+"/results/index/{experiment}/{experiment}.jls",experiment=EXPERIMENTS),
+        expand(config["base_path"]+"/results/quantify/{sample}/{sample}.psi.gz",sample=SAMPLES),
+        expand(config["base_path"]+"/results/delta_psi/{experiment}.diff.gz",experiment=EXPERIMENTS)
