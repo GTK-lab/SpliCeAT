@@ -6,6 +6,8 @@ rule whippet_delta:
     params:
         grp1 = lambda wildcards: grp1(wildcards),
         grp2 = lambda wildcards: grp2(wildcards),
-        out = config["base_path"]+"/results/delta_psi/{experiment}"
+        out = config["base_path"]+"/results/delta_psi/{experiment}",
+        julia = config["julia"],
+        whippet_bin = config["whippet_bin"]
     shell:
-        "~/julia-1.7.2/bin/julia ~/Whippet.jl/bin/whippet-delta.jl -a {params.grp1} -b {params.grp2} -o {params.out}"
+        "{params.julia} {params.whippet_bin}whippet-delta.jl -a {params.grp1} -b {params.grp2} -o {params.out}"

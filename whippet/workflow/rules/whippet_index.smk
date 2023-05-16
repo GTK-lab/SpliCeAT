@@ -5,6 +5,8 @@ rule whippet_index:
         config["base_path"]+"/results/index/{experiment}/{experiment}.jls"
     params:
         fasta=config["fasta_file"],
-        gtf=config["annotation_gtf"]
+        gtf=config["annotation_gtf"],
+        julia = config["julia"],
+        whippet_bin = config["whippet_bin"]
     shell:
-        "~/julia-1.7.2/bin/julia ~/Whippet.jl/bin/whippet-index.jl --fasta {params.fasta} --bam {input} --gtf {params.gtf} --bam-min-reads 20 --index {output}"
+        "{params.julia} {params.whippet_bin}whippet-index.jl --fasta {params.fasta} --bam {input} --gtf {params.gtf} --bam-min-reads 20 --index {output}"

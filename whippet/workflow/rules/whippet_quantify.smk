@@ -6,6 +6,8 @@ rule whippet_quantify:
     output:
         config["base_path"]+"/results/quantify/{sample}/{sample}.psi.gz"
     params:
-        config["base_path"]+"/results/quantify/{sample}/{sample}"
+        out = config["base_path"]+"/results/quantify/{sample}/{sample}",
+        julia = config["julia"],
+        whippet_bin = config["whippet_bin"]
     shell:
-        "~/julia-1.7.2/bin/julia ~/Whippet.jl/bin/whippet-quant.jl {input.fq1} {input.fq2} -o {params} -x {input.index}"
+        "{params.julia} {params.whippet_bin}whippet-quant.jl {input.fq1} {input.fq2} -o {params.out} -x {input.index}"
