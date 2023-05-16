@@ -1,7 +1,7 @@
 # Majiq snakemake
 
 ## Setting up
-1. In the `prep.R` file, change the following parameters to suit your experimental design:
+1. Open the `prep.R` file and change the following parameters to suit your experimental design:
 ```
 setwd("/mnt/cbis/home/yongshan/majiq_snakemake") # working directory containing majiq snakemake
 design <- read.csv("./input/design.csv") # experimental design csv file, do not need to change if you upload it under input
@@ -26,3 +26,13 @@ base_path <- getwd()
 
 `mouse.gff3` : gene annotation file (e.g. `gencode.vM29.primary_assembly.annotation.gff3`) You may obtain the annotation file from Gencode ([mouse](https://www.gencodegenes.org/mouse/), [human](https://www.gencodegenes.org/human/)).
 
+3. Run `prep.R` file on command line with
+```
+Rscript prep.R
+```
+in order to populate the directories with the necessary helper files. The following files should be successfully created:
+- `conf/<experiment_name>_conf.txt`
+- `config/confs.tsv`
+- `config/delta_psi_samples.tsv`
+- `config/experiment_sample_names.tsv`
+- `config/config.yaml`
