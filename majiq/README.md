@@ -63,9 +63,10 @@ to check the parameters of the run. Once ready to run, execute
 snakemake --cores 24
 ```
 
-## Output
+## Output files
 
 In the `results` directory, you should see the following output files:
+
 `results/majiq_build`:
 - `<sample>.majiq`
 - `<sample>.sj`
@@ -79,9 +80,8 @@ In the `results` directory, you should see the following output files:
 
 In order to view the interactive results on Voila web server, execute the following on command line:
 ```
-cd results/majiq_delta_psi/<experiment_name>
-voila view <group_comparison>.deltapsi.voila results/majiq_build/<experiment_name>/splicegraph.sql -p 5000 --host 0.0.0.0
+voila view results/majiq_delta_psi/<experiment_name>/<group_comparison>.deltapsi.voila results/majiq_build/<experiment_name>/splicegraph.sql -p 5000 --host 0.0.0.0
 ```
-View the results on http://<remote_server>:5000/ (e.g. `http://atlas.cbis.nus.edu.sg:5000/`) and they should be displayed as follows:
-![image](https://github.com/ys-lim/SpliCeAT/assets/68455070/83af4e97-5fd7-440b-9f33-28bd2fecc5a2)
-Click on `Download LSVs` to get the list of local splicing variations. 
+View the results on `http://<remote_server>:5000/` (e.g. `http://atlas.cbis.nus.edu.sg:5000/`) and they should be displayed as follows. Click on `Download LSVs` to get the list of local splicing variations. 
+
+![image](https://github.com/ys-lim/SpliCeAT/assets/68455070/78fffc09-9629-4c41-b7a4-c1c7da92f2e3)
