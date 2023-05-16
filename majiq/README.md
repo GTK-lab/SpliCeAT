@@ -43,10 +43,11 @@ Rscript prep.R
 ```
 in order to populate the directories with the necessary helper files. The following files should be successfully created:
 - `conf/<experiment_name>_conf.txt`
+- `config/config.yaml`
 - `config/confs.tsv`
 - `config/delta_psi_samples.tsv`
 - `config/experiment_sample_names.tsv`
-- `config/config.yaml`
+
 
 ## Running Snakemake
 
