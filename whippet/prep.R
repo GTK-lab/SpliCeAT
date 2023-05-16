@@ -11,6 +11,8 @@ experiment_name <- "WT_IgG2A_WT_O9_CTX"
 design <- read.csv("./input/design.csv")
 fq_dir <- "/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/trimmedFASTQ/"
 bam_dir <- "/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/STAR/"
+julia <- "/mnt/cbis/home/yongshan/julia-1.7.2/bin/julia"
+whippet_bin <- "/mnt/cbis/home/yongshan/Whippet.jl/bin/"
 #######################################
 
 design$psi_gz <- paste(base_path,"/results/quantify/",design$sample,"/",design$sample,".psi.gz", sep="")
@@ -32,7 +34,9 @@ cat(paste("delta_input_tsv: ",base_path,"/config/delta_input.tsv",sep=""))
 cat("\n")
 cat(paste("bam_dir: ",bam_dir,sep=""))
 cat("\n")
-cat(paste("base_path: ",base_path,sep=""))
+cat(paste("julia: ",julia,sep=""))
+cat("\n")
+cat(paste("whippet_bin: ",whippet_bin,sep=""))
 sink()
 
 # delta file
