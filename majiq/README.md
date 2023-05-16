@@ -1,8 +1,5 @@
 # Majiq snakemake
 
-## Useful tools
-- [Majiq command builder](https://biociphers.bitbucket.io/majiq-docs-academic/commandbuilder.html)
-
 ## Necessary packages/tools
 - snakemake
 - majiq/voila
@@ -85,3 +82,6 @@ voila view results/majiq_delta_psi/<experiment_name>/<group_comparison>.deltapsi
 View the results on `http://<remote_server>:5000/` (e.g. `http://atlas.cbis.nus.edu.sg:5000/`) and they should be displayed as follows. Click on `Download LSVs` to get the list of local splicing variations. 
 
 ![image](https://github.com/ys-lim/SpliCeAT/assets/68455070/78fffc09-9629-4c41-b7a4-c1c7da92f2e3)
+
+## Other useful tools
+- [Majiq command builder](https://biociphers.bitbucket.io/majiq-docs-academic/commandbuilder.html)
