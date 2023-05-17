@@ -6,4 +6,4 @@ include: "rules/majiq_delta_psi.smk"
 rule all:
     input:
         expand(config["BASE_PATH"]+"/results/majiq_build/{experiment}/majiq.log",experiment=EXPERIMENTS),
-        expand(config["BASE_PATH"]+"/results/majiq_delta_psi/{experiment}/ctr-cko.deltapsi.tsv",experiment=EXPERIMENTS)
+        expand(config["BASE_PATH"]+"/results/majiq_delta_psi/{experiment}/ctr-treatment.deltapsi.tsv",experiment=EXPERIMENTS)
