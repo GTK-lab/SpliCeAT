@@ -1,0 +1,6 @@
+F2014	control
+F2011	control
+F2003	control
+F2001	treatment
+F2010	treatment
+F2002	treatment

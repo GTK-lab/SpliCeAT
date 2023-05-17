@@ -1,0 +1,8 @@
+BASE_PATH: /mnt/cbis/home/yongshan/leafcutter_snakemake/
+samples_tsv: /mnt/cbis/home/yongshan/leafcutter_snakemake/config/samples.tsv
+STRAND: 1
+juncs_file: /mnt/cbis/home/yongshan/leafcutter_snakemake/config/juncs_file.tsv
+output_juncs: /mnt/cbis/home/yongshan/leafcutter_snakemake/config/output_junc.tsv
+gtf: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf.gz
+leafcutter_dir: /mnt/cbis/home/yongshan/leafcutter/
+bam_dir: /mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/STAR/
