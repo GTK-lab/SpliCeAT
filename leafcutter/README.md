@@ -82,11 +82,15 @@ All alternative splicing results are found in the above 2 files.
 
 `<experiment_name>_cluster_significance.txt` (significance of AS events):
 
-![image](https://github.com/ys-lim/SpliCeAT/assets/68455070/2778ab42-6212-4442-934b-20a877a8af6d)
+<p align="left">
+  <img src="../images/leafcutter_significance.PNG">
+</p>
 
 `<experiment_name>_effect_sizes.txt` (deltaPSI of AS events):
 
-![image](https://github.com/ys-lim/SpliCeAT/assets/68455070/023e5bd7-665b-4288-a39e-61a3e740516e)
+<p align="left">
+  <img src="../images/leafcutter_effect_size.PNG">
+</p>
 
 ## Other useful tools
 - [Leafcutter vignette](https://davidaknowles.github.io/leafcutter/articles/Usage.html)
