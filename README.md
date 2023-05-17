@@ -14,3 +14,5 @@ Start here:
 ```
 git clone https://github.com/ys-lim/SpliCeAT.git
 ```
+
+[^1]: Unless otherwise stated, all RNA-seq alignments are performed with STAR. The pipelines assume BAM files are labelled as `sample_Aligned.sortedByCoord.out.bam`.
