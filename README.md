@@ -4,7 +4,7 @@
 
 # SpliCeAT: Integrated pipeline for detection and quantification of aberrant transcripts with novel splicing events
 
-This repository contains the following steps of the pipeline [^1]:
+This repository contains the following scripts [^1]:
 1. Majiq
 2. Whippet
 3. Leafcutter
