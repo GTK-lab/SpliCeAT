@@ -1,0 +1,15 @@
+configfile: "/mnt/cbis/home/yongshan/leafcutter_snakemake/config/config.yaml"
+include: "rules/common.smk"
+include: "rules/regtools_junction_extract.smk"
+include: "rules/leafcutter_cluster.smk"
+include: "rules/leafcutter_differential_splicing.smk"
+include: "rules/create_genome_txt.smk"
+
+rule all:
+    input:
+        expand(config["BASE_PATH"]+"results/{sample}.junc",sample=SAMPLES),
+        expand(config["BASE_PATH"]+"results/{experiment}_perind_numers.counts.gz",experiment=EXPERIMENTS),
+        expand(config["BASE_PATH"]+"results/{experiment}_cluster_significance.txt",experiment=EXPERIMENTS),
+        expand(config["BASE_PATH"]+"results/{experiment}_effect_sizes.txt",experiment=EXPERIMENTS),
+        expand(config["BASE_PATH"]+"results/{experiment}_pooled",experiment=EXPERIMENTS),
+        config["BASE_PATH"]+"input/gtf_exons.txt.gz"
