@@ -75,13 +75,15 @@ In the `results` directory, you should see the following output files:
 - `ctr-treatment.deltapsi.voila`
 - `deltapsi_majiq.log`
 
-In order to view the interactive results on Voila web server, execute the following on command line:
+In order to view the interactive results on Voila web server, execute the following on command line (from your top-level Majiq Snakemake directory):
 ```
 voila view results/majiq_delta_psi/<experiment_name>/ctr-treatment.deltapsi.voila results/majiq_build/<experiment_name>/splicegraph.sql -p 5000 --host 0.0.0.0
 ```
 View the results on `http://<remote_server>:5000/` (e.g. `http://atlas.cbis.nus.edu.sg:5000/`) and they should be displayed as follows. Click on `Download LSVs` to get the list of local splicing variations. 
 
-![image](https://github.com/ys-lim/SpliCeAT/assets/68455070/78fffc09-9629-4c41-b7a4-c1c7da92f2e3)
+<p align="center">
+  <img src="images/majiq_results.PNG">
+</p>
 
 ## Other useful tools
 - [Majiq command builder](https://biociphers.bitbucket.io/majiq-docs-academic/commandbuilder.html)
