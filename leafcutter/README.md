@@ -1,6 +1,7 @@
 # Leafcutter snakemake
 
 ## Necessary packages/tools
+- snakemake
 - leafcutter (both leafcutter scripts & R package)
 - optparse
 - dplyr
