@@ -1,6 +1,7 @@
 # Whippet snakemake
 
 ## Necessary packages/tools
+- snakemake
 - julia
 - whippet
 - samtools
