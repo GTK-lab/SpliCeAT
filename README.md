@@ -4,7 +4,7 @@
 
 # SpliCeAT: Integrated pipeline for detection and quantification of aberrant transcripts with novel splicing events
 
-This repository contains the following snakemakes:
+This repository contains the following snakemakes [^1]:
 1. Majiq
 2. Whippet
 3. Leafcutter
