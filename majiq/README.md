@@ -71,13 +71,13 @@ In the `results` directory, you should see the following output files:
 - `splicegraph.sql`
 
 `results/majiq_delta_psi`:
-- `<group_comparison>.deltapsi.tsv`
-- `<group_comparison>.deltapsi.voila`
+- `ctr-treatment.deltapsi.tsv`
+- `ctr-treatment.deltapsi.voila`
 - `deltapsi_majiq.log`
 
 In order to view the interactive results on Voila web server, execute the following on command line:
 ```
-voila view results/majiq_delta_psi/<experiment_name>/<group_comparison>.deltapsi.voila results/majiq_build/<experiment_name>/splicegraph.sql -p 5000 --host 0.0.0.0
+voila view results/majiq_delta_psi/<experiment_name>/ctr-treatment.deltapsi.voila results/majiq_build/<experiment_name>/splicegraph.sql -p 5000 --host 0.0.0.0
 ```
 View the results on `http://<remote_server>:5000/` (e.g. `http://atlas.cbis.nus.edu.sg:5000/`) and they should be displayed as follows. Click on `Download LSVs` to get the list of local splicing variations. 
 
