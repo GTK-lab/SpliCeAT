@@ -85,5 +85,11 @@ View the results on `http://<remote_server>:5000/` (e.g. `http://atlas.cbis.nus.
   <img src="../images/majiq_results.PNG">
 </p>
 
+Local splicing variations (LSV) file:
+
+<p align="left">
+  <img src="../images/majiq_lsv.PNG">
+</p>
+
 ## Other useful tools
 - [Majiq command builder](https://biociphers.bitbucket.io/majiq-docs-academic/commandbuilder.html)
