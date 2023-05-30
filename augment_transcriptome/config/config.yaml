@@ -5,3 +5,4 @@ JUNCS_CUTOFF: 20
 STRINGTIE_THREADS: 4
 SAMPLES: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/samples.tsv
 STRAND: rf
+ALIGNMENTS_DIR: /mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14
