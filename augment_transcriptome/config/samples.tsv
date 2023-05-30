@@ -1,9 +1,9 @@
-sample	bam
-CTX_120	/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/CTX_120_Aligned.sortedByCoord.out.bam
-CTX_125	/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/CTX_125_Aligned.sortedByCoord.out.bam
-CTX_147	/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/CTX_147_Aligned.sortedByCoord.out.bam
-CTX_148	/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/CTX_148_Aligned.sortedByCoord.out.bam
-CTX_104	/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/CTX_104_Aligned.sortedByCoord.out.bam
-CTX_108	/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/CTX_108_Aligned.sortedByCoord.out.bam
-CTX_128	/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/CTX_128_Aligned.sortedByCoord.out.bam
-CTX_154	/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/CTX_154_Aligned.sortedByCoord.out.bam
+sample
+CTX_120
+CTX_125
+CTX_147
+CTX_148
+CTX_104
+CTX_108
+CTX_128
+CTX_154
