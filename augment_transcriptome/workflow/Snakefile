@@ -1,4 +1,4 @@
-configfile: "/mnt/cbis/home/yongshan/at_pipeline/config/config.yaml"
+configfile: "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
 include: "rules/common.smk"
 include: "rules/stringtie_assembly.smk"
 
