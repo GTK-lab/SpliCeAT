@@ -9,5 +9,7 @@ rule stringtie_assembly:
         juncs=config["JUNCS_CUTOFF"],
         threads=config["STRINGTIE_THREADS"],
         strand=config["STRAND"]
+    threads:
+        config["STRINGTIE_THREADS"]
     shell:
         "{params.stringtie} {input} -G {params.gtf} -o {output} -j {params.juncs} -p {params.threads} --{params.strand}"    
