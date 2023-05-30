@@ -1,0 +1,7 @@
+BASE_PATH: /mnt/cbis/home/yongshan/at_pipeline/
+STRINGTIE_COMMAND: /mnt/cbis/home/yongshan/stringtie-2.2.1.Linux_x86_64/stringtie
+GTF: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf
+JUNCS_CUTOFF: 20
+STRINGTIE_THREADS: 4
+SAMPLES: /mnt/cbis/home/yongshan/at_pipeline/config/samples.tsv
+STRAND: rf

@@ -1,0 +1,7 @@
+configfile: "/mnt/cbis/home/yongshan/at_pipeline/config/config.yaml"
+include: "rules/common.smk"
+include: "rules/stringtie_assembly.smk"
+
+rule all:
+    input:
+        expand(config["BASE_PATH"]+"results/stringtie_assemblies/{sample}_ref_guided_assembly.gtf",sample=SAMPLES)
