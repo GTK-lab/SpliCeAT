@@ -3,7 +3,7 @@
 ## Necessary packages/tools
 - snakemake
 - majiq/voila
-- dplyr
+- (R package) dplyr
 
 ## Setting up
 
