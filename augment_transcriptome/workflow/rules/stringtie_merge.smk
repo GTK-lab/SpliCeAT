@@ -1,1 +1,12 @@
-# /mnt/cbis/home/yongshan/stringtie-2.2.1.Linux_x86_64/stringtie --merge /mnt/cbis/home/yongshan/at_pipeline/results/stringtie_assemblies/CTX_120_ref_guided_assembly.gtf /mnt/cbis/home/yongshan/at_pipeline/results/stringtie_assemblies/CTX_125_ref_guided_assembly.gtf /mnt/cbis/home/yongshan/at_pipeline/results/stringtie_assemblies/CTX_147_ref_guided_assembly.gtf /mnt/cbis/home/yongshan/at_pipeline/results/stringtie_assemblies/CTX_148_ref_guided_assembly.gtf /mnt/cbis/home/yongshan/at_pipeline/results/stringtie_assemblies/CTX_104_ref_guided_assembly.gtf /mnt/cbis/home/yongshan/at_pipeline/results/stringtie_assemblies/CTX_108_ref_guided_assembly.gtf /mnt/cbis/home/yongshan/at_pipeline/results/stringtie_assemblies/CTX_128_ref_guided_assembly.gtf /mnt/cbis/home/yongshan/at_pipeline/results/stringtie_assemblies/CTX_154_ref_guided_assembly.gtf -G /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf -i -o /mnt/cbis/home/yongshan/at_pipeline/temp_results/merged_stringtie/nestin_ctx_e14_ref_guided_assembly_ctr_cko_merged.gtf
+rule stringtie_merge:
+    input:
+        unpack(get_stringtie_assembly)
+    output:
+        config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly.gtf"
+    params:
+        stringtie=config["STRINGTIE_COMMAND"],
+        gtf=config["GTF"]
+    threads:
+        config["STRINGTIE_THREADS"]
+    shell:
+        {params.stringtie} --merge {input} -G {params.gtf} -i -o {output}
