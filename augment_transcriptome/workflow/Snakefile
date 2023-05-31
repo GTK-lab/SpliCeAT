@@ -10,4 +10,5 @@ rule all:
         expand(config["BASE_PATH"]+"results/stringtie_assemblies/{sample}_ref_guided_assembly.gtf",sample=SAMPLES),
         config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly.gtf",
         config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf",
-        config["BASE_PATH"]+"results/augmented_transcriptome/merged_stringtie_assembly_novel_exon_filtered.fa"
+        config["BASE_PATH"]+"results/augmented_transcriptome/merged_stringtie_assembly_novel_exon_filtered.fa",
+        config["BASE_PATH"]+"results/augmented_transcriptome/augmented_transcripts.fa"
