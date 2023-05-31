@@ -9,10 +9,4 @@ rule get_novel_sequence:
     threads:
         4
     shell:
-        "{params.gffread}"
-        
-        
-    ~/gffread/gffread \
--w /mnt/cbis/home/yongshan/at_pipeline/temp_results/stringtie_filtering/exon_level/nestin_ctx_e14_ref_guided_assembly_ctr_cko_merged_novel_exon_filtered.fa \
--g /mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa \
-/mnt/cbis/home/yongshan/at_pipeline/temp_results/stringtie_filtering/exon_level/nestin_ctx_e14_ref_guided_assembly_ctr_cko_merged_novel_exon_filtered.gtf
+        "{params.gffread}" -w {output} -g {params.genome} {input}"
