@@ -1,7 +1,9 @@
 configfile: "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
 include: "rules/common.smk"
 include: "rules/stringtie_assembly.smk"
+include: "rules/stringtie_merge.smk"
 
 rule all:
     input:
-        expand(config["BASE_PATH"]+"results/stringtie_assemblies/{sample}_ref_guided_assembly.gtf",sample=SAMPLES)
+        expand(config["BASE_PATH"]+"results/stringtie_assemblies/{sample}_ref_guided_assembly.gtf",sample=SAMPLES),
+        config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly.gtf"
