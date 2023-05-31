@@ -2,8 +2,10 @@ configfile: "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/confi
 include: "rules/common.smk"
 include: "rules/stringtie_assembly.smk"
 include: "rules/stringtie_merge.smk"
+include: "rules/prep_for_AT.smk"
 
 rule all:
     input:
         expand(config["BASE_PATH"]+"results/stringtie_assemblies/{sample}_ref_guided_assembly.gtf",sample=SAMPLES),
-        config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly.gtf"
+        config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly.gtf",
+        config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf"
