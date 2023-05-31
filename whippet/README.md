@@ -5,7 +5,7 @@
 - julia
 - whippet
 - samtools
-- dplyr
+- (R package) dplyr
 
 ## Setting up
 1. Upload the `design.csv` experimental design file into the `input` directory as follows:
