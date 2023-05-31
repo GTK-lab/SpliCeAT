@@ -23,4 +23,4 @@ masterlists_out_path: /mnt/cbis/home/yongshan/at_pipeline/masterlists/
 ###################
 
 gff_read_path: /mnt/cbis/home/yongshan/gffread/gffread
-genome: /mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa
+genome_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa
