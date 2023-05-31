@@ -1,3 +1,7 @@
+#### CHANGE THIS ####
+config_file_path <- "/mnt/cbis/home/yongshan/at_pipeline/config.yaml"
+####################
+
 # libraries
 cat("> Loading libraries... \n")
 library(yaml)
@@ -11,7 +15,7 @@ cat("Done. \n\n")
 # load in config containing file paths and other params
 cat("> Reading config.yaml... \n")
 
-config <- read_yaml("/mnt/cbis/home/yongshan/at_pipeline/config.yaml")
+config <- read_yaml(config_file_path)
 
 cat("Done. \n\n")
 
