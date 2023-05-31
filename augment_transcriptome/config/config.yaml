@@ -6,3 +6,14 @@ STRINGTIE_THREADS: 4
 SAMPLES: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/samples.tsv
 STRAND: rf
 ALIGNMENTS_DIR: /mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/
+
+###################
+# MASTERLISTS PREP
+###################
+
+mouse_ensembl_version: 106
+majiq_lsv_file_path: /mnt/cbis/home/yongshan/majiq_snakemake/results/majiq_delta_psi/NESTIN_CTX_E14/NESTIN_CTX_E14_lsv.txt
+leafcutter_cluster_sig_file_path: /mnt/cbis/home/yongshan/leafcutter_snakemake/results/tdp43_nestin_ctx_e14_cluster_significance.txt
+leafcutter_effect_size_file_path: /mnt/cbis/home/yongshan/leafcutter_snakemake/results/tdp43_nestin_ctx_e14_effect_sizes.txt
+whippet_diff_file_path: /mnt/cbis/home/yongshan/whippet_snakemake/results/delta_psi/tdp43_nestin_ctx_e14.diff
+masterlists_out_path: /mnt/cbis/home/yongshan/at_pipeline/masterlists/
