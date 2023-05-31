@@ -17,3 +17,9 @@ leafcutter_cluster_sig_file_path: /mnt/cbis/home/yongshan/leafcutter_snakemake/r
 leafcutter_effect_size_file_path: /mnt/cbis/home/yongshan/leafcutter_snakemake/results/tdp43_nestin_ctx_e14_effect_sizes.txt
 whippet_diff_file_path: /mnt/cbis/home/yongshan/whippet_snakemake/results/delta_psi/tdp43_nestin_ctx_e14.diff
 masterlists_out_path: /mnt/cbis/home/yongshan/at_pipeline/masterlists/
+
+###################
+# AUG TRANSCRIPTOME
+###################
+
+gff_read_path: /mnt/cbis/home/yongshan/gffread/gffread
