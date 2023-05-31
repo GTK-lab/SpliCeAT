@@ -22,6 +22,6 @@ masterlists_out_path: /mnt/cbis/home/yongshan/at_pipeline/masterlists/
 # AUG TRANSCRIPTOME
 ###################
 
-gff_read_path: /mnt/cbis/home/yongshan/gffread/gffread
+gffread_path: /mnt/cbis/home/yongshan/gffread/gffread
 genome_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa
 transcripts_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.transcripts.fa
