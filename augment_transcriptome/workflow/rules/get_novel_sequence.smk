@@ -5,7 +5,7 @@ rule get_novel_sequence:
         novel=config["BASE_PATH"]+"results/augmented_transcriptome/merged_stringtie_assembly_novel_exon_filtered.fa",
         merged=config["BASE_PATH"]+"results/augmented_transcriptome/augmented_transcripts.fa"
     params:
-        gffread=config["gff_read_path"],
+        gffread=config["gffread_path"],
         genome=config["genome_fasta"],
         transcripts=config["transcripts_fasta"]
     threads:
