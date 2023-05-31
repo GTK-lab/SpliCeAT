@@ -4,6 +4,7 @@ include: "rules/stringtie_assembly.smk"
 include: "rules/stringtie_merge.smk"
 include: "rules/prep_for_AT.smk"
 include: "rules/get_novel_sequence.smk"
+include: "rules/kallisto_index.smk"
 
 rule all:
     input:
@@ -11,4 +12,5 @@ rule all:
         config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly.gtf",
         config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf",
         config["BASE_PATH"]+"results/augmented_transcriptome/merged_stringtie_assembly_novel_exon_filtered.fa",
-        config["BASE_PATH"]+"results/augmented_transcriptome/augmented_transcripts.fa"
+        config["BASE_PATH"]+"results/augmented_transcriptome/augmented_transcripts.fa",
+        config["BASE_PATH"]+"results/augmented_transcriptome/kallisto_index_augmented_transcriptome"
