@@ -11,5 +11,5 @@ rule get_novel_sequence:
     threads:
         4
     shell:
-        "{params.gffread}" -w {output.novel} -g {params.genome} {input} && "
+        "{params.gffread} -w {output.novel} -g {params.genome} {input} && "
         "cat {params.transcripts} {output.novel} > {output.merged}"
