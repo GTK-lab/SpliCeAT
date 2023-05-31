@@ -4,11 +4,12 @@
 
 # SpliCeAT: Integrated pipeline for detection and quantification of aberrant transcripts with novel splicing events
 
-This repository contains the following Snakemake pipelines [^1]:
+This repository contains the following Snakemake pipelines and scripts [^1]:
 1. Majiq
 2. Whippet
 3. Leafcutter
-4. Augmented transcriptome analysis
+4. Generation of augmented transcriptome
+5. Differential analysis with kallisto/sleuth
 
 Start here: 
 ```
