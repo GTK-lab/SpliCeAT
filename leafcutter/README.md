@@ -3,10 +3,10 @@
 ## Necessary packages/tools
 - snakemake
 - leafcutter (both leafcutter scripts & R package)
-- optparse
-- dplyr
-- data.table
 - regtools
+- (R package) optparse
+- (R package) dplyr
+- (R package) data.table
 
 ### Leafcutter installation
 
