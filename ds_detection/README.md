@@ -28,6 +28,7 @@ Further detailed installation instructions can be found [here](https://davidakno
 ## Setting up
 
 1. Upload the following 2 files in the `input` directory as follows:
+
 `design.csv` : experimental design (change to your own, with the following columns)
 
 | sample      | design    | genome | strand  | fq1             | fq2             |
