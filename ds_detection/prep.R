@@ -42,6 +42,51 @@ leafcutter_dir <- "/mnt/cbis/home/yongshan/leafcutter/"
 
 base_path <- getwd()
 
+# config
+sink(paste("./config/config.yaml",sep=""))
+cat(paste("confs: ",base_path,"/config/confs.tsv",sep=""))
+cat("\n")
+cat(paste("delta_psi_samples: ",base_path,"/config/delta_psi_samples.tsv",sep=""))
+cat("\n")
+cat(paste("BASE_PATH: ",base_path,sep=""))
+cat("\n")
+cat(paste("gff3: ",gff3_path,sep=""))
+cat("\n")
+cat(paste("build_out: ",base_path,"/results/majiq_build/{experiment}",sep=""))
+cat("\n")
+cat(paste("delta_out: ",base_path,"/results/majiq_delta_psi/{experiment}",sep=""))
+cat("\n")
+cat(paste("experiment_sample_names: ",base_path,"/config/experiment_sample_names.tsv",sep=""))
+cat("\n")
+cat(paste("samples_tsv: ",base_path,"/config/samples.tsv",sep=""))
+cat("\n")
+cat(paste("fasta_file: ",fasta_file_path,sep=""))
+cat("\n")
+cat(paste("annotation_gtf: ",annotation_gtf_path,sep=""))
+cat("\n")
+cat(paste("fastq_tsv: ",base_path,"/config/fastq.tsv",sep=""))
+cat("\n")
+cat(paste("delta_tsv: ",base_path,"/config/delta.tsv",sep=""))
+cat("\n")
+cat(paste("delta_input_tsv: ",base_path,"/config/delta_input.tsv",sep=""))
+cat("\n")
+cat(paste("bam_dir: ",bam_dir,sep=""))
+cat("\n")
+cat(paste("julia: ",julia,sep=""))
+cat("\n")
+cat(paste("whippet_bin: ",whippet_bin,sep=""))
+cat("\n")
+cat(paste("STRAND: ",regtools_strand,sep=""))
+cat("\n")
+cat(paste("juncs_file: ",base_path,"/config/juncs_file.tsv",sep=""))
+cat("\n")
+cat(paste("output_juncs: ",base_path,"/config/output_junc.tsv",sep=""))
+cat("\n")
+cat(paste("leafcutter_dir: ",leafcutter_dir,sep=""))
+sink()
+
+# samples.tsv
+
 # majiq files
 
 design$sample_alignment <- paste(design$sample, "_Aligned.sortedByCoord.out", sep="")
@@ -96,47 +141,9 @@ design_experiment_sample_names <- design[,c(1,5)]
 colnames(design_experiment_sample_names) <- c("experiment","sample")
 write.table(design_experiment_sample_names, file = "./config/experiment_sample_names.tsv", row.names=FALSE, sep="\t",quote=FALSE)
 
-# config file
-sink(paste("./config/config.yaml",sep=""))
-cat(paste("confs: ",base_path,"/config/confs.tsv",sep=""))
-cat("\n")
-cat(paste("delta_psi_samples: ",base_path,"/config/delta_psi_samples.tsv",sep=""))
-cat("\n")
-cat(paste("BASE_PATH: ",base_path,sep=""))
-cat("\n")
-cat(paste("gff3: ",gff3_path,sep=""))
-cat("\n")
-cat(paste("build_out: ",base_path,"/results/majiq_build/{experiment}",sep=""))
-cat("\n")
-cat(paste("delta_out: ",base_path,"/results/majiq_delta_psi/{experiment}",sep=""))
-cat("\n")
-cat(paste("experiment_sample_names: ",base_path,"/config/experiment_sample_names.tsv",sep=""))
-sink()
-
 # whippet files
 
 design$psi_gz <- paste(base_path,"/results/quantify/",design$sample,"/",design$sample,".psi.gz", sep="")
-
-# config file
-sink(paste("./config/config.yaml",sep=""))
-cat(paste("samples_tsv: ",base_path,"/config/samples.tsv",sep=""))
-cat("\n")
-cat(paste("fasta_file: ",fasta_file_path,sep=""))
-cat("\n")
-cat(paste("annotation_gtf: ",annotation_gtf_path,sep=""))
-cat("\n")
-cat(paste("fastq_tsv: ",base_path,"/config/fastq.tsv",sep=""))
-cat("\n")
-cat(paste("delta_tsv: ",base_path,"/config/delta.tsv",sep=""))
-cat("\n")
-cat(paste("delta_input_tsv: ",base_path,"/config/delta_input.tsv",sep=""))
-cat("\n")
-cat(paste("bam_dir: ",bam_dir,sep=""))
-cat("\n")
-cat(paste("julia: ",julia,sep=""))
-cat("\n")
-cat(paste("whippet_bin: ",whippet_bin,sep=""))
-sink()
 
 # delta file
 sink(paste("./config/delta.tsv",sep=""))
@@ -190,25 +197,6 @@ write.table(design, file = paste(base_path,"/config/",experiment_name,"_groups_f
 design$junc <- paste(base_path, "/results/", design$sample, ".junc", sep="")
 write.table(design$junc, file = paste(base_path,"/config/",experiment_name,"_junc.txt",sep=""), 
             row.names=FALSE, sep="\t",quote=FALSE,col.names=FALSE)
-			
-# config
-sink(paste("./config/config.yaml",sep=""))
-cat(paste("BASE_PATH: ",base_path,"/",sep=""))
-cat("\n")
-cat(paste("samples_tsv: ",base_path,"/config/samples.tsv",sep=""))
-cat("\n")
-cat(paste("STRAND: ",regtools_strand,sep=""))
-cat("\n")
-cat(paste("juncs_file: ",base_path,"/config/juncs_file.tsv",sep=""))
-cat("\n")
-cat(paste("output_juncs: ",base_path,"/config/output_junc.tsv",sep=""))
-cat("\n")
-cat(paste("gtf: ",annotation_gtf_path,sep=""))
-cat("\n")
-cat(paste("leafcutter_dir: ",leafcutter_dir,sep=""))
-cat("\n")
-cat(paste("bam_dir: ",bam_dir,sep=""))
-sink()
 
 # juncs_file
 sink(paste("./config/juncs_file.tsv",sep=""))
