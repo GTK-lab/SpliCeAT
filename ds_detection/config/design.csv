@@ -1,9 +1,0 @@
-sample,design,genome,strand,fq1,fq2
-CTX_120,control,mm39,reverse,CTX_120_1.fq.gz,CTX_120_2.fq.gz
-CTX_125,control,mm39,reverse,CTX_125_1.fq.gz,CTX_125_2.fq.gz
-CTX_147,control,mm39,reverse,CTX_147_1.fq.gz,CTX_147_2.fq.gz
-CTX_148,control,mm39,reverse,CTX_148_1.fq.gz,CTX_148_2.fq.gz
-CTX_104,treatment,mm39,reverse,CTX_104_1.fq.gz,CTX_104_2.fq.gz
-CTX_108,treatment,mm39,reverse,CTX_108_1.fq.gz,CTX_108_2.fq.gz
-CTX_128,treatment,mm39,reverse,CTX_128_1.fq.gz,CTX_128_2.fq.gz
-CTX_154,treatment,mm39,reverse,CTX_154_1.fq.gz,CTX_154_2.fq.gz
