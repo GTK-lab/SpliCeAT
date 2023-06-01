@@ -102,7 +102,7 @@ cat(paste("delta_psi_samples: ",base_path,"/config/delta_psi_samples.tsv",sep=""
 cat("\n")
 cat(paste("BASE_PATH: ",base_path,sep=""))
 cat("\n")
-cat(paste("gtf: ",base_path,"/input/",gff3_path,sep=""))
+cat(paste("gtf: ",gff3_path,sep=""))
 cat("\n")
 cat(paste("build_out: ",base_path,"/results/majiq_build/{experiment}",sep=""))
 cat("\n")
