@@ -190,7 +190,7 @@ sink()
 # leafcutter files
 
 # XXX_groups_file
-write.table(design, file = paste(base_path,"/config/",experiment_name,"_groups_file.txt",sep=""), 
+write.table(design[,c("sample","design")], file = paste(base_path,"/config/",experiment_name,"_groups_file.txt",sep=""), 
             row.names=FALSE, sep="\t",quote=FALSE,col.names=FALSE)
 			
 # XXX_junc
