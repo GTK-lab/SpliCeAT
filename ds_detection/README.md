@@ -23,7 +23,7 @@ R package installation: For differential splicing analysis, the leafcutter R pac
 ```
 devtools::install_github("davidaknowles/leafcutter/leafcutter")
 ```
-Detailed installation instructions can be found [here](https://davidaknowles.github.io/leafcutter/articles/Installation.html).
+Further detailed installation instructions can be found [here](https://davidaknowles.github.io/leafcutter/articles/Installation.html).
 
 ## Setting up
 
