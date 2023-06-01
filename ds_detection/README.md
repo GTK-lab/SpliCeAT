@@ -100,7 +100,7 @@ leafcutter_dir <- "/mnt/cbis/home/yongshan/leafcutter/"
 ```
 Rscript prep.R
 ```
-in order to populate the directories with the necessary helper files. The following files should be successfully created:
+in order to populate the directories with the necessary helper files. The following 14 files should be successfully created:
 - `config/config.yaml`
 
 ### Majiq helper files
