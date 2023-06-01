@@ -27,9 +27,9 @@ Further detailed installation instructions can be found [here](https://davidakno
 
 ## Setting up
 
-1. Upload the following 2 files in the `input` directory as follows:
+1. Upload your `design.csv` in the `input` directory as follows:
 
-`design.csv` : experimental design (change to your own, with the following columns)
+`design.csv` : experimental design (change to your own, with the following compulsory columns)
 
 | sample      | design    | genome | strand  | fq1             | fq2             |
 |-------------|-----------|--------|---------|-----------------|-----------------|
@@ -42,33 +42,40 @@ Further detailed installation instructions can be found [here](https://davidakno
 | CTX_128     | treatment | mm39   | reverse | CTX_128_1.fq.gz | CTX_128_2.fq.gz |
 | CTX_154     | treatment | mm39   | reverse | CTX_154_1.fq.gz | CTX_154_2.fq.gz |
 
-`mouse.gff3` : gene annotation file (e.g. `gencode.vM29.primary_assembly.annotation.gff3`) You may obtain the annotation file from Gencode ([mouse](https://www.gencodegenes.org/mouse/), [human](https://www.gencodegenes.org/human/)).
+2. Download the following gene annotations and genome files and place them into a location of your choice:
 
-2. Open the `prep.R` file and change the following parameters to suit your experimental design:
+- `mouse.gff3` (e.g. `gencode.vM29.primary_assembly.annotation.gff3`).  Unzip the file using `gunzip` tool.
+- `mouse.gtf.gz` (e.g. `gencode.vM29.primary_assembly.annotation.gtf.gz`).
+- `mouse.genome.fa.gz` (e.g. `GRCm39.primary_assembly.genome.fa.gz`).
+
+You may obtain the annotation files from Gencode ([mouse](https://www.gencodegenes.org/mouse/), [human](https://www.gencodegenes.org/human/)).
+
+3. Open the `prep.R` file and change the following parameters to suit your experimental design:
 
 ```
-setwd("/mnt/cbis/home/yongshan/majiq_snakemake") # majiq snakemake directory
-design <- read.csv("./input/design.csv") # experimental design csv file
-bamdir <- "/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/STAR" # directory containing your bam alignment files
-experiment_name <- "WT_IgG2A_WT_O9_CTX" # set your own experiment name
-gff3 <- "gencode.vM29.primary_assembly.annotation.gff3" # gff3 file name of species of interest
-
-setwd("/mnt/cbis/home/yongshan/whippet_snakemake") # whippet snakemake directory
-fasta_file_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa.gz" # location of genome fa.gz file
-annotation_gtf_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf.gz" # location of annotation gtf.gz file
-experiment_name <- "WT_IgG2A_WT_O9_CTX" # set your own experiment name
-design <- read.csv("./input/design.csv") # experimental design csv file
-fq_dir <- "/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/trimmedFASTQ/" # directory with fastq files
-bam_dir <- "/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/STAR/" # directory with bam files
-julia <- "/mnt/cbis/home/yongshan/julia-1.7.2/bin/julia" # location of julia command
-whippet_bin <- "/mnt/cbis/home/yongshan/Whippet.jl/bin/" # directory of whippet scripts
-
-setwd("/mnt/cbis/home/yongshan/leafcutter_snakemake") # leafcutter snakemake directory
-experiment_name <- "WT_IgG2A_WT_O9_CTX" # set your own experiment name
-design <- read.csv("./input/design.csv") # experimental design csv file
-regtools_strand <- "1" # Note that: 0 = unstranded, 1 = first-strand/RF, 2, = second-strand/FR
-gene_annotation <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf.gz" # location of annotation gtf.gz file
-bam_dir <- "/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/STAR/" # directory with bam files
-leafcutter_dir <- "/mnt/cbis/home/yongshan/leafcutter/" # directory of leafcutter installation
+# differential splicing detection directory
+setwd("/mnt/cbis/home/yongshan/SpliCeAT/ds_detection") 
+# experimental design csv file - dont need to change if design.csv is in input directory
+design <- read.csv("./input/design.csv") 
+# directory containing your bam alignment files
+bamdir <- "/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/" 
+# directory containing your fastq files
+fq_dir <- "/mnt/gtklab01/linglab/tdp43/fastq/"
+# set your own experiment name
+experiment_name <- "tdp43_nestin_ctx_e14" 
+# path of annotation gff3 file
+gff3_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gff3" 
+# path of annotation gtf.gz file
+annotation_gtf_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf.gz" 
+# path of genome fa.gz file
+fasta_file_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa.gz" 
+# path of julia command
+julia <- "/mnt/cbis/home/yongshan/julia-1.7.2/bin/julia" 
+# directory of whippet scripts
+whippet_bin <- "/mnt/cbis/home/yongshan/Whippet.jl/bin/" 
+# Note that: 0 = unstranded, 1 = first-strand/RF, 2, = second-strand/FR
+regtools_strand <- "1" 
+# directory of leafcutter installation
+leafcutter_dir <- "/mnt/cbis/home/yongshan/leafcutter/" 
 ```
 
