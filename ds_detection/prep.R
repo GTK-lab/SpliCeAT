@@ -85,8 +85,6 @@ cat("\n")
 cat(paste("leafcutter_dir: ",leafcutter_dir,sep=""))
 sink()
 
-# samples.tsv
-
 # majiq files
 
 design$sample_alignment <- paste(design$sample, "_Aligned.sortedByCoord.out", sep="")
@@ -170,13 +168,13 @@ fastq$dir <- fq_dir
 fastq$index_dir <- paste(base_path,"/results/index/",experiment_name,"/",experiment_name,".jls", sep="")
 write.table(fastq, file = "./config/fastq.tsv", row.names=FALSE, sep="\t",quote=FALSE)
 
-# samples
+# samples_whippet.tsv
 design$sample_alignment <- paste(design$sample, "_Aligned.sortedByCoord.out.bam", sep="")
   
-sink(paste("./config/samples.tsv",sep=""))
+sink(paste("./config/samples_whippet.tsv",sep=""))
 cat("experiment")
 cat("\t")
-cat("cko")
+cat("treatment")
 cat("\t")
 cat("dir")
 cat("\n")
@@ -216,9 +214,9 @@ write.table(design[,c("experiment","junction_files")],
             file=paste(base_path,"/config/output_junc.tsv",sep=""),
             row.names=FALSE, sep="\t", quote=FALSE)
 			
-# samples
+# samples_leafcutter.tsv
 design$folder <- experiment_name
 design$bam <- paste(design$sample,"_Aligned.sortedByCoord.out.bam",sep="")
 write.table(design[,c("sample","folder","bam")],
-            file=paste(base_path,"/config/samples.tsv",sep=""),
+            file=paste(base_path,"/config/samples_leafcutter.tsv",sep=""),
             row.names=FALSE, sep="\t",quote=FALSE)
