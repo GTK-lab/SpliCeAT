@@ -15,11 +15,11 @@
 - (R package) dplyr
 
 ### Leafcutter installation
-For leafcutter quantifications (junction counts for each splicing cluster), you will require the python scripts in `scripts` and `clustering` directories:
+Github installation: For leafcutter quantifications (junction counts for each splicing cluster), you will require the python scripts in `scripts` and `clustering` directories of the leafcutter github:
 ```
 git clone https://github.com/davidaknowles/leafcutter
 ```
-For differential splicing analysis, the leafcutter R package is required:
+R package installation: For differential splicing analysis, the leafcutter R package is required:
 ```
 devtools::install_github("davidaknowles/leafcutter/leafcutter")
 ```
