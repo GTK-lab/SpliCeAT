@@ -90,3 +90,37 @@ regtools_strand <- "1"
 leafcutter_dir <- "/mnt/cbis/home/yongshan/leafcutter/" 
 ```
 
+4. Open the `Snakefile` in `workflow` and change the first line to point to your config file location:
+```
+ configfile: "<your_ds_detection_snakemake_dir>/config/config.yaml"
+ ...
+ ```
+
+5. Run `prep.R` on command line with
+```
+Rscript prep.R
+```
+in order to populate the directories with the necessary helper files. The following files should be successfully created:
+- `config/config.yaml`
+
+### Majiq helper files
+- `conf/<experiment_name>_conf.txt`
+- `config/config.yaml` <--
+- `config/confs.tsv`
+- `config/delta_psi_samples.tsv`
+- `config/experiment_sample_names.tsv`
+
+### Whippet helper files
+- `config/config.yaml` <--
+- `config/delta.tsv`
+- `config/delta_input.tsv`
+- `config/fastq.tsv`
+- `config/samples.tsv` <--
+
+### Leafcutter helper files
+- `config/config.yaml` <--
+- `config/juncs_file.tsv`
+- `config/output_junc.tsv`
+- `config/samples.tsv` <--
+- `config/<experiment_name>_groups_file.txt`
+- `config/<experiment_name>_groups_junc.txt`
