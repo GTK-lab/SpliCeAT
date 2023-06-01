@@ -10,7 +10,7 @@ setwd("/mnt/cbis/home/yongshan/SpliCeAT/ds_detection")
 design <- read.csv("./input/design.csv") 
 
 # directory containing your bam alignment files
-bamdir <- "/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/" 
+bam_dir <- "/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/" 
 
  # directory containing your fastq files
 fq_dir <- "/mnt/gtklab01/linglab/tdp43/fastq/"
