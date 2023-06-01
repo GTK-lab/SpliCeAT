@@ -92,7 +92,7 @@ sink()
 design$sample_alignment <- paste(design$sample, "_Aligned.sortedByCoord.out", sep="")
 
 # conf file
-sink(paste("./conf/",experiment_name,"_conf.txt",sep=""))
+sink(paste("./config/",experiment_name,"_conf.txt",sep=""))
 cat("[info]")
 cat("\n")
 cat(paste("bamdirs=",bam_dir,sep=""))
@@ -114,7 +114,7 @@ cat("conf_path")
 cat("\n")
 cat(experiment_name)
 cat("\t")
-cat(paste(base_path,"/conf/",experiment_name,"_conf.txt",sep=""))
+cat(paste(base_path,"/config/",experiment_name,"_conf.txt",sep=""))
 sink()
 
 # delta_psi_samples file
