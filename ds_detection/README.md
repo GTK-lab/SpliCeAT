@@ -55,26 +55,37 @@ You may obtain the annotation files from Gencode ([mouse](https://www.gencodegen
 ```
 # differential splicing detection directory
 setwd("/mnt/cbis/home/yongshan/SpliCeAT/ds_detection") 
+
 # experimental design csv file - dont need to change if design.csv is in input directory
 design <- read.csv("./input/design.csv") 
+
 # directory containing your bam alignment files
 bamdir <- "/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/" 
+
 # directory containing your fastq files
 fq_dir <- "/mnt/gtklab01/linglab/tdp43/fastq/"
+
 # set your own experiment name
 experiment_name <- "tdp43_nestin_ctx_e14" 
+
 # path of annotation gff3 file
 gff3_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gff3" 
+
 # path of annotation gtf.gz file
 annotation_gtf_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf.gz" 
+
 # path of genome fa.gz file
 fasta_file_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa.gz" 
+
 # path of julia command
 julia <- "/mnt/cbis/home/yongshan/julia-1.7.2/bin/julia" 
+
 # directory of whippet scripts
 whippet_bin <- "/mnt/cbis/home/yongshan/Whippet.jl/bin/" 
+
 # Note that: 0 = unstranded, 1 = first-strand/RF, 2, = second-strand/FR
 regtools_strand <- "1" 
+
 # directory of leafcutter installation
 leafcutter_dir <- "/mnt/cbis/home/yongshan/leafcutter/" 
 ```
