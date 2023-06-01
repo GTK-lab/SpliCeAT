@@ -105,22 +105,19 @@ in order to populate the directories with the necessary helper files. The follow
 
 ### Majiq helper files
 - `conf/<experiment_name>_conf.txt`
-- `config/config.yaml` <--
 - `config/confs.tsv`
 - `config/delta_psi_samples.tsv`
 - `config/experiment_sample_names.tsv`
 
 ### Whippet helper files
-- `config/config.yaml` <--
 - `config/delta.tsv`
 - `config/delta_input.tsv`
 - `config/fastq.tsv`
-- `config/samples.tsv` <--
+- `config/samples_whippet.tsv`
 
 ### Leafcutter helper files
-- `config/config.yaml` <--
 - `config/juncs_file.tsv`
 - `config/output_junc.tsv`
-- `config/samples.tsv` <--
+- `config/samples_leafcutter.tsv`
 - `config/<experiment_name>_groups_file.txt`
 - `config/<experiment_name>_groups_junc.txt`
