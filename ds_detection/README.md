@@ -104,7 +104,7 @@ in order to populate the directories with the necessary helper files. The follow
 - `config/config.yaml`
 
 ### Majiq helper files
-- `conf/<experiment_name>_conf.txt`
+- `config/<experiment_name>_conf.txt`
 - `config/confs.tsv`
 - `config/delta_psi_samples.tsv`
 - `config/experiment_sample_names.tsv`
