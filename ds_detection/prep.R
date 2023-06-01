@@ -40,6 +40,8 @@ regtools_strand <- "1"
 leafcutter_dir <- "/mnt/cbis/home/yongshan/leafcutter/" 
 ###############################################################################################################
 
+base_path <- getwd()
+
 # majiq files
 
 design$sample_alignment <- paste(design$sample, "_Aligned.sortedByCoord.out", sep="")
