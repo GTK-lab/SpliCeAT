@@ -93,7 +93,7 @@ design$sample_alignment <- paste(design$sample, "_Aligned.sortedByCoord.out", se
 sink(paste("./conf/",experiment_name,"_conf.txt",sep=""))
 cat("[info]")
 cat("\n")
-cat(paste("bamdirs=",bamdir,sep=""))
+cat(paste("bamdirs=",bam_dir,sep=""))
 cat("\n")
 cat(paste("genome=",unique(design$genome),sep=""))
 cat("\n")
