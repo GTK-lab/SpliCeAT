@@ -137,7 +137,7 @@ cat(paste(base_path,"/results/majiq_build/",experiment_name,"/",sep=""))
 sink()
 
 # experiment_sample_names file
-design_experiment_sample_names <- design[,c(1,5)]
+design_experiment_sample_names <- design[,c("sample","sample_alignment")]
 colnames(design_experiment_sample_names) <- c("experiment","sample")
 write.table(design_experiment_sample_names, file = "./config/experiment_sample_names.tsv", row.names=FALSE, sep="\t",quote=FALSE)
 
