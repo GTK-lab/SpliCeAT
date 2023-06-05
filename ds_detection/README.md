@@ -42,11 +42,11 @@ Further detailed installation instructions can be found [here](https://davidakno
 | CTX_128     | treatment | mm39   | reverse | CTX_128_1.fq.gz | CTX_128_2.fq.gz |
 | CTX_154     | treatment | mm39   | reverse | CTX_154_1.fq.gz | CTX_154_2.fq.gz |
 
-2. Download the following gene annotations and genome files and place them into a location of your choice:
+2. Download the respective gene annotations and genome files for the species of interest and place them into a location of your choice:
 
-- `GFF3` gene annotation file  (e.g. `gencode.vM29.primary_assembly.annotation.gff3`).  Unzip the file using `gunzip` tool.
-- `GTF` gene annotation file (e.g. `gencode.vM29.primary_assembly.annotation.gtf.gz`).
-- `FASTA` genome file (e.g. `GRCm39.primary_assembly.genome.fa.gz`).
+- A `GFF3` gene annotation file  (e.g. `gencode.vM29.primary_assembly.annotation.gff3`).  Unzip the file using `gunzip` tool.
+- A `GTF` gene annotation file (e.g. `gencode.vM29.primary_assembly.annotation.gtf.gz`).
+- A `FASTA` genome file (e.g. `GRCm39.primary_assembly.genome.fa.gz`).
 
 You may obtain the annotation files from Gencode ([mouse](https://www.gencodegenes.org/mouse/), [human](https://www.gencodegenes.org/human/)).
 
