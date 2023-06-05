@@ -4,9 +4,9 @@ rule majiq_build:
     output:
         config["BASE_PATH"]+"/results/majiq_build/{experiment}/majiq.log"
     params:
-        gtf=config["annotation_gtf"],
+        gff3=config["gff3"],
         out=config["build_out"]
     threads:
         8
     shell:
-        "majiq build {params.gtf} -c {input} -j {threads} -o {params.out}"
+        "majiq build {params.gff3} -c {input} -j {threads} -o {params.out}"
