@@ -20,14 +20,14 @@ def delta_psi_grp1(wildcards):
         new_string_list.append(new_i)
     return new_string_list
 
-  def delta_psi_grp2(wildcards):
-    string = samples_majiq.loc[wildcards.experiment, "grp2"]
-    string_list = string.split()
-    new_string_list = []
-    for i in string_list:
-        new_i = samples_majiq.loc[wildcards.experiment, "dir"]+i+".majiq"
-        new_string_list.append(new_i)
-    return new_string_list
+def delta_psi_grp2(wildcards):
+  string = samples_majiq.loc[wildcards.experiment, "grp2"]
+  string_list = string.split()
+  new_string_list = []
+  for i in string_list:
+      new_i = samples_majiq.loc[wildcards.experiment, "dir"]+i+".majiq"
+      new_string_list.append(new_i)
+  return new_string_list
   
   
 samples_leafcutter = pd.read_table(config["samples_tsv"]).set_index("sample", drop=False)
@@ -40,7 +40,7 @@ def get_bam(wildcards):
     output = config["bam_dir"]+samples_leafcutter.loc[wildcards.sample, "bam"]
     return output
 
-  def get_junc(wildcards):
+def get_junc(wildcards):
     return config["BASE_PATH"]+"config/"+juncs_leafcutter.loc[wildcards.experiment,"juncs_file"]
 	
 def get_output_junc(wildcards):
