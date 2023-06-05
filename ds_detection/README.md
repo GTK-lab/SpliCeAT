@@ -184,6 +184,7 @@ All alternative splicing results are found in the `results/delta_psi/<experiment
 ```
 gunzip results/delta_psi/<experiment_name>.diff.gz
 ```
+and the results should look something like this:
 <p align="left">
   <img src="../images/whippet_results.PNG">
 </p>
@@ -193,7 +194,7 @@ gunzip results/delta_psi/<experiment_name>.diff.gz
 In the `results` directory, you should see the following output files:
 - `<experiment_name>_cluster_significance.txt`
 - `<experiment_name>_effect_sizes.txt`
--
+
 All alternative splicing results are found in the above 2 files. 
 `<experiment_name>_cluster_significance.txt` (significance of AS events):
 
