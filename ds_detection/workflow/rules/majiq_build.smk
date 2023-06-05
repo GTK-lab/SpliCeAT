@@ -4,7 +4,7 @@ rule majiq_build:
     output:
         config["BASE_PATH"]+"/results/majiq_build/{experiment}/majiq.log"
     params:
-        gtf=config["gtf"],
+        gtf=config["annotation_gtf"],
         out=config["build_out"]
     threads:
         8
