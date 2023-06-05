@@ -1,8 +1,8 @@
 rule create_genome_txt:
     input:
-       gtf=config["gtf"]
+       gtf=config["annotation_gtf"]
     output:
-        config["BASE_PATH"]+"input/gtf_exons.txt.gz"
+        config["BASE_PATH"]+"/input/gtf_exons.txt.gz"
     params:
         leafcutter_dir = config["leafcutter_dir"]
     threads:
