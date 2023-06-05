@@ -2,10 +2,10 @@ rule leafcutter_cluster:
     input:
         unpack(get_output_junc)
     output:
-        config["BASE_PATH"]+"results/{experiment}_perind_numers.counts.gz",
-        config["BASE_PATH"]+"results/{experiment}_pooled"
+        config["BASE_PATH"]+"/results/{experiment}_perind_numers.counts.gz",
+        config["BASE_PATH"]+"/results/{experiment}_pooled"
     params:
-        output = config["BASE_PATH"]+"results/{experiment}",
+        output = config["BASE_PATH"]+"/results/{experiment}",
         junc_file = lambda wildcards: get_junc(wildcards),
         leafcutter_dir = config["leafcutter_dir"]
     shell:
