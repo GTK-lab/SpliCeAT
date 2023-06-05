@@ -1,1 +1,30 @@
-test
+configfile: "/mnt/cbis/home/yongshan/SpliCeAT/ds_detection/config/config.yaml"
+include: "rules/common.smk"
+include: "rules/majiq_build.smk"
+include: "rules/majiq_delta_psi.smk"
+
+include: "rules/regtools_junction_extract.smk"
+include: "rules/leafcutter_cluster.smk"
+include: "rules/leafcutter_differential_splicing.smk"
+include: "rules/create_genome_txt.smk"
+
+include: "rules/samtools_merge.smk"
+include: "rules/whippet_index.smk"
+include: "rules/whippet_quantify.smk"
+include: "rules/whippet_delta.smk"
+
+rule all:
+    input:
+        expand(config["BASE_PATH"]+"/results/majiq_build/{experiment}/majiq.log",experiment=EXPERIMENTS),
+        expand(config["BASE_PATH"]+"/results/majiq_delta_psi/{experiment}/ctr-treatment.deltapsi.tsv",experiment=EXPERIMENTS),
+        expand(config["BASE_PATH"]+"/results/{sample}.junc",sample=SAMPLES),
+        expand(config["BASE_PATH"]+"/results/{experiment}_perind_numers.counts.gz",experiment=EXPERIMENTS),
+        expand(config["BASE_PATH"]+"/results/{experiment}_cluster_significance.txt",experiment=EXPERIMENTS),
+        expand(config["BASE_PATH"]+"/results/{experiment}_effect_sizes.txt",experiment=EXPERIMENTS),
+        expand(config["BASE_PATH"]+"/results/{experiment}_pooled",experiment=EXPERIMENTS),
+        config["BASE_PATH"]+"/input/gtf_exons.txt.gz",
+        expand(config["bam_dir"]+"{experiment}_treatment_merged.bam",experiment=EXPERIMENTS),
+        expand(config["bam_dir"]+"{experiment}_treatment_merged.bam.bai",experiment=EXPERIMENTS),
+        expand(config["BASE_PATH"]+"/results/index/{experiment}/{experiment}.jls",experiment=EXPERIMENTS),
+        expand(config["BASE_PATH"]+"/results/quantify/{sample}/{sample}.psi.gz",sample=SAMPLES),
+        expand(config["BASE_PATH"]+"/results/delta_psi/{experiment}.diff.gz",experiment=EXPERIMENTS)
