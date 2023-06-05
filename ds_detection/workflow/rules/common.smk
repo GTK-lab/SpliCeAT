@@ -3,8 +3,8 @@ import pandas as pd
 experimental_design_majiq = pd.read_table(config["confs"]).set_index("experiment", drop=False)
 samples_majiq = pd.read_table(config["delta_psi_samples"]).set_index("experiment", drop=False)
 experiment_samples_majiq = pd.read_table(config["experiment_sample_names"]).set_index("experiment", drop=False)
-EXPERIMENTS_majiq = experimental_design["experiment"].tolist()
-SAMPLE_NAMES_majiq = experiment_samples["experiment"].tolist()
+EXPERIMENTS_majiq = experimental_design_majiq["experiment"].tolist()
+SAMPLE_NAMES_majiq = experiment_samples_majiq["experiment"].tolist()
 
 def get_conf_file(wildcards):
     return{
@@ -33,8 +33,8 @@ def delta_psi_grp2(wildcards):
 samples_leafcutter = pd.read_table(config["samples_tsv"]).set_index("sample", drop=False)
 juncs_leafcutter = pd.read_table(config["juncs_file"]).set_index("experiment", drop=False)
 output_junc_leafcutter = pd.read_table(config["output_juncs"]).set_index("experiment", drop=False)
-SAMPLES_leafcutter = samples["sample"].tolist()
-EXPERIMENTS_leafcutter = juncs["experiment"].tolist()
+SAMPLES_leafcutter = samples_leafcutter["sample"].tolist()
+EXPERIMENTS_leafcutter = juncs_leafcutter["experiment"].tolist()
 
 def get_bam(wildcards):
     output = config["bam_dir"]+samples_leafcutter.loc[wildcards.sample, "bam"]
@@ -49,8 +49,8 @@ def get_output_junc(wildcards):
 
 samples_whippet = pd.read_table(config["samples_tsv"]).set_index("experiment", drop=False)
 fastq_whippet = pd.read_table(config["fastq_tsv"]).set_index("sample", drop=False)
-EXPERIMENTS_whippet = samples["experiment"].tolist()
-SAMPLES_whippet = fastq["sample"].tolist()
+EXPERIMENTS_whippet = samples_whippet["experiment"].tolist()
+SAMPLES_whippet = fastq_whippet["sample"].tolist()
 delta_whippet = pd.read_table(config["delta_tsv"]).set_index("experiment", drop=False)
 delta_input_tsv_whippet = pd.read_table(config["delta_input_tsv"]).set_index("experiment", drop=False)
 
