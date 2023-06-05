@@ -55,7 +55,7 @@ delta_whippet = pd.read_table(config["delta_tsv"]).set_index("experiment", drop=
 delta_input_tsv_whippet = pd.read_table(config["delta_input_tsv"]).set_index("experiment", drop=False)
 
 def samtools_input(wildcards):
-    string = samples_whippet.loc[wildcards.experiment, "cko"]
+    string = samples_whippet.loc[wildcards.experiment, "treatment"]
     string_list = string.split()
     new_string_list = []
     for i in string_list:
