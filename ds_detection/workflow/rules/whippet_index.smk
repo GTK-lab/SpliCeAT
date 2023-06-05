@@ -2,7 +2,7 @@ rule whippet_index:
     input:
         config["bam_dir"]+"{experiment}_treatment_merged.bam"
     output:
-        config["base_path"]+"/results/index/{experiment}/{experiment}.jls"
+        config["BASE_PATH"]+"/results/index/{experiment}/{experiment}.jls"
     params:
         fasta=config["fasta_file"],
         gtf=config["annotation_gtf"],
