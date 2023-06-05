@@ -30,7 +30,7 @@ def delta_psi_grp2(wildcards):
   return new_string_list
   
   
-samples_leafcutter = pd.read_table(config["samples_tsv"]).set_index("sample", drop=False)
+samples_leafcutter = pd.read_table(config["samples_leafcutter_tsv"]).set_index("sample", drop=False)
 juncs_leafcutter = pd.read_table(config["juncs_file"]).set_index("experiment", drop=False)
 output_junc_leafcutter = pd.read_table(config["output_juncs"]).set_index("experiment", drop=False)
 SAMPLES_leafcutter = samples_leafcutter["sample"].tolist()
@@ -47,7 +47,7 @@ def get_output_junc(wildcards):
     return config["BASE_PATH"]+"/results/"+output_junc_leafcutter.loc[wildcards.experiment,"junction_files"]
 
 
-samples_whippet = pd.read_table(config["samples_tsv"]).set_index("experiment", drop=False)
+samples_whippet = pd.read_table(config["samples_whippet_tsv"]).set_index("experiment", drop=False)
 fastq_whippet = pd.read_table(config["fastq_tsv"]).set_index("sample", drop=False)
 EXPERIMENTS_whippet = samples_whippet["experiment"].tolist()
 SAMPLES_whippet = fastq_whippet["sample"].tolist()
