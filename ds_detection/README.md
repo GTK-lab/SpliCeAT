@@ -121,3 +121,91 @@ in order to populate the directories with the necessary helper files. The follow
 - `samples_leafcutter.tsv`
 - `<experiment_name>_groups_file.txt`
 - `<experiment_name>_groups_junc.txt`
+
+## Running Snakemake
+Once the above finishes running successfully and the necessary helper files are created, execute a Snakemake dry run with
+```
+snakemake -np
+```
+to check the parameters of the run. Once ready to run, execute
+```
+snakemake --cores 24
+```
+
+## Output files
+In the `results` directory, you should see the following output files:
+
+### Majiq output files
+In directory `results/majiq_build`:
+- `<sample>.majiq`
+- `<sample>.sj`
+- `majiq.log`
+- `splicegraph.sql`
+
+In directory `results/majiq_delta_psi`:
+- `ctr-treatment.deltapsi.tsv`
+- `ctr-treatment.deltapsi.voila`
+- `deltapsi_majiq.log`
+
+In order to view the interactive results on Voila web server, execute the following on command line (from your top-level Majiq Snakemake directory):
+```
+voila view results/majiq_delta_psi/<experiment_name>/ctr-treatment.deltapsi.voila results/majiq_build/<experiment_name>/splicegraph.sql -p 5000 --host 0.0.0.0
+```
+View the results on `http://<remote_server>:5000/` (e.g. `http://atlas.cbis.nus.edu.sg:5000/`) and they should be displayed as follows. Click on `Download LSVs` to get the list of local splicing variations. 
+
+<p align="left">
+  <img src="../images/majiq_results.PNG">
+</p>
+
+Local splicing variations (LSV) file:
+<p align="left">
+  <img src="../images/majiq_lsv.PNG">
+</p>
+
+
+### Whippet output files
+In directory `results/index`:
+- `<experiment_name>.jls`
+- `<experiment_name>.jls.exons.tab.gz`
+
+In directory `results/quantify`:
+
+For each sample,
+- `<sample>.gene.tpm.gz`
+- `<sample>.isoform.tpm.gz`
+- `<sample>.jnc.gz`
+- `<sample>.map.gz`
+- `<sample>.psi.gz`
+
+In directory `results/delta_psi`:
+- `<experiment_name>.diff.gz`
+
+All alternative splicing results are found in the `results/delta_psi/<experiment_name>.diff.gz` file. Unzip the file on command line as follows:
+```
+gunzip results/delta_psi/<experiment_name>.diff.gz
+```
+<p align="left">
+  <img src="../images/whippet_results.PNG">
+</p>
+
+### Leafcutter output files
+
+In the `results` directory, you should see the following output files:
+- `<experiment_name>_cluster_significance.txt`
+- `<experiment_name>_effect_sizes.txt`
+-
+All alternative splicing results are found in the above 2 files. 
+`<experiment_name>_cluster_significance.txt` (significance of AS events):
+
+<p align="left">
+  <img src="../images/leafcutter_significance.PNG">
+</p>
+
+`<experiment_name>_effect_sizes.txt` (deltaPSI of AS events):
+<p align="left">
+  <img src="../images/leafcutter_effect_size.PNG">
+</p>
+
+## Other useful tools
+- [Majiq command builder](https://biociphers.bitbucket.io/majiq-docs-academic/commandbuilder.html)
+- [Leafcutter vignette](https://davidaknowles.github.io/leafcutter/articles/Usage.html)
