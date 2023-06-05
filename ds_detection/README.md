@@ -147,7 +147,7 @@ In directory `results/majiq_delta_psi`:
 - `ctr-treatment.deltapsi.voila`
 - `deltapsi_majiq.log`
 
-In order to view the interactive results on Voila web server, execute the following on command line (from your top-level Majiq Snakemake directory):
+In order to view the interactive results on Voila web server, execute the following on command line (from your top-level ds_detection Snakemake directory):
 ```
 voila view results/majiq_delta_psi/<experiment_name>/ctr-treatment.deltapsi.voila results/majiq_build/<experiment_name>/splicegraph.sql -p 5000 --host 0.0.0.0
 ```
