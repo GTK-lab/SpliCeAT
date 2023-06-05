@@ -15,16 +15,16 @@ include: "rules/whippet_delta.smk"
 
 rule all:
     input:
-        expand(config["BASE_PATH"]+"/results/majiq_build/{experiment}/majiq.log",experiment=EXPERIMENTS),
-        expand(config["BASE_PATH"]+"/results/majiq_delta_psi/{experiment}/ctr-treatment.deltapsi.tsv",experiment=EXPERIMENTS),
-        expand(config["BASE_PATH"]+"/results/{sample}.junc",sample=SAMPLES),
-        expand(config["BASE_PATH"]+"/results/{experiment}_perind_numers.counts.gz",experiment=EXPERIMENTS),
-        expand(config["BASE_PATH"]+"/results/{experiment}_cluster_significance.txt",experiment=EXPERIMENTS),
-        expand(config["BASE_PATH"]+"/results/{experiment}_effect_sizes.txt",experiment=EXPERIMENTS),
-        expand(config["BASE_PATH"]+"/results/{experiment}_pooled",experiment=EXPERIMENTS),
+        expand(config["BASE_PATH"]+"/results/majiq_build/{experiment}/majiq.log",experiment=EXPERIMENTS_majiq),
+        expand(config["BASE_PATH"]+"/results/majiq_delta_psi/{experiment}/ctr-treatment.deltapsi.tsv",experiment=EXPERIMENTS_majiq),
+        expand(config["BASE_PATH"]+"/results/{sample}.junc",sample=SAMPLES_leafcutter),
+        expand(config["BASE_PATH"]+"/results/{experiment}_perind_numers.counts.gz",experiment=EXPERIMENTS_leafcutter),
+        expand(config["BASE_PATH"]+"/results/{experiment}_cluster_significance.txt",experiment=EXPERIMENTS_leafcutter),
+        expand(config["BASE_PATH"]+"/results/{experiment}_effect_sizes.txt",experiment=EXPERIMENTS_leafcutter),
+        expand(config["BASE_PATH"]+"/results/{experiment}_pooled",experiment=EXPERIMENTS_leafcutter),
         config["BASE_PATH"]+"/input/gtf_exons.txt.gz",
-        expand(config["bam_dir"]+"{experiment}_treatment_merged.bam",experiment=EXPERIMENTS),
-        expand(config["bam_dir"]+"{experiment}_treatment_merged.bam.bai",experiment=EXPERIMENTS),
-        expand(config["BASE_PATH"]+"/results/index/{experiment}/{experiment}.jls",experiment=EXPERIMENTS),
-        expand(config["BASE_PATH"]+"/results/quantify/{sample}/{sample}.psi.gz",sample=SAMPLES),
-        expand(config["BASE_PATH"]+"/results/delta_psi/{experiment}.diff.gz",experiment=EXPERIMENTS)
+        expand(config["bam_dir"]+"{experiment}_treatment_merged.bam",experiment=EXPERIMENTS_whippet),
+        expand(config["bam_dir"]+"{experiment}_treatment_merged.bam.bai",experiment=EXPERIMENTS_whippet),
+        expand(config["BASE_PATH"]+"/results/index/{experiment}/{experiment}.jls",experiment=EXPERIMENTS_whippet),
+        expand(config["BASE_PATH"]+"/results/quantify/{sample}/{sample}.psi.gz",sample=SAMPLES_whippet),
+        expand(config["BASE_PATH"]+"/results/delta_psi/{experiment}.diff.gz",experiment=EXPERIMENTS_whippet)
