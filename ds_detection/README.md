@@ -44,9 +44,9 @@ Further detailed installation instructions can be found [here](https://davidakno
 
 2. Download the following gene annotations and genome files and place them into a location of your choice:
 
-- `mouse.gff3` (e.g. `gencode.vM29.primary_assembly.annotation.gff3`).  Unzip the file using `gunzip` tool.
-- `mouse.gtf.gz` (e.g. `gencode.vM29.primary_assembly.annotation.gtf.gz`).
-- `mouse.genome.fa.gz` (e.g. `GRCm39.primary_assembly.genome.fa.gz`).
+- `GFF3` gene annotation file  (e.g. `gencode.vM29.primary_assembly.annotation.gff3`).  Unzip the file using `gunzip` tool.
+- `GTF` gene annotation file (e.g. `gencode.vM29.primary_assembly.annotation.gtf.gz`).
+- `FASTA` genome file (e.g. `GRCm39.primary_assembly.genome.fa.gz`).
 
 You may obtain the annotation files from Gencode ([mouse](https://www.gencodegenes.org/mouse/), [human](https://www.gencodegenes.org/human/)).
 
