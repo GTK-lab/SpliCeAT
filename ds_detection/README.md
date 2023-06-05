@@ -100,24 +100,24 @@ leafcutter_dir <- "/mnt/cbis/home/yongshan/leafcutter/"
 ```
 Rscript prep.R
 ```
-in order to populate the directories with the necessary helper files. The following 14 files should be successfully created:
-- `config/config.yaml`
+in order to populate the directories with the necessary helper files. The following 14 files should be successfully created within the `config/` directory:
+- `config.yaml`
 
 ### Majiq helper files
-- `config/<experiment_name>_conf.txt`
-- `config/confs.tsv`
-- `config/delta_psi_samples.tsv`
-- `config/experiment_sample_names.tsv`
+- `<experiment_name>_conf.txt`
+- `confs.tsv`
+- `delta_psi_samples.tsv`
+- `experiment_sample_names.tsv`
 
 ### Whippet helper files
-- `config/delta.tsv`
-- `config/delta_input.tsv`
-- `config/fastq.tsv`
-- `config/samples_whippet.tsv`
+- `delta.tsv`
+- `delta_input.tsv`
+- `fastq.tsv`
+- `samples_whippet.tsv`
 
 ### Leafcutter helper files
-- `config/juncs_file.tsv`
-- `config/output_junc.tsv`
-- `config/samples_leafcutter.tsv`
-- `config/<experiment_name>_groups_file.txt`
-- `config/<experiment_name>_groups_junc.txt`
+- `juncs_file.tsv`
+- `output_junc.tsv`
+- `samples_leafcutter.tsv`
+- `<experiment_name>_groups_file.txt`
+- `<experiment_name>_groups_junc.txt`
