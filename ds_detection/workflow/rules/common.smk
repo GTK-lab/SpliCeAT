@@ -41,10 +41,10 @@ def get_bam(wildcards):
     return output
 
 def get_junc(wildcards):
-    return config["BASE_PATH"]+"config/"+juncs_leafcutter.loc[wildcards.experiment,"juncs_file"]
+    return config["BASE_PATH"]+"/config/"+juncs_leafcutter.loc[wildcards.experiment,"juncs_file"]
 	
 def get_output_junc(wildcards):
-    return config["BASE_PATH"]+"results/"+output_junc_leafcutter.loc[wildcards.experiment,"junction_files"]
+    return config["BASE_PATH"]+"/results/"+output_junc_leafcutter.loc[wildcards.experiment,"junction_files"]
 
 
 samples_whippet = pd.read_table(config["samples_tsv"]).set_index("experiment", drop=False)
@@ -69,7 +69,7 @@ def get_fastq(wildcards):
     return [fq1,fq2]
 	
 def experiment_sample(wildcards):
-    output = config["base_path"]+"/results/quantify/"+fastq_whippet.loc[wildcards.experiment, "experiment"]+"/"+fastq_whippet.loc[wildcards.experiment, "sample"]+"/"+fastq_whippet.loc[wildcards.experiment, "sample"]
+    output = config["BASE_PATH"]+"/results/quantify/"+fastq_whippet.loc[wildcards.experiment, "experiment"]+"/"+fastq_whippet.loc[wildcards.experiment, "sample"]+"/"+fastq_whippet.loc[wildcards.experiment, "sample"]
     return output
 	
 def get_index(wildcards):
