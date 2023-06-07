@@ -3,7 +3,8 @@ rule prep_for_AT:
         config["majiq_lsv_file_path"],
         config["leafcutter_cluster_sig_file_path"],
         config["leafcutter_effect_size_file_path"],
-        config["whippet_diff_file_path"]
+        config["whippet_diff_file_path"],
+        config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly.gtf"
     output:
         config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf"
     params:
