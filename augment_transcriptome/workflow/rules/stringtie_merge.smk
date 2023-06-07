@@ -9,4 +9,4 @@ rule stringtie_merge:
     threads:
         config["STRINGTIE_THREADS"]
     shell:
-        {params.stringtie} --merge {input} -G {params.gtf} -i -o {output}
+        "{params.stringtie} --merge {input} -G {params.gtf} -i -o {output}"
