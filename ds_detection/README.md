@@ -154,7 +154,7 @@ voila view results/majiq_delta_psi/<experiment_name>/ctr-treatment.deltapsi.voil
 View the results on `http://<remote_server>:5000/` (e.g. `http://atlas.cbis.nus.edu.sg:5000/`) and they should be displayed as follows. Click on `Download LSVs` to get the list of local splicing variations. 
 
 <p align="left">
-  <img src="../images/majiq_results.PNG">
+  <img src="../images/majiq_results.png">
 </p>
 
 Local splicing variations (LSV) file:
