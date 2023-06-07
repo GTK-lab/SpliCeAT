@@ -182,7 +182,7 @@ In directory `results/delta_psi`:
 
 All alternative splicing results are found in the `results/delta_psi/<experiment_name>.diff.gz` file. Unzip the file on command line as follows:
 ```
-gunzip results/delta_psi/<experiment_name>.diff.gz
+gunzip <experiment_name>.diff.gz
 ```
 and the results should look something like this:
 <p align="left">
