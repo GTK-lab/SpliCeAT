@@ -10,6 +10,7 @@ library(stringr)
 library(data.table)
 library(VennDetail)
 suppressMessages(library(dplyr))
+library(GenomicRanges)
 cat("Done. \n\n")
 
 # load in config containing file paths and other params
