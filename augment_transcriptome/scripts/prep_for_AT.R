@@ -54,9 +54,10 @@ majiq_lsv_final <- left_join(majiq_lsv,
 
 majiq_lsv_final <- majiq_lsv_final[,c(1:4)]
 
-write.csv(majiq_lsv_final,paste(config$masterlists_out_path,"majiq_masterlist.csv",sep=""),row.names = FALSE)
+dir.create(paste(config$BASE_PATH,"masterlists",sep=""))
+write.csv(majiq_lsv_final,paste(config$BASE_PATH,"masterlists/majiq_masterlist.csv",sep=""),row.names = FALSE)
 
-cat("Majiq masterlist created at:",paste(config$masterlists_out_path,"majiq_masterlist.csv",sep=""),"\n\n")
+cat("Majiq masterlist created at:",paste(config$BASE_PATH,"masterlists/majiq_masterlist.csv",sep=""),"\n\n")
 
 # LEAFCUTTER
 cat("> Processing Leafcutter input files... \n")
@@ -72,9 +73,9 @@ leafcutter_final <- left_join(leafcutter_effect_sizes,
                               by = c("cluster_joined"="cluster"))
 
 leafcutter_final_filtered <- filter(leafcutter_final, p.adjust <0.05 & abs(deltapsi) >= 0.2)
-write.csv(leafcutter_final_filtered,paste(config$masterlists_out_path,"leafcutter_masterlist.csv",sep=""),row.names = FALSE)
+write.csv(leafcutter_final_filtered,paste(config$BASE_PATH,"masterlists/leafcutter_masterlist.csv",sep=""),row.names = FALSE)
 
-cat("Leafcutter masterlist created at:",paste(config$masterlists_out_path,"leafcutter_masterlist.csv",sep=""),"\n\n")
+cat("Leafcutter masterlist created at:",paste(config$BASE_PATH,"masterlists/leafcutter_masterlist.csv",sep=""),"\n\n")
 
 # WHIPPET
 cat("> Processing Whippet input file... \n")
@@ -110,9 +111,9 @@ colnames(whippet_diff_final) <- c("Ensembl_ID","Ensembl_ID_version",
 whippet_diff_final$Gene_strand[whippet_diff_final$Gene_strand=="-1"]<-"-"
 whippet_diff_final$Gene_strand[whippet_diff_final$Gene_strand=="1"]<-"+"
 
-write.csv(whippet_diff_final, paste(config$masterlists_out_path,"whippet_masterlist.csv",sep=""),row.names = FALSE)
+write.csv(whippet_diff_final, paste(config$BASE_PATH,"masterlists/whippet_masterlist.csv",sep=""),row.names = FALSE)
 
-cat("Whippet masterlist created at:",paste(config$masterlists_out_path,"whippet_masterlist.csv",sep=""),"\n\n")
+cat("Whippet masterlist created at:",paste(config$BASE_PATH,"masterlists/whippet_masterlist.csv",sep=""),"\n\n")
 
 # Getting intersections of majiq, whippet, leafcutter
 cat("> Getting intersections of Majiq, Whippet, Leafcutter... \n")
@@ -135,11 +136,11 @@ filter_genes <- function(whippet_csv, majiq_csv, leafcutter_csv){
   result <- list("majiq_genes" = majiq_genes, "whippet_genes" = whippet_genes, "leafcutter_genes" = leafcutter_genes)
 }
 
-filtered_genes <- filter_genes(paste(config$masterlists_out_path,"whippet_masterlist.csv",sep=""),
-                               paste(config$masterlists_out_path,"majiq_masterlist.csv",sep=""),
-                               paste(config$masterlists_out_path,"leafcutter_masterlist.csv",sep=""))
+filtered_genes <- filter_genes(paste(config$BASE_PATH,"masterlists/whippet_masterlist.csv",sep=""),
+                               paste(config$BASE_PATH,"masterlists/majiq_masterlist.csv",sep=""),
+                               paste(config$BASE_PATH,"masterlists/leafcutter_masterlist.csv",sep=""))
 
-master_whippet_df <- read.csv(paste(config$masterlists_out_path,"whippet_masterlist.csv",sep=""),header=TRUE,check.names=FALSE)
+master_whippet_df <- read.csv(paste(config$BASE_PATH,"masterlists/whippet_masterlist.csv",sep=""),header=TRUE,check.names=FALSE)
 
 master_whippet_df$Description <- sub(" \\[.*", "", master_whippet_df$Description)
 
@@ -176,9 +177,9 @@ colnames(df_to_display) <- c("Gene", "Description",
                              "DeltaPSI", "Probability",
                              "Strand")
 
-write.csv(df_to_display, paste(config$masterlists_out_path,"union_of_intersects_events.csv",sep=""),row.names = FALSE)
+write.csv(df_to_display, paste(config$BASE_PATH,"masterlists/union_of_intersects_events.csv",sep=""),row.names = FALSE)
 
-cat("Intersections file created at:",paste(config$masterlists_out_path,"union_of_intersects_events.csv",sep=""),"\n\n")
+cat("Intersections file created at:",paste(config$BASE_PATH,"masterlists/union_of_intersects_events.csv",sep=""),"\n\n")
 
 #############################
 # FILTERING FOR SPLICE EVENTS
@@ -192,7 +193,7 @@ gtf_full <- rtracklayer::import(paste(config$BASE_PATH,"results/merged_assembly/
 # I only want exons in granges
 gtf_full <- gtf_full[(elementMetadata(gtf_full)[,"type"] == "exon")]
 
-union_of_intersect <- read.csv(paste(config$masterlists_out_path,"union_of_intersects_events.csv",sep=""))
+union_of_intersect <- read.csv(paste(config$BASE_PATH,"masterlists/union_of_intersects_events.csv",sep=""))
 union_of_intersect <- union_of_intersect[,c("Coordinates", "Strand")]
 union_of_intersect[c('seqnames', 'ranges')] <- str_split_fixed(union_of_intersect$Coordinates, ':', 2)
 union_of_intersect[c('start', 'end')] <- str_split_fixed(union_of_intersect$ranges, '-', 2)
