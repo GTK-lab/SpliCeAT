@@ -208,7 +208,7 @@ All alternative splicing results are found in the above 2 files.
 </p>
 
 ## Next steps
-Proceed to `augment_transcriptome` ([link](https://github.com/ys-lim/SpliCeAT/tree/main/augment_transcriptome)) to augment the reference transcriptome with these differential splicing events.
+If all output files were created successfully, proceed to `augment_transcriptome` ([link](https://github.com/ys-lim/SpliCeAT/tree/main/augment_transcriptome)) to augment the reference transcriptome with these differential splicing events.
 
 ## Other useful tools
 - [Majiq command builder](https://biociphers.bitbucket.io/majiq-docs-academic/commandbuilder.html)
