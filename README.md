@@ -7,7 +7,7 @@
 This repository contains the following Snakemake pipelines and scripts [^1]:
 1. Differential splicing detection
 2. Generation of augmented transcriptome
-3. Differential analysis with `kallisto/sleuth`
+3. Differential transcript expression analysis
 
 Start here: 
 ```
