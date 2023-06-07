@@ -1,9 +1,16 @@
 BASE_PATH: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/
+SAMPLES: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/samples.tsv
+
+###################
+# STRINGTIE ASSEMBLY
+###################
+
 STRINGTIE_COMMAND: /mnt/cbis/home/yongshan/stringtie-2.2.1.Linux_x86_64/stringtie
 GTF: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf
-JUNCS_CUTOFF: 20
+# minimum junction coverage for Stringtie assembly
+JUNCS_CUTOFF: 20 
 STRINGTIE_THREADS: 4
-SAMPLES: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/samples.tsv
+# --rf : assume stranded library fr-firststrand; --fr : assume stranded library fr-secondstrand
 STRAND: rf
 ALIGNMENTS_DIR: /mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/
 
@@ -12,10 +19,10 @@ ALIGNMENTS_DIR: /mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/
 ###################
 
 mouse_ensembl_version: 106
-majiq_lsv_file_path: /mnt/cbis/home/yongshan/majiq_snakemake/results/majiq_delta_psi/NESTIN_CTX_E14/NESTIN_CTX_E14_lsv.txt
-leafcutter_cluster_sig_file_path: /mnt/cbis/home/yongshan/leafcutter_snakemake/results/tdp43_nestin_ctx_e14_cluster_significance.txt
-leafcutter_effect_size_file_path: /mnt/cbis/home/yongshan/leafcutter_snakemake/results/tdp43_nestin_ctx_e14_effect_sizes.txt
-whippet_diff_file_path: /mnt/cbis/home/yongshan/whippet_snakemake/results/delta_psi/tdp43_nestin_ctx_e14.diff
+majiq_lsv_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/majiq_delta_psi/tdp43_nestin_ctx_e14/lsvs.txt
+leafcutter_cluster_sig_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/tdp43_nestin_ctx_e14_cluster_significance.txt
+leafcutter_effect_size_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/tdp43_nestin_ctx_e14_effect_sizes.txt
+whippet_diff_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/delta_psi/tdp43_nestin_ctx_e14.diff
 
 ###################
 # AUG TRANSCRIPTOME
