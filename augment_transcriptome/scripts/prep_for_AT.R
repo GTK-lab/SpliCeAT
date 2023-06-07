@@ -1,5 +1,5 @@
 #### CHANGE THIS ####
-config_file_path <- "/mnt/cbis/home/yongshan/at_pipeline/config.yaml"
+config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
 ####################
 
 # libraries
