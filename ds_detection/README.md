@@ -207,6 +207,9 @@ All alternative splicing results are found in the above 2 files.
   <img src="../images/leafcutter_effect_size.PNG">
 </p>
 
+## Next steps
+Proceed to `augment_transcriptome` ([link](https://github.com/ys-lim/SpliCeAT/tree/main/augment_transcriptome)) to augment the reference transcriptome with these differential splicing events.
+
 ## Other useful tools
 - [Majiq command builder](https://biociphers.bitbucket.io/majiq-docs-academic/commandbuilder.html)
 - [Leafcutter vignette](https://davidaknowles.github.io/leafcutter/articles/Usage.html)
