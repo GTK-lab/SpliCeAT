@@ -1,18 +1,18 @@
 # Differential splicing detection
 
 ## Necessary packages/tools
-- python
-- R
-- julia
-- majiq/voila
-- leafcutter (both leafcutter scripts & R package)
-- whippet
-- snakemake
-- samtools
-- regtools
-- (R package) optparse
-- (R package) data.table
-- (R package) dplyr
+- python (3.9.16)
+- R (4.2.2)
+- julia (1.7.2)
+- majiq/voila (2.4.dev3+g85d07819)
+- leafcutter (both leafcutter scripts & R package) (commit: 63b347a316cc214808b8c734ba181c602e950f06, R pckg version: 0.2.9)
+- whippet (1.6.1)
+- snakemake (6.8.1)
+- samtools (1.13)
+- regtools (0.5.2)
+- (R package) optparse (1.7.3)
+- (R package) data.table (1.14.6)
+- (R package) dplyr (1.1.0)
 
 ### Leafcutter installation
 Github installation: For leafcutter quantifications (junction counts for each splicing cluster), you will require the python scripts in `scripts` and `clustering` directories of the leafcutter github:
