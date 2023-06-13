@@ -1,6 +1,8 @@
 # Generation of augmented transcriptome
 This pipeline augments a reference transcriptome with transcripts containing differential splicing events detected in the previous `ds_detection` step. The output of this pipeline is a `kallisto` index of the augmented transcriptome.
 
+## Necessary packages/tools
+
 ## Required input
 The `ds_detection` pipeline should have been run and the following output files should be present: 
 1. MAJIQ `LSV` file 
