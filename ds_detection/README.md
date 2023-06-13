@@ -48,7 +48,7 @@ Further detailed installation instructions can be found [here](https://davidakno
 - A `GTF` gene annotation file (e.g. `gencode.vM29.primary_assembly.annotation.gtf.gz`).
 - A `FASTA` genome file (e.g. `GRCm39.primary_assembly.genome.fa.gz`).
 
-You may obtain the annotation files from Gencode ([mouse](https://www.gencodegenes.org/mouse/), [human](https://www.gencodegenes.org/human/)).
+You may obtain the annotation files from Gencode ([mouse](https://www.gencodegenes.org/mouse/)).
 
 3. Open the `prep.R` file and change the following parameters to suit your experimental design:
 
