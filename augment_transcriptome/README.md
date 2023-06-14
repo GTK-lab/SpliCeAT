@@ -85,3 +85,25 @@ snakemake --cores 24
 ```
 
 ## Output files
+You should see the following files in the `results` folder:
+```
+results
+├── augmented_transcriptome
+│   ├── augmented_transcripts.fa
+│   ├── kallisto_index_augmented_transcriptome
+│   └── merged_stringtie_assembly_novel_exon_filtered.fa
+├── merged_assembly
+│   ├── merged_stringtie_assembly.gtf
+│   ├── merged_stringtie_assembly_novel_exon_filtered.gtf
+│   └── merged_stringtie_assembly_novel_exon_filtered_with_reference.gtf
+└── stringtie_assemblies
+    ├── <sample1>_ref_guided_assembly.gtf
+    ├── <sample2>_ref_guided_assembly.gtf
+    ├── <sample3>_ref_guided_assembly.gtf
+    ├── <sample4>_ref_guided_assembly.gtf
+    ├── <sample5>_ref_guided_assembly.gtf
+    ├── <sample6>_ref_guided_assembly.gtf
+    ├── <sample7>_ref_guided_assembly.gtf
+    └── <sample8>_ref_guided_assembly.gtf
+```
+The transcriptome index is found at `kallisto_index_augmented_transcriptome` and will be used for subsequent kallisto quantification and sleuth differential expression analysis.
