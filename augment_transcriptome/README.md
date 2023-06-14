@@ -2,6 +2,16 @@
 This pipeline augments a reference transcriptome with transcripts containing differential splicing events detected in the previous `ds_detection` step. The output of this pipeline is a `kallisto` index of the augmented transcriptome.
 
 ## Necessary packages/tools
+- gffread (0.12.7)
+- kallisto (0.46.1)
+- stringtie (2.2.1)
+- (R package) yaml (2.3)
+- (R package) biomaRt (2.54.0)
+- (R package) stringr (1.5.0)
+- (R package) data.table (1.14.6)
+- (R package) VennDetail (1.14.0)
+- (R package) dplyr (1.1.0)
+- (R package) GenomicRanges (1.50.2)
 
 ## Required input
 The `ds_detection` pipeline should have been run and the following output files should be present: 
