@@ -13,6 +13,7 @@
 - (R package) optparse (1.7.3)
 - (R package) data.table (1.14.6)
 - (R package) dplyr (1.1.0)
+- (python packages) pandas
 
 ### Leafcutter installation
 Github installation: For leafcutter quantifications (junction counts for each splicing cluster), you will require the python scripts in `scripts` and `clustering` directories of the leafcutter github:
