@@ -13,7 +13,7 @@ This repository contains the following Snakemake pipelines and scripts [^1], to 
   <img src="images/workflow.png">
 </p>
 
-What you need *before* starting:
+### What you need *before* starting:
 - FASTQ sample files of 2 conditions (control & treatment)
 - Aligned BAM files using STAR
 - Gene annotation (GTF/GFF3) in GENCODE format
@@ -26,7 +26,7 @@ Download the respective gene annotations and genome files for the species of int
 
 You may obtain the annotation files from Gencode ([mouse](https://www.gencodegenes.org/mouse/)).
 
-Once those are done, you can start here: 
+### Once those are done, you can start here: 
 ```
 git clone https://github.com/ys-lim/SpliCeAT.git
 ```
