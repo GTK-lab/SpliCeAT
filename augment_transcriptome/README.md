@@ -3,7 +3,7 @@
 
 **Input:** Differential splicing results from Majiq, Whippet & Leafcutter
 
-**Output:** A `kallisto` index of the augmented transcriptome
+**Output:** A kallisto index of the augmented transcriptome
 
 ## Packages required
 Click on the links for installation instructions. (In brackets are versions used when run by the author)
