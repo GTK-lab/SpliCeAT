@@ -2,6 +2,7 @@
 This pipeline augments a reference transcriptome with transcripts containing differential splicing events detected in the previous `ds_detection` step. The output of this pipeline is a `kallisto` index of the augmented transcriptome.
 
 ## Packages required
+Click on the links for installation instructions. (In brackets are versions used when run by the author)
 - [gffread](https://github.com/gpertea/gffread#installation) (0.12.7)
 - [kallisto](https://pachterlab.github.io/kallisto/download) (0.46.1)
 - [stringtie](https://ccb.jhu.edu/software/stringtie/#install) (2.2.1)
