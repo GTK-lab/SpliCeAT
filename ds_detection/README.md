@@ -11,10 +11,14 @@ Click on the links for download instructions for each package. (In brackets are 
 - [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) (6.8.1)
 - [samtools](http://www.htslib.org/download/) (1.13)
 - [regtools](https://github.com/griffithlab/regtools#installation) (0.5.2)
-- (R package) [optparse](https://cran.r-project.org/web/packages/optparse/readme/README.html) (1.7.3)
-- (R package) [data.table](https://github.com/Rdatatable/data.table#installation) (1.14.6)
-- (R package) [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html) (1.1.0)
-- (Python package) [pandas](https://pandas.pydata.org/docs/getting_started/install.html) (1.5.0)
+
+R packages
+- [optparse](https://cran.r-project.org/web/packages/optparse/readme/README.html) (1.7.3)
+- [data.table](https://github.com/Rdatatable/data.table#installation) (1.14.6)
+- [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html) (1.1.0)
+
+Python packages
+- [pandas](https://pandas.pydata.org/docs/getting_started/install.html) (1.5.0)
 
 ## Setting up
 
