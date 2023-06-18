@@ -11,13 +11,13 @@ Click on the links for installation instructions. (In brackets are versions used
 - [samtools](http://www.htslib.org/download/) (1.13)
 - [regtools](https://github.com/griffithlab/regtools#installation) (0.5.2)
 
-R packages
+R packages:
 - [optparse](https://cran.r-project.org/web/packages/optparse/readme/README.html) (1.7.3)
 - [data.table](https://github.com/Rdatatable/data.table#installation) (1.14.6)
 - [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html) (1.1.0)
 - [leafcutter](https://davidaknowles.github.io/leafcutter/articles/Installation.html) (both leafcutter scripts & R package) (commit: 63b347a316cc214808b8c734ba181c602e950f06, R pckg version: 0.2.9)
 
-Python packages
+Python packages:
 - [pandas](https://pandas.pydata.org/docs/getting_started/install.html) (1.5.0)
 
 ## Setting up
