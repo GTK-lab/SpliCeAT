@@ -1,7 +1,7 @@
 # Differential splicing detection
 
 ## Packages required
-Click on the links for download instructions for each package. (In brackets are versions used when run by the author)
+Click on the links for installation instructions for each package. (In brackets are versions used when run by the author)
 - [python](https://www.python.org/downloads/) (3.9.16)
 - [R](https://cran.rstudio.com/) (4.2.2)
 - [julia](https://julialang.org/downloads/) (1.7.2)
