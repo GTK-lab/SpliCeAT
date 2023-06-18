@@ -1,6 +1,8 @@
 # Generation of augmented transcriptome
 **Use:** augments a reference transcriptome with transcripts containing differential splicing events detected in the previous `ds_detection` step
+
 **Input:** differential splicing results from Majiq, Whippet & Leafcutter
+
 **Output:** a `kallisto` index of the augmented transcriptome
 
 ## Packages required
