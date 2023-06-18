@@ -27,7 +27,7 @@ annotation_gtf_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/gencode
 # path of genome fa.gz file
 fasta_file_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa.gz" 
 
-# path of julia command
+# path of julia command. If you have exported to path, simply put "julia"
 julia <- "/mnt/cbis/home/yongshan/julia-1.7.2/bin/julia" 
 
 # directory of whippet scripts
