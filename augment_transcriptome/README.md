@@ -22,9 +22,9 @@ R packages:
 
 ## Required input
 The `ds_detection` pipeline should have been run and the following output files should be present: 
-1. MAJIQ `LSV` file (e.g. `lsvs.txt`)
-2. Whippet `.diff` file (e.g. `tdp43_nestin_ctx_e14.diff`)
-3. Leafcutter `cluster_significance.txt` and `effect_sizes.txt` files (e.g. `tdp43_nestin_ctx_e14_cluster_significance.txt` and `tdp43_nestin_ctx_e14_effect_sizes.txt`)
+1. MAJIQ `LSV` file (e.g. lsvs.txt)
+2. Whippet `.diff` file (e.g. tdp43_nestin_ctx_e14.diff)
+3. Leafcutter `cluster_significance.txt` and `effect_sizes.txt` files (e.g. tdp43_nestin_ctx_e14_cluster_significance.txt and tdp43_nestin_ctx_e14_effect_sizes.txt)
 
 These files contain high-confidence differential splicing events which will subsequently be included in the augmented transcriptome.
 
