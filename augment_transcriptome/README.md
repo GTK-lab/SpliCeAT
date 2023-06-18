@@ -2,9 +2,9 @@
 This pipeline augments a reference transcriptome with transcripts containing differential splicing events detected in the previous `ds_detection` step. The output of this pipeline is a `kallisto` index of the augmented transcriptome.
 
 ## Necessary packages/tools
-- gffread (0.12.7)
-- kallisto (0.46.1)
-- stringtie (2.2.1)
+- [gffread](https://github.com/gpertea/gffread#installation) (0.12.7)
+- [kallisto](https://pachterlab.github.io/kallisto/download) (0.46.1)
+- [stringtie](https://ccb.jhu.edu/software/stringtie/#install) (2.2.1)
 - (R package) yaml (2.3)
 - (R package) biomaRt (2.54.0)
 - (R package) stringr (1.5.0)
@@ -43,7 +43,7 @@ SAMPLES: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/samples.t
 ###################
 # STRINGTIE ASSEMBLY
 ###################
-# If you have exported to path, simply put "stringtie"
+# If you have added the executable to your PATH, simply put "stringtie"
 STRINGTIE_COMMAND: /mnt/cbis/home/yongshan/stringtie-2.2.1.Linux_x86_64/stringtie
 GTF: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf
 # minimum junction coverage for Stringtie assembly
