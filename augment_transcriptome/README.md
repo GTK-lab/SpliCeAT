@@ -43,6 +43,7 @@ SAMPLES: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/samples.t
 ###################
 # STRINGTIE ASSEMBLY
 ###################
+# If you have exported to path, simply put "stringtie"
 STRINGTIE_COMMAND: /mnt/cbis/home/yongshan/stringtie-2.2.1.Linux_x86_64/stringtie
 GTF: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf
 # minimum junction coverage for Stringtie assembly
@@ -64,6 +65,7 @@ whippet_diff_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/de
 ###################
 # AUG TRANSCRIPTOME
 ###################
+# If you have exported to path, simply put "gffread"
 gffread_path: /mnt/cbis/home/yongshan/gffread/gffread
 genome_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa
 transcripts_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.transcripts.fa
