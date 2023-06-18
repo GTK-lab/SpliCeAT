@@ -205,6 +205,9 @@ All alternative splicing results are found in the above 2 files.
 ## Next steps
 If all output files were created successfully, proceed to `augment_transcriptome` ([link](https://github.com/ys-lim/SpliCeAT/tree/main/augment_transcriptome)) to augment the reference transcriptome with these differential splicing events.
 
+## Alternatives
+In this repo, all 3 differential splicing tools (Majiq, Whippet & Leafcutter) are run together in a single Snakemake. If you prefer, you can also choose to run each tool separately. The individual Snakemakes are located at [majiq](https://github.com/ys-lim/SpliCeAT/tree/main/majiq), [whippet](https://github.com/ys-lim/SpliCeAT/tree/main/whippet) & [leafcutter](https://github.com/ys-lim/SpliCeAT/tree/main/leafcutter).
+
 ## Other useful tools
 - [Majiq command builder](https://biociphers.bitbucket.io/majiq-docs-academic/commandbuilder.html)
 - [Leafcutter vignette](https://davidaknowles.github.io/leafcutter/articles/Usage.html)
