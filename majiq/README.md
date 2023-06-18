@@ -1,9 +1,9 @@
 # Majiq snakemake
 
 ## Necessary packages/tools
-- snakemake
-- majiq/voila
-- (R package) dplyr
+- [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) (6.8.1)
+- [majiq/voila](https://majiq.biociphers.org/app_download/) (2.4.dev3+g85d07819)
+- [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html) (1.1.0)
 
 ## Setting up
 
