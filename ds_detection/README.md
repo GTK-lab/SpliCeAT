@@ -6,7 +6,6 @@ Click on the links for installation instructions for each package. (In brackets 
 - [R](https://cran.rstudio.com/) (4.2.2)
 - [julia](https://julialang.org/downloads/) (1.7.2)
 - [majiq/voila](https://majiq.biociphers.org/app_download/) (2.4.dev3+g85d07819)
-- [leafcutter](https://davidaknowles.github.io/leafcutter/articles/Installation.html) (both leafcutter scripts & R package) (commit: 63b347a316cc214808b8c734ba181c602e950f06, R pckg version: 0.2.9)
 - [whippet](https://github.com/timbitz/Whippet.jl#1-install) (1.6.1)
 - [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) (6.8.1)
 - [samtools](http://www.htslib.org/download/) (1.13)
@@ -16,6 +15,7 @@ R packages
 - [optparse](https://cran.r-project.org/web/packages/optparse/readme/README.html) (1.7.3)
 - [data.table](https://github.com/Rdatatable/data.table#installation) (1.14.6)
 - [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html) (1.1.0)
+- [leafcutter](https://davidaknowles.github.io/leafcutter/articles/Installation.html) (both leafcutter scripts & R package) (commit: 63b347a316cc214808b8c734ba181c602e950f06, R pckg version: 0.2.9)
 
 Python packages
 - [pandas](https://pandas.pydata.org/docs/getting_started/install.html) (1.5.0)
