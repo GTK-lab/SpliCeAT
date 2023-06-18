@@ -5,7 +5,7 @@
 - [julia](https://julialang.org/downloads/) (1.7.2)
 - [whippet](https://github.com/timbitz/Whippet.jl#1-install) (1.6.1)
 - [samtools](http://www.htslib.org/download/) (1.13)
-- (R package) [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html) (1.1.0)
+- [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html) (1.1.0)
 
 ## Setting up
 1. Upload the `design.csv` experimental design file into the `input` directory as follows:
