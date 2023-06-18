@@ -2,8 +2,8 @@
 
 ## Packages required
 Click on the links for download instructions for each package. (In brackets are versions used when run by the author)
-- python (3.9.16)
-- R (4.2.2)
+- [python](https://www.python.org/downloads/) (3.9.16)
+- [R](https://cran.rstudio.com/) (4.2.2)
 - [julia](https://julialang.org/downloads/) (1.7.2)
 - [majiq/voila](https://majiq.biociphers.org/app_download/) (2.4.dev3+g85d07819)
 - [leafcutter](https://davidaknowles.github.io/leafcutter/articles/Installation.html) (both leafcutter scripts & R package) (commit: 63b347a316cc214808b8c734ba181c602e950f06, R pckg version: 0.2.9)
@@ -15,17 +15,6 @@ Click on the links for download instructions for each package. (In brackets are 
 - (R package) data.table (1.14.6)
 - (R package) dplyr (1.1.0)
 - (python packages) pandas
-
-### Leafcutter installation
-Github installation: For leafcutter quantifications (junction counts for each splicing cluster), you will require the python scripts in `scripts` and `clustering` directories of the leafcutter github:
-```
-git clone https://github.com/davidaknowles/leafcutter
-```
-R package installation: For differential splicing analysis, the leafcutter R package is required:
-```
-devtools::install_github("davidaknowles/leafcutter/leafcutter")
-```
-Further detailed installation instructions can be found [here](https://davidaknowles.github.io/leafcutter/articles/Installation.html).
 
 ## Setting up
 
