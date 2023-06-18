@@ -1,13 +1,13 @@
 # Differential splicing detection
 
 ## Packages required
-(In brackets are versions used when run by the author)
+Click on the links for download instructions for each package. (In brackets are versions used when run by the author)
 - python (3.9.16)
 - R (4.2.2)
-- julia (1.7.2)
+- [julia](https://julialang.org/downloads/) (1.7.2)
 - majiq/voila (2.4.dev3+g85d07819)
 - leafcutter (both leafcutter scripts & R package) (commit: 63b347a316cc214808b8c734ba181c602e950f06, R pckg version: 0.2.9)
-- whippet (1.6.1)
+- [whippet](https://github.com/timbitz/Whippet.jl#1-install) (1.6.1)
 - snakemake (6.8.1)
 - samtools (1.13)
 - regtools (0.5.2)
