@@ -8,13 +8,13 @@ Click on the links for download instructions for each package. (In brackets are 
 - [majiq/voila](https://majiq.biociphers.org/app_download/) (2.4.dev3+g85d07819)
 - [leafcutter](https://davidaknowles.github.io/leafcutter/articles/Installation.html) (both leafcutter scripts & R package) (commit: 63b347a316cc214808b8c734ba181c602e950f06, R pckg version: 0.2.9)
 - [whippet](https://github.com/timbitz/Whippet.jl#1-install) (1.6.1)
-- snakemake (6.8.1)
-- samtools (1.13)
-- regtools (0.5.2)
-- (R package) optparse (1.7.3)
-- (R package) data.table (1.14.6)
-- (R package) dplyr (1.1.0)
-- (python packages) pandas
+- [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) (6.8.1)
+- [samtools](http://www.htslib.org/download/) (1.13)
+- [regtools](https://github.com/griffithlab/regtools#installation) (0.5.2)
+- (R package) [optparse](https://cran.r-project.org/web/packages/optparse/readme/README.html) (1.7.3)
+- (R package) [data.table](https://github.com/Rdatatable/data.table#installation) (1.14.6)
+- (R package) [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html) (1.1.0)
+- (Python package) [pandas](https://pandas.pydata.org/docs/getting_started/install.html) (1.5.0)
 
 ## Setting up
 
