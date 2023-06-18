@@ -65,7 +65,7 @@ whippet_diff_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/de
 ###################
 # AUG TRANSCRIPTOME
 ###################
-# If you have exported to path, simply put "gffread"
+# If you have added the executable to your PATH, simply put "gffread"
 gffread_path: /mnt/cbis/home/yongshan/gffread/gffread
 genome_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa
 transcripts_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.transcripts.fa
