@@ -1,10 +1,26 @@
 # this script collapses all novel transcripts in a gene into a meta-novel transcript
 # Output: tx2tx file, tx2gene file that you can use with sleuth
 
+#### CHANGE THIS ####
+config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
+####################
+
+cat("> Loading libraries... \n")
+library(yaml)
+cat("Done. \n\n")
+
+# load in config containing file paths and other params
+cat("> Reading config.yaml... \n")
+
+config <- read_yaml(config_file_path)
+
+cat("Done. \n\n")
+
+# note: do i still need this mapping part?
 # import stringtie merged GTF - contains the mappings you need for gene to MSTRG identifier
-merged_stringtie_gtf_full <- rtracklayer::import("/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/results/merged_assembly/merged_stringtie_assembly.gtf")
+merged_stringtie_gtf_full <- rtracklayer::import(paste(config$BASE_PATH,"results/merged_assembly/merged_stringtie_assembly.gtf",sep=""))
 # contains only transcripts with high confidence splicing events
-filtered_stringtie_gtf <- rtracklayer::import("/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf")
+filtered_stringtie_gtf <- rtracklayer::import(paste(config$BASE_PATH,"results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf",sep=""))
 
 # load all as a dataframe
 merged_stringtie_gtf_full_df <- as.data.frame(merged_stringtie_gtf_full)
@@ -59,7 +75,7 @@ t2g_augment$collapsed_target_id <- apply(t2g_augment,1,collapse_transcripts)
 # remove duplicated target_id entries becos there can be overlapping genes
 t2g_augment <- t2g_augment[!duplicated(t2g_augment[c('target_id')]),]
 
-write.csv(t2g_augment, file="/mnt/cbis/home/yongshan/collapse_transcript_test/t2g_augment.csv")
+write.csv(t2g_augment, file=paste(config$BASE_PATH,"results/collapse_transcript/t2g_augment.csv",sep=""))
 
 # testing sleuth on collapsed transcripts
 
