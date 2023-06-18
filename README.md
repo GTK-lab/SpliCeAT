@@ -26,7 +26,7 @@ Download the respective gene annotations and genome files for the species of int
 
 You may obtain the annotation files from Gencode ([mouse](https://www.gencodegenes.org/mouse/)).
 
-### Once those are done, you can start here: 
+### Once the above are completed, you can start here: 
 ```
 git clone https://github.com/ys-lim/SpliCeAT.git
 ```
