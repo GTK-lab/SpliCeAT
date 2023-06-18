@@ -1,12 +1,12 @@
 # Leafcutter snakemake
 
 ## Necessary packages/tools
-- snakemake
-- leafcutter (both leafcutter scripts & R package)
-- regtools
-- (R package) optparse
-- (R package) dplyr
-- (R package) data.table
+- [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) (6.8.1)
+- [leafcutter](https://davidaknowles.github.io/leafcutter/articles/Installation.html) (both leafcutter scripts & R package) (commit: 63b347a316cc214808b8c734ba181c602e950f06, R pckg version: 0.2.9)
+- [regtools](https://github.com/griffithlab/regtools#installation) (0.5.2)
+- [optparse](https://cran.r-project.org/web/packages/optparse/readme/README.html) (1.7.3)
+- [data.table](https://github.com/Rdatatable/data.table#installation) (1.14.6)
+- [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html) (1.1.0)
 
 ### Leafcutter installation
 
