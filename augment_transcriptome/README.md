@@ -1,17 +1,19 @@
 # Generation of augmented transcriptome
 This pipeline augments a reference transcriptome with transcripts containing differential splicing events detected in the previous `ds_detection` step. The output of this pipeline is a `kallisto` index of the augmented transcriptome.
 
-## Necessary packages/tools
+## Packages required
 - [gffread](https://github.com/gpertea/gffread#installation) (0.12.7)
 - [kallisto](https://pachterlab.github.io/kallisto/download) (0.46.1)
 - [stringtie](https://ccb.jhu.edu/software/stringtie/#install) (2.2.1)
-- (R package) yaml (2.3)
-- (R package) biomaRt (2.54.0)
-- (R package) stringr (1.5.0)
-- (R package) data.table (1.14.6)
-- (R package) VennDetail (1.14.0)
-- (R package) dplyr (1.1.0)
-- (R package) GenomicRanges (1.50.2)
+
+R packages:
+- [yaml](https://www.rdocumentation.org/packages/yaml/versions/2.3.7) (2.3)
+- [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html) (2.54.0)
+- [stringr](https://cran.r-project.org/web/packages/stringr/readme/README.html) (1.5.0)
+- [data.table](https://github.com/Rdatatable/data.table#installation) (1.14.6)
+- [VennDetail](https://www.bioconductor.org/packages/release/bioc/html/VennDetail.html) (1.14.0)
+- [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html) (1.1.0)
+- [GenomicRanges](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html) (1.50.2)
 
 ## Required input
 The `ds_detection` pipeline should have been run and the following output files should be present: 
