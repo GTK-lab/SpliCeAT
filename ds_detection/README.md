@@ -1,7 +1,7 @@
 # Differential splicing detection
 
 ## Packages required
-In brackets are versions used when run by the author.
+(In brackets are versions used when run by the author)
 - python (3.9.16)
 - R (4.2.2)
 - julia (1.7.2)
