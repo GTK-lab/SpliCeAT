@@ -6,4 +6,4 @@ rule regtools_junction_extract:
     params:
         strand = config["STRAND"]
     shell:
-        "regtools junctions extract -s {params.strand} {input} -o {output}"
+        "regtools junctions extract -a 8 -m 50 -M 500000 -s {params.strand} {input} -o {output}"
