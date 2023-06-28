@@ -36,6 +36,7 @@ Python packages:
 | CTX_108     | treatment | mm39   | reverse | CTX_108_1.fq.gz | CTX_108_2.fq.gz |
 | CTX_128     | treatment | mm39   | reverse | CTX_128_1.fq.gz | CTX_128_2.fq.gz |
 | CTX_154     | treatment | mm39   | reverse | CTX_154_1.fq.gz | CTX_154_2.fq.gz |
+
 (for strand, choose either of: None, reverse, forward)
 
 2. Download the respective gene annotations and genome files for the species of interest and place them into a location of your choice:
