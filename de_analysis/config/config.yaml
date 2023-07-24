@@ -1,0 +1,6 @@
+samples: /mnt/cbis/home/yongshan/kallisto_snakemake/tdp43_nestin_ctx_e14/config/samples.tsv
+INDEX: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/results/augmented_transcriptome/kallisto_index_augmented_transcriptome
+OUT_FILE: /mnt/cbis/home/yongshan/collapse_transcript_test/tdp43_nestin_ctx_e14/{sample_name}
+STRAND: "rf-stranded"
+BOOTSTRAPS: 100
+N_THREADS: 4
