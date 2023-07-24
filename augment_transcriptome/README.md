@@ -42,7 +42,7 @@ CTX_128
 CTX_154
 ```
 
-2. Open up `config.yaml` and change the following paths:
+2. Open `config/config.yaml` and change the following paths:
 ```
 BASE_PATH: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/
 SAMPLES: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/samples.tsv
@@ -50,14 +50,18 @@ SAMPLES: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/samples.t
 ###################
 # STRINGTIE ASSEMBLY
 ###################
-# If you have added the executable to your PATH, simply put "stringtie"
+# If you have added the executable to your PATH, simply put "stringtie" for STRINGTIE_COMMAND:
 STRINGTIE_COMMAND: /mnt/cbis/home/yongshan/stringtie-2.2.1.Linux_x86_64/stringtie
 GTF: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf
-# minimum junction coverage for Stringtie assembly
-JUNCS_CUTOFF: 20 
 STRINGTIE_THREADS: 4
-# --rf : assume stranded library fr-firststrand; --fr : assume stranded library fr-secondstrand
+
+# minimum junction coverage for Stringtie assembly:
+JUNCS_CUTOFF: 20 
+
+# --rf : assume stranded library fr-firststrand; --fr : assume stranded library fr-secondstrand:
 STRAND: rf
+
+# alignments directory should contain all sample BAM & BAI files:
 ALIGNMENTS_DIR: /mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/
 
 ###################
@@ -72,7 +76,7 @@ whippet_diff_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/de
 ###################
 # AUG TRANSCRIPTOME
 ###################
-# If you have added the executable to your PATH, simply put "gffread"
+# If you have added the executable to your PATH, simply put "gffread" for gffread_path:
 gffread_path: /mnt/cbis/home/yongshan/gffread/gffread
 genome_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa
 transcripts_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.transcripts.fa
