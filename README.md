@@ -9,16 +9,14 @@ This repository contains the following Snakemake pipelines and scripts [^1], to 
 2. Generation of augmented transcriptome (`augment_transcriptome`)
 3. Differential expression analysis (`de_analysis`)
 
-
+<p align="center">
+  <img src="images/workflow.png">
+</p>
 
 ### What you need *before* starting:
 - FASTQ sample files of 2 conditions (control & treatment)
 - Aligned BAM files using STAR
 - Gene annotation (GTF/GFF3) in GENCODE format
-- 
-<p align="center">
-  <img src="images/workflow.png">
-</p>
 
 Download the respective gene annotations and genome files for the species of interest and place them into a location of your choice:
 
