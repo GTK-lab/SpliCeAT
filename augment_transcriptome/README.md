@@ -117,8 +117,8 @@ results
 │   ├── augmented_transcripts.fa
 │   ├── kallisto_index_augmented_transcriptome
 |   ├── merged_stringtie_assembly_novel_exon_filtered.fa
-|   ├── t2g_augment_uncollapsed.csv
-│   └── t2g_augment_collapsed.csv
+|   ├── t2g_augment_collapsed.csv
+│   └── t2g_augment_uncollapsed.csv
 ├── merged_assembly
 │   ├── merged_stringtie_assembly.gtf
 │   ├── merged_stringtie_assembly_novel_exon_filtered.gtf
