@@ -82,9 +82,9 @@ genome_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_as
 transcripts_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.transcripts.fa
 ```
 
-3. Open up `prep_for_AT.R` in the `scripts` folder & the `Snakefile` in `workflow` and change the first line to point to your config file location:
+3. Open up `prep_for_AT.R` & `collapse_transcripts.R` in the `scripts` folder & the `Snakefile` in `workflow` and change the first line to point to your config file location:
 
-`prep_for_AT.R`:
+`prep_for_AT.R`/`collapse_transcripts.R`:
 ```
 #### CHANGE THIS ####
 config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
@@ -98,7 +98,7 @@ configfile: "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/confi
 ```
 
 ## Running Snakemake
-Once the above finishes running successfully and the necessary helper files are created, execute a Snakemake dry run with
+Once the above files are configured correctly, execute a Snakemake dry run with
 ```
 snakemake -np
 ```
@@ -114,7 +114,9 @@ results
 ├── augmented_transcriptome
 │   ├── augmented_transcripts.fa
 │   ├── kallisto_index_augmented_transcriptome
-│   └── merged_stringtie_assembly_novel_exon_filtered.fa
+|   ├── merged_stringtie_assembly_novel_exon_filtered.fa
+|   ├── t2g_augment_uncollapsed.csv
+│   └── t2g_augment_collapsed.csv
 ├── merged_assembly
 │   ├── merged_stringtie_assembly.gtf
 │   ├── merged_stringtie_assembly_novel_exon_filtered.gtf
@@ -129,4 +131,4 @@ results
     ├── <sample7>_ref_guided_assembly.gtf
     └── <sample8>_ref_guided_assembly.gtf
 ```
-The transcriptome index is found at `kallisto_index_augmented_transcriptome` and will be used for subsequent kallisto quantification and sleuth differential expression analysis.
+The transcriptome index is found at `kallisto_index_augmented_transcriptome` and can be used for subsequent kallisto quantification and sleuth differential expression analysis. The t2g (both uncollapsed `t2g_augment_uncollapsed.csv` and collapsed `t2g_augment_collapsed.csv` versions) mappings can be used for subsequent differential expression analysis. 
