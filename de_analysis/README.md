@@ -8,10 +8,12 @@
 
 ## Packages required
 Click on the links for installation instructions. (In brackets are versions used when run by the author)
-- g
+- [kallisto](https://pachterlab.github.io/kallisto/download) (0.46.1)
+- [sleuth](http://pachterlab.github.io/sleuth/download) (0.30.1)
 
 R packages:
-- g
+- [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html) (2.54.0)
+- [lgr](https://cran.r-project.org/web/packages/lgr/index.html) (0.4.4)
 
 ## Required input
 The `ds_detection` and `augment_transcriptome` steps should have been run and the following output files (located in `SpliCeAT/augment_transcriptome/`) will be used in this step: 
