@@ -10,7 +10,7 @@ This repository contains the following Snakemake pipelines and scripts [^1], to 
 3. Differential expression analysis (`de_analysis`)
 
 <p align="center">
-  <img src="images/workflow.png">
+  <img src="images/Workflow.png">
 </p>
 
 ### What you need *before* starting:
