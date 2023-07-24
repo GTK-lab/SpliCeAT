@@ -1,20 +1,41 @@
-# testing sleuth on collapsed transcripts
+# sleuth for differential transcript expression analysis
 
+#### CHANGE THIS ####
+config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/de_analysis/config/config.yaml"
+####################
+
+library(lgr)
+
+lgr$info("Loading libraries...")
+suppressMessages({
 library(rhdf5)
-setwd("/mnt/cbis/home/yongshan/collapse_transcript_test/tdp43_nestin_ctx_e14/")
-files <- list.files(".", pattern=".h5", recursive=TRUE, full.names=TRUE)
+})
+lgr$info("Done.")
+
+# load in config containing file paths and other params
+lgr$info("Reading config.yaml...")
+config <- read_yaml(config_file_path)
+lgr$info("Done.")
+
+# configuring h5 files to get rid of trailing transcript info - required if using Gencode annotations. If using Ensembl annotations, skip this part
+files <- list.files(paste(config$BASE_PATH, "/de_analysis/kallisto_quant_out/", sep=""), 
+                    pattern=".h5", 
+                    recursive=TRUE, 
+                    full.names=TRUE)
 
 for (currentFile in files) {
   oldids <- h5read(currentFile, "/aux/ids")
   newids <- gsub("\\|.*", "", oldids)
   h5write(newids, currentFile, "/aux/ids")
 }
+#############
 
-t2g_augment <- read.csv("/mnt/cbis/home/yongshan/collapse_transcript_test/t2g_augment.csv")
-t2g_augment <- t2g_augment[,-c(1)]
-head(t2g_augment)
+lgr$info("Loading t2g dataframes...")
+t2g_augment_uncollapsed <- read.csv(paste(config$BASE_PATH,"/augment_transcriptome/results/augmented_transcriptome/t2g_augment_uncollapsed.csv", sep=""))
+t2g_augment_collapsed <- read.csv(paste(config$BASE_PATH,"/augment_transcriptome/results/augmented_transcriptome/t2g_augment_collapsed.csv", sep=""))
 
-############## DEG ANALYSIS - but collapsing on collapsed_target_id ################
+############## ANALYSIS 2 - WITH COLLAPSING ################
+# follow sleuth walkthrough to load the experimental tsv table
 metadf <- read.table("/mnt/cbis/home/yongshan/collapse_transcript_test/experimental_design.tsv", sep = '\t', header = TRUE, colClasses = c("character"))
 
 metadf$condition <- as.factor(metadf$condition)
