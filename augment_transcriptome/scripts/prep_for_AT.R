@@ -2,8 +2,10 @@
 config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
 ####################
 
+library(lgr)
+
 # libraries
-cat("> Loading libraries... \n")
+lgr$info("Loading libraries...")
 library(yaml)
 library(biomaRt)
 library(stringr)
@@ -11,25 +13,25 @@ library(data.table)
 library(VennDetail)
 suppressMessages(library(dplyr))
 library(GenomicRanges)
-cat("Done. \n\n")
+lgr$info("Done.")
 
 # load in config containing file paths and other params
-cat("> Reading config.yaml... \n")
+lgr$info("Reading config.yaml...")
 
 config <- read_yaml(config_file_path)
 
-cat("Done. \n\n")
+lgr$info("Done.")
 
 ###################
 # MASTERLISTS PREP
 ###################
 
-cat("> MASTERLISTS PREP \n\n")
+lgr$info("MASTERLISTS PREP")
 
 # Prepares the Majiq, Whippet and Leafcutter splicing results into a masterlist for comparison purposes
 
 # MAJIQ
-cat("> Getting Ensembl annotations... \n")
+lgr$info("Getting Ensembl annotations...")
 
 ensembl <- useEnsembl(biomart = "genes",
                       dataset = "mmusculus_gene_ensembl",
@@ -38,9 +40,9 @@ ensembl <- useEnsembl(biomart = "genes",
 annotations <- getBM(attributes = c('ensembl_gene_id',"external_gene_name",'description', 'chromosome_name',
                                     'start_position', 'end_position', 'strand'), mart = ensembl)
 
-cat("Done. \n\n")
+lgr$info("Done.")
 
-cat("> Processing Majiq LSV file... \n")
+lgr$info("Processing Majiq LSV file...")
 
 majiq_lsv <- read.table(config$majiq_lsv_file_path)
 majiq_lsv[c('Ensembl_ID', 'type',"Coord")] <- str_split_fixed(majiq_lsv$V1, ':', 3)
@@ -58,10 +60,10 @@ majiq_lsv_final <- majiq_lsv_final[,c(1:4)]
 dir.create(paste(config$BASE_PATH,"masterlists",sep=""))
 write.csv(majiq_lsv_final,paste(config$BASE_PATH,"masterlists/majiq_masterlist.csv",sep=""),row.names = FALSE)
 
-cat("Majiq masterlist created at:",paste(config$BASE_PATH,"masterlists/majiq_masterlist.csv",sep=""),"\n\n")
+lgr$info("Majiq masterlist created at: %s",paste(config$BASE_PATH,"masterlists/majiq_masterlist.csv",sep=""))
 
 # LEAFCUTTER
-cat("> Processing Leafcutter input files... \n")
+lgr$info("Processing Leafcutter input files...")
 leafcutter_cluster_sig <- read.table(config$leafcutter_cluster_sig_file_path,sep="\t",header=TRUE)
 leafcutter_cluster_sig <- leafcutter_cluster_sig[,c(1,6,7)]
 leafcutter_effect_sizes <- read.table(config$leafcutter_effect_size_file_path,sep="\t",header=TRUE)
@@ -76,10 +78,10 @@ leafcutter_final <- left_join(leafcutter_effect_sizes,
 leafcutter_final_filtered <- filter(leafcutter_final, p.adjust <0.05 & abs(deltapsi) >= 0.2)
 write.csv(leafcutter_final_filtered,paste(config$BASE_PATH,"masterlists/leafcutter_masterlist.csv",sep=""),row.names = FALSE)
 
-cat("Leafcutter masterlist created at:",paste(config$BASE_PATH,"masterlists/leafcutter_masterlist.csv",sep=""),"\n\n")
+lgr$info("Leafcutter masterlist created at: %s",paste(config$BASE_PATH,"masterlists/leafcutter_masterlist.csv",sep=""))
 
 # WHIPPET
-cat("> Processing Whippet input file... \n")
+lgr$info("Processing Whippet input file...")
 
 whippet_diff <- read.table(config$whippet_diff_file_path, sep = '\t', header = TRUE, row.names=NULL)
 colnames(whippet_diff) <- c("Gene", "Node", "Coord", "Strand", "Type", "Psi_A", "Psi_B", "DeltaPsi", "Probability", "Complexity", "Entropy")
@@ -114,10 +116,10 @@ whippet_diff_final$Gene_strand[whippet_diff_final$Gene_strand=="1"]<-"+"
 
 write.csv(whippet_diff_final, paste(config$BASE_PATH,"masterlists/whippet_masterlist.csv",sep=""),row.names = FALSE)
 
-cat("Whippet masterlist created at:",paste(config$BASE_PATH,"masterlists/whippet_masterlist.csv",sep=""),"\n\n")
+lgr$info("Whippet masterlist created at: %s",paste(config$BASE_PATH,"masterlists/whippet_masterlist.csv",sep=""))
 
 # Getting intersections of majiq, whippet, leafcutter
-cat("> Getting intersections of Majiq, Whippet, Leafcutter... \n")
+lgr$info("Getting intersections of Majiq, Whippet, Leafcutter...")
 
 filter_genes <- function(whippet_csv, majiq_csv, leafcutter_csv){
   whippet_df <- read.csv(whippet_csv,header=TRUE,check.names=FALSE)
@@ -180,14 +182,14 @@ colnames(df_to_display) <- c("Gene", "Description",
 
 write.csv(df_to_display, paste(config$BASE_PATH,"masterlists/union_of_intersects_events.csv",sep=""),row.names = FALSE)
 
-cat("Intersections file created at:",paste(config$BASE_PATH,"masterlists/union_of_intersects_events.csv",sep=""),"\n\n")
+lgr$info("Intersections file created at: %s",paste(config$BASE_PATH,"masterlists/union_of_intersects_events.csv",sep=""))
 
 #############################
 # FILTERING FOR SPLICE EVENTS
 #############################
 
-cat("> FILTERING FOR SPLICE EVENTS \n\n")
-cat("> Processing merged Stringtie GTF file... \n")
+lgr$info("FILTERING FOR SPLICE EVENTS")
+lgr$info("Processing merged Stringtie GTF file...")
 
 gtf_full <- rtracklayer::import(paste(config$BASE_PATH,"results/merged_assembly/merged_stringtie_assembly.gtf",sep=""))
 
@@ -220,5 +222,5 @@ gtf_subset <- as.data.frame(gtf_subset)
 filtered_gtf <- rbind(ref_tx,gtf_subset)
 rtracklayer::export(filtered_gtf,paste(config$BASE_PATH,"results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered_with_reference.gtf",sep=""))
 
-cat("Filtered Stringtie file created at:",paste(config$BASE_PATH,"results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf",sep=""),"\n\n")
+lgr$info("Filtered Stringtie file created at: %s",paste(config$BASE_PATH,"results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf",sep=""))
 
