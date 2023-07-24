@@ -28,7 +28,6 @@ for (currentFile in files) {
   newids <- gsub("\\|.*", "", oldids)
   h5write(newids, currentFile, "/aux/ids")
 }
-#############
 
 lgr$info("Loading t2g dataframes...")
 t2g_augment_uncollapsed <- read.csv(paste(config$BASE_PATH,"/augment_transcriptome/results/augmented_transcriptome/t2g_augment_uncollapsed.csv", sep=""))
