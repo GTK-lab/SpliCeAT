@@ -20,6 +20,7 @@ R packages:
 - [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html) (1.1.0)
 - [GenomicRanges](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html) (1.50.2)
 - [lgr](https://cran.r-project.org/web/packages/lgr/index.html) (0.4.4)
+- [rtracklayer](https://bioconductor.org/packages/release/bioc/html/rtracklayer.html)(1.58.0)
 
 ## Required input
 The `ds_detection` pipeline should have been run and the following output files should be present: 
