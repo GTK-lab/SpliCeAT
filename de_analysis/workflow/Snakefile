@@ -1,8 +1,8 @@
-configfile: "/mnt/cbis/home/yongshan/kallisto_snakemake/tdp43_nestin_ctx_e14/config/config.yaml"
+configfile: "/mnt/cbis/home/yongshan/SpliCeAT/de_analysis/config/config.yaml"
 
 include: "rules/common.smk"
 include: "rules/kallisto_quant.smk"
 
 rule all:
     input:
-        expand(config["OUT_FILE"]+"/abundance.tsv",sample_name=SAMPLES)
+        expand(config["BASE_PATH"]+"/de_analysis/results/kallisto_quant_out/{sample_name}/abundance.tsv",sample_name=SAMPLES)
