@@ -14,7 +14,7 @@ R packages:
 - g
 
 ## Required input
-The `ds_detection` and `augment_transcriptome` pipelines should have been run and the following output files will be used in this step: 
+The `ds_detection` and `augment_transcriptome` steps should have been run and the following output files will be used in this step: 
 ```
 results
 └── augmented_transcriptome
