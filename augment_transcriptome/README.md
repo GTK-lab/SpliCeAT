@@ -43,7 +43,7 @@ CTX_128
 CTX_154
 ```
 
-2. Open `config/config.yaml` and change the following paths:
+2. Open `config.yaml` and change the following paths:
 ```
 BASE_PATH: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/
 SAMPLES: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/samples.tsv
