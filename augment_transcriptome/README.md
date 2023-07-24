@@ -85,7 +85,7 @@ transcripts_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29
 
 3. Open up `prep_for_AT.R` & `collapse_transcripts.R` in the `scripts` folder & the `Snakefile` in `workflow` and change the first line to point to your config file location:
 
-`prep_for_AT.R`/`collapse_transcripts.R`:
+`prep_for_AT.R` and `collapse_transcripts.R`:
 ```
 #### CHANGE THIS ####
 config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
