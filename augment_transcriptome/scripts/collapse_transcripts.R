@@ -8,10 +8,14 @@ config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/conf
 library(lgr)
 
 lgr$info("Loading libraries...")
+
+suppressMessages({
 library(yaml)
 library(dplyr)
 library(rtracklayer)
 library(biomaRt)
+})
+
 lgr$info("Done.")
 
 # load in config containing file paths and other params
