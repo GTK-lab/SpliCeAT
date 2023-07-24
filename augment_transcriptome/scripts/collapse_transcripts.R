@@ -9,6 +9,9 @@ library(lgr)
 
 lgr$info("Loading libraries...")
 library(yaml)
+library(dplyr)
+library(rtracklayer)
+library(biomaRt)
 lgr$info("Done.")
 
 # load in config containing file paths and other params
@@ -34,7 +37,7 @@ mappings <- unique(na.omit(mappings))
 
 lgr$info("Annotating high-confidence filtered transcripts with gene...")
 # map the filtered novel transcripts to give them the ENSMUSG column
-filtered_stringtie_gtf_df_with_refgeneid <- inner_join(filtered_stringtie_gtf_df,mappings,by="gene_id")
+filtered_stringtie_gtf_df_with_refgeneid <- dplyr::inner_join(filtered_stringtie_gtf_df,mappings,by="gene_id")
 
 # now we have the gene id for the novel transcripts - can combine with t2g
 t2g_augment <- filtered_stringtie_gtf_df_with_refgeneid[,c("transcript_id","ref_gene_id")]
@@ -57,7 +60,7 @@ t2g <- dplyr::rename(t2g, target_id = ensembl_transcript_id_version,
 ens_gene_ext_gene <- unique(t2g[,c(2,3)])
 
 # augment my high-confidence transcripts with gene name
-t2g_augment <- inner_join(t2g_augment,ens_gene_ext_gene,by="ens_gene")
+t2g_augment <- dplyr::inner_join(t2g_augment,ens_gene_ext_gene,by="ens_gene")
 
 lgr$info("Combining reference transcripts and high-confidence novel transcripts into a t2g dataframe...")
 # now we rbind it with normal t2g to create an AUGMENTED T2G
