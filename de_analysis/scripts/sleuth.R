@@ -34,26 +34,34 @@ t2g_augment_uncollapsed <- read.csv(paste(config$BASE_PATH,"/augment_transcripto
 t2g_augment_collapsed <- read.csv(paste(config$BASE_PATH,"/augment_transcriptome/results/augmented_transcriptome/t2g_augment_collapsed.csv", sep=""))
 
 ############## ANALYSIS 2 - WITH COLLAPSING ################
-# follow sleuth walkthrough to load the experimental tsv table
-metadf <- read.table("/mnt/cbis/home/yongshan/collapse_transcript_test/experimental_design.tsv", sep = '\t', header = TRUE, colClasses = c("character"))
+# configuring experimental design
+sample_ids <- dir(file.path(paste(config$BASE_PATH, "/de_analysis/kallisto_quant_out", sep="")))
+lgr$info("Check that your samples are correct:")
+sample_id
+
+kal_dirs <- file.path(paste(config$BASE_PATH, "/de_analysis/kallisto_quant_out", sep=""), sample_ids, "abundance.h5")
+lgr$info("Check that your h5 files are correct:")
+kal_dirs
+
+lgr$info("Loading in experimental design...")
+metadf <- read.table(paste(config$BASE_PATH, "/de_analysis/config/experimental_design.tsv", sep=""), sep = '\t', header = TRUE, colClasses = c("character"))
+metadf <- metadf[order(metadf$sample, decreasing=FALSE),]
+metadf <- dplyr::mutate(metadf, path = kal_dirs)
+lgr$info("Check that the metadata pairings are correct:")
+metadf
 
 metadf$condition <- as.factor(metadf$condition)
 metadf$condition <- relevel(metadf$condition, "ctr")
 
-head(t2g_augment)
-tail(t2g_augment)
-
-so <- sleuth_prep(metadf, ~gender+condition, target_mapping = t2g_augment,
+lgr$info("Starting sleuth analysis...")
+so <- sleuth_prep(metadf, ~gender+condition, target_mapping = t2g_augment_collapsed,
                   aggregation_column = 'collapsed_target_id', extra_bootstrap_summary = TRUE,
-                  gene_mode=TRUE, transformation_function = function(x) log2(x + 0.5)) ## NOT BETA but LOG2FC
-
-so <- sleuth_fit(so, ~gender, 'reduced')
-
-so <- sleuth_fit(so, ~gender+condition, 'full')
-
-so <- sleuth_lrt(so, 'reduced', 'full')
-
-so <- sleuth_wt(so,which_beta = 'conditiontrtment')
+                  gene_mode=TRUE, transformation_function = function(x) log2(x + 0.5)) %>%
+      sleuth_fit(~gender, 'reduced') %>%
+      sleuth_fit(~gender+condition, 'full') %>%
+      sleuth_lrt('reduced', 'full') %>%
+      sleuth_wt(which_beta = 'conditiontrtment')
+                  
 
 sleuth_gene_mode_lrt <- sleuth_results(so, 'reduced:full', 'lrt', show_all = FALSE, pval_aggregate = FALSE, gene_mode = TRUE)
 sleuth_gene_mode_wald <- sleuth_results(so, 'conditiontrtment', 'Wald', show_all = FALSE, pval_aggregate = FALSE, gene_mode = TRUE)
