@@ -1,7 +1,0 @@
-sample,fq1,fq2,design
-F2014,F2014_R1.fastq.gz,F2014_R2.fastq.gz,control
-F2011,F2011_R1.fastq.gz,F2011_R2.fastq.gz,control
-F2003,F2003_R1.fastq.gz,F2003_R2.fastq.gz,control
-F2001,F2001_R1.fastq.gz,F2001_R2.fastq.gz,treatment
-F2010,F2010_R1.fastq.gz,F2010_R2.fastq.gz,treatment
-F2002,F2002_R1.fastq.gz,F2002_R2.fastq.gz,treatment

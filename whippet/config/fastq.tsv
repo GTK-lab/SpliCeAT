@@ -1,7 +1,0 @@
-sample	fq1	fq2	dir	index_dir
-F2014	F2014_R1.fastq.gz	F2014_R2.fastq.gz	/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/trimmedFASTQ/	/mnt/cbis/home/yongshan/whippet_snakemake/results/index/WT_IgG2A_WT_O9_CTX/WT_IgG2A_WT_O9_CTX.jls
-F2011	F2011_R1.fastq.gz	F2011_R2.fastq.gz	/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/trimmedFASTQ/	/mnt/cbis/home/yongshan/whippet_snakemake/results/index/WT_IgG2A_WT_O9_CTX/WT_IgG2A_WT_O9_CTX.jls
-F2003	F2003_R1.fastq.gz	F2003_R2.fastq.gz	/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/trimmedFASTQ/	/mnt/cbis/home/yongshan/whippet_snakemake/results/index/WT_IgG2A_WT_O9_CTX/WT_IgG2A_WT_O9_CTX.jls
-F2001	F2001_R1.fastq.gz	F2001_R2.fastq.gz	/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/trimmedFASTQ/	/mnt/cbis/home/yongshan/whippet_snakemake/results/index/WT_IgG2A_WT_O9_CTX/WT_IgG2A_WT_O9_CTX.jls
-F2010	F2010_R1.fastq.gz	F2010_R2.fastq.gz	/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/trimmedFASTQ/	/mnt/cbis/home/yongshan/whippet_snakemake/results/index/WT_IgG2A_WT_O9_CTX/WT_IgG2A_WT_O9_CTX.jls
-F2002	F2002_R1.fastq.gz	F2002_R2.fastq.gz	/mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/trimmedFASTQ/	/mnt/cbis/home/yongshan/whippet_snakemake/results/index/WT_IgG2A_WT_O9_CTX/WT_IgG2A_WT_O9_CTX.jls

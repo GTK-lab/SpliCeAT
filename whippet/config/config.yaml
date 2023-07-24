@@ -1,8 +1,0 @@
-samples_tsv: /mnt/cbis/home/yongshan/whippet_snakemake/config/samples.tsv
-fasta_file: /mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa.gz
-annotation_gtf: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf.gz
-fastq_tsv: /mnt/cbis/home/yongshan/whippet_snakemake/config/fastq.tsv
-delta_tsv: /mnt/cbis/home/yongshan/whippet_snakemake/config/delta.tsv
-delta_input_tsv: /mnt/cbis/home/yongshan/whippet_snakemake/config/delta_input.tsv
-bam_dir: /mnt/gtklab01/linglab/external_datasets/tdp43_Q331K_rescue_rubychen/STAR/
-base_path: /mnt/cbis/home/yongshan/whippet_snakemake
