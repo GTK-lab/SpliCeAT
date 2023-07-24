@@ -5,16 +5,18 @@
 config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
 ####################
 
-cat("> Loading libraries... \n")
+library(lgr)
+
+lgr$info("Loading libraries...")
 library(yaml)
-cat("Done. \n\n")
+lgr$info("Done.")
 
 # load in config containing file paths and other params
-cat("> Reading config.yaml... \n")
+lgr$info("Reading config.yaml...")
 
 config <- read_yaml(config_file_path)
 
-cat("Done. \n\n")
+lgr$info("Done.")
 
 # note: do i still need this mapping part?
 # import stringtie merged GTF - contains the mappings you need for gene to MSTRG identifier
