@@ -84,5 +84,5 @@ t2g_augment$collapsed_target_id <- apply(t2g_augment,1,collapse_transcripts)
 # remove duplicated target_id entries becos there can be overlapping genes
 t2g_augment <- t2g_augment[!duplicated(t2g_augment[c('target_id')]),]
 
-write.csv(t2g_augment, file=paste(config$BASE_PATH,"results/collapse_transcript/t2g_augment.csv",sep=""))
+write.csv(t2g_augment, file=paste(config$BASE_PATH,"results/augmented_transcriptome/t2g_augment.csv",sep=""))
 lgr$info("Collapsed t2g dataframe saved at: %s", paste(config$BASE_PATH,"results/augmented_transcriptome/t2g_augment_collapsed.csv",sep=""))
