@@ -7,11 +7,15 @@ SAMPLES: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/samples.t
 # If you have added the executable to your PATH, simply put "stringtie" for STRINGTIE_COMMAND:
 STRINGTIE_COMMAND: /mnt/cbis/home/yongshan/stringtie-2.2.1.Linux_x86_64/stringtie
 GTF: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf
+STRINGTIE_THREADS: 4
+
 # minimum junction coverage for Stringtie assembly
 JUNCS_CUTOFF: 20 
-STRINGTIE_THREADS: 4
+
 # --rf : assume stranded library fr-firststrand; --fr : assume stranded library fr-secondstrand
 STRAND: rf
+
+# alignments directory should contain all sample BAM & BAI files
 ALIGNMENTS_DIR: /mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/
 
 ###################
