@@ -6,6 +6,8 @@ library(lgr)
 
 # libraries
 lgr$info("Loading libraries...")
+
+suppressMessages({
 library(yaml)
 library(biomaRt)
 library(stringr)
@@ -13,6 +15,8 @@ library(data.table)
 library(VennDetail)
 suppressMessages(library(dplyr))
 library(GenomicRanges)
+})
+
 lgr$info("Done.")
 
 # load in config containing file paths and other params
