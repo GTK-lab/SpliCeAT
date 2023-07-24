@@ -67,7 +67,7 @@ lgr$info("Combining reference transcripts and high-confidence novel transcripts 
 t2g_augment <- rbind(t2g, t2g_augment)
 head(t2g_augment)
 tail(t2g_augment)
-write.csv(t2g_augment, file=paste(config$BASE_PATH,"results/augmented_transcriptome/t2g_augment_uncollapsed.csv",sep=""))
+write.csv(t2g_augment, file=paste(config$BASE_PATH,"results/augmented_transcriptome/t2g_augment_uncollapsed.csv",sep=""), row.names=FALSE)
 lgr$info("Uncollapsed t2g dataframe saved at: %s", paste(config$BASE_PATH,"results/augmented_transcriptome/t2g_augment_uncollapsed.csv",sep=""))
 
 # function for collaspsing transcripts to create tx to tx group
@@ -84,5 +84,5 @@ t2g_augment$collapsed_target_id <- apply(t2g_augment,1,collapse_transcripts)
 # remove duplicated target_id entries becos there can be overlapping genes
 t2g_augment <- t2g_augment[!duplicated(t2g_augment[c('target_id')]),]
 
-write.csv(t2g_augment, file=paste(config$BASE_PATH,"results/augmented_transcriptome/t2g_augment_collapsed.csv",sep=""))
+write.csv(t2g_augment, file=paste(config$BASE_PATH,"results/augmented_transcriptome/t2g_augment_collapsed.csv",sep=""), row.names=FALSE)
 lgr$info("Collapsed t2g dataframe saved at: %s", paste(config$BASE_PATH,"results/augmented_transcriptome/t2g_augment_collapsed.csv",sep=""))
