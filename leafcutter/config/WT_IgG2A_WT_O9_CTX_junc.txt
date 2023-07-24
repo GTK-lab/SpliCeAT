@@ -1,6 +1,0 @@
-/mnt/cbis/home/yongshan/leafcutter_snakemake/results/F2014.junc
-/mnt/cbis/home/yongshan/leafcutter_snakemake/results/F2011.junc
-/mnt/cbis/home/yongshan/leafcutter_snakemake/results/F2003.junc
-/mnt/cbis/home/yongshan/leafcutter_snakemake/results/F2001.junc
-/mnt/cbis/home/yongshan/leafcutter_snakemake/results/F2010.junc
-/mnt/cbis/home/yongshan/leafcutter_snakemake/results/F2002.junc
