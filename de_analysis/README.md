@@ -22,6 +22,6 @@ results
     ├── t2g_augment_collapsed.csv
     └── t2g_augment_uncollapsed.csv
 ```
-This step consists of 2 parts: (1) Quantification of transcripts against the augmented transcriptome, and (2) Differential transcript expression analysis. 
+The subsequent analysis will be carried out in 2 parts: (1) Quantification of transcripts against the augmented transcriptome, and (2) Differential transcript expression analysis. 
 
 ## Setting up
