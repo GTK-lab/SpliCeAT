@@ -1,6 +1,6 @@
 rule sleuth:
     input:
-        config["BASE_PATH"]+"/de_analysis/results/kallisto_quant_out/{sample_name}/abundance.tsv"
+        expand(config["BASE_PATH"]+"/de_analysis/results/kallisto_quant_out/{sample_name}/abundance.tsv", sample_name = SAMPLES)
     output:
         config["BASE_PATH"]+"/de_analysis/results/sleuth/collapsed_differential_transcript_analysis_tpm.csv",
         config["BASE_PATH"]+"/de_analysis/results/sleuth/collapsed_differential_transcript_analysis.csv",
