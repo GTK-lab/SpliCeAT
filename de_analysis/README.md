@@ -30,7 +30,7 @@ results
 The subsequent analysis will be carried out in 2 parts: (1) Quantification of transcripts against the augmented transcriptome, and (2) Differential transcript expression analysis. 
 
 ## Setting up
-1. Open the `samples.tsv` and `experimental_design.tsv` in the `config` folder and change to your sample names, paths and conditions accordingly. It is important to adhere to the column names:
+1. Open the `samples.tsv` and `experimental_design.tsv` in the `config` folder and change to your sample names, paths and conditions accordingly. The fastqdir is a directory containing all FASTQ files in your experiment. It is important to adhere to the column names:
 
 `samples.tsv`:
 |sample_name|fastq1|fastq2|fastqdir|
