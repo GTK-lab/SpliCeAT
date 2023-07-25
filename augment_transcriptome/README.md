@@ -133,4 +133,4 @@ results
     ├── <sample7>_ref_guided_assembly.gtf
     └── <sample8>_ref_guided_assembly.gtf
 ```
-The transcriptome index is found at `kallisto_index_augmented_transcriptome` and can be used for subsequent kallisto quantification and sleuth differential expression analysis. The t2g (both uncollapsed `t2g_augment_uncollapsed.csv` and collapsed `t2g_augment_collapsed.csv` versions) mappings can be used for subsequent differential expression analysis. 
+The transcriptome index is found at `kallisto_index_augmented_transcriptome` and can be used for subsequent kallisto quantification and sleuth differential expression analysis. The t2g (both uncollapsed `t2g_augment_uncollapsed.csv` and collapsed `t2g_augment_collapsed.csv` versions) mappings can be used for subsequent differential expression analysis [here](https://github.com/ys-lim/SpliCeAT/tree/main/de_analysis).
