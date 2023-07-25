@@ -9,6 +9,7 @@ library(lgr)
 lgr$info("Loading libraries...")
 suppressMessages({
 library(rhdf5)
+library(yaml)
 })
 lgr$info("Done.")
 
