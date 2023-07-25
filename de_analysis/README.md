@@ -144,3 +144,8 @@ Results after collapsing transcripts:
   <img src="../images/sleuth_results_collapsed.png">
 </p>
 
+Column meanings:
+1. `ens_gene`, `ext_gene`: Ensembl gene identifiers and gene names
+2. `target_id`: Ensembl transcript identifiers and Stringtie novel transcripts
+3. `qval_lrt`: q-value under Likelihood ratio test
+4. `b_wald`: log2FC values under Wald test
