@@ -11,6 +11,7 @@ suppressMessages({
 library(rhdf5)
 library(yaml)
 library(tidyverse)
+library(sleuth)
 })
 lgr$info("Done.")
 
