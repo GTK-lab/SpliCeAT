@@ -1,5 +1,11 @@
 # Differential splicing detection
 
+**Use:** Performs differential splicing detection (using Majiq, Whippet & Leafcutter) between control & treatment RNA-seq samples
+
+**Input:** Aligned and indexed RNA-seq BAM files, gene annotations
+
+**Output:** List of differential splicing events between control & treatment
+
 ## Packages required
 Click on the links for installation instructions. (In brackets are versions used when run by the author)
 - [python](https://www.python.org/downloads/) (3.9.16)
