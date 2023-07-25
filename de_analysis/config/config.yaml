@@ -1,4 +1,7 @@
 BASE_PATH: /mnt/cbis/home/yongshan/SpliCeAT
+
+# for forward strand: "fr-stranded", for reverse strand: "rf-stranded"
 STRAND: "rf-stranded"
+
 BOOTSTRAPS: 100
 N_THREADS: 4
