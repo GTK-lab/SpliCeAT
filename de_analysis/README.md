@@ -86,7 +86,7 @@ snakemake -np
 ```
 to check the parameters of the run. Once ready to run, execute
 ```
-snakemake --cores 12
+snakemake --cores 24
 ```
 
 ## Output files
