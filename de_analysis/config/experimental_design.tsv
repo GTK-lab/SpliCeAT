@@ -1,9 +1,9 @@
-sample	gender	condition	path
-CTX_120	M	ctr	/mnt/cbis/home/yongshan/collapse_transcript_test/tdp43_nestin_ctx_e14/CTX_120/abundance.h5
-CTX_125	M	ctr	/mnt/cbis/home/yongshan/collapse_transcript_test/tdp43_nestin_ctx_e14/CTX_125/abundance.h5
-CTX_147	F	ctr	/mnt/cbis/home/yongshan/collapse_transcript_test/tdp43_nestin_ctx_e14/CTX_147/abundance.h5
-CTX_148	F	ctr	/mnt/cbis/home/yongshan/collapse_transcript_test/tdp43_nestin_ctx_e14/CTX_148/abundance.h5
-CTX_104	M	trtment	/mnt/cbis/home/yongshan/collapse_transcript_test/tdp43_nestin_ctx_e14/CTX_104/abundance.h5
-CTX_108	F	trtment	/mnt/cbis/home/yongshan/collapse_transcript_test/tdp43_nestin_ctx_e14/CTX_108/abundance.h5
-CTX_128	M	trtment	/mnt/cbis/home/yongshan/collapse_transcript_test/tdp43_nestin_ctx_e14/CTX_128/abundance.h5
-CTX_154	F	trtment	/mnt/cbis/home/yongshan/collapse_transcript_test/tdp43_nestin_ctx_e14/CTX_154/abundance.h5
+sample	gender	condition
+CTX_120	M	ctr
+CTX_125	M	ctr
+CTX_147	F	ctr
+CTX_148	F	ctr
+CTX_104	M	trtment
+CTX_108	F	trtment
+CTX_128	M	trtment
+CTX_154	F	trtment
