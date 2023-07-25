@@ -2,11 +2,13 @@ rule sleuth:
     input:
         config["BASE_PATH"]+"/de_analysis/results/kallisto_quant_out/{sample_name}/abundance.tsv"
     output:
-        config["BASE_PATH"]+"/de_analysis/results/kallisto_quant_out/differential_transcript_expression_analysis_uncollapsed.csv",
-        config["BASE_PATH"]+"/de_analysis/results/kallisto_quant_out/differential_transcript_expression_analysis_collapsed.csv"
+        config["BASE_PATH"]+"/de_analysis/results/sleuth/collapsed_differential_transcript_analysis_tpm.csv",
+        config["BASE_PATH"]+"/de_analysis/results/sleuth/collapsed_differential_transcript_analysis.csv",
+        config["BASE_PATH"]+"/de_analysis/results/sleuth/uncollapsed_differential_transcript_analysis_tpm.csv",
+        config["BASE_PATH"]+"/de_analysis/results/sleuth/uncollapsed_differential_transcript_analysis.csv"
     params:
         script=config["BASE_PATH"]+"/de_analysis/scripts/sleuth.R"
     threads:
-        4
+        12
     shell:
         "Rscript {params.script}"
