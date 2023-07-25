@@ -12,7 +12,6 @@ library(rhdf5)
 })
 lgr$info("Done.")
 
-# load in config containing file paths and other params
 lgr$info("Reading config.yaml...")
 config <- read_yaml(config_file_path)
 lgr$info("Done.")
@@ -39,7 +38,7 @@ t2g_augment_collapsed <- read.csv(paste(config$BASE_PATH,"/augment_transcriptome
 lgr$info("==== Begin Analysis 1: NO collapsing ====")
 
 lgr$info("Configuring experimental design...")
-# configuring experimental design
+
 sample_ids <- dir(file.path(paste(config$BASE_PATH, "/de_analysis/results/kallisto_quant_out", sep="")))
 lgr$info("Check that your samples are correct:")
 sample_id
