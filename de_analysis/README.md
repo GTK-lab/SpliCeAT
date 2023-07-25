@@ -1,4 +1,4 @@
-![image](https://github.com/ys-lim/SpliCeAT/assets/68455070/0d3f7f64-1bc7-41bd-a391-923a4ca461e5)# Differential expression analysis
+# Differential expression analysis
 
 **Use:** Performs differential transcript expression analysis using augmented transcriptome (generated in previous [step](https://github.com/ys-lim/SpliCeAT/tree/main/augment_transcriptome))
 
