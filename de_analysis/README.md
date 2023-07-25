@@ -4,7 +4,7 @@
 
 **Input:** kallisto index of the augmented transcriptome & sample FASTQ files
 
-**Output:** List of differentially expressed transcripts (in both uncollapsed and collapsed t2g versions)
+**Output:** List of differentially expressed transcripts (for both uncollapsed and collapsed transcripts versions)
 
 ## Packages required
 Click on the links for installation instructions. (In brackets are versions used when run by the author)
