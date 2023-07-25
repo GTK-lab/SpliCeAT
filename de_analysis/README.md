@@ -30,19 +30,9 @@ results
 The subsequent analysis will be carried out in 2 parts: (1) Quantification of transcripts against the augmented transcriptome, and (2) Differential transcript expression analysis. 
 
 ## Setting up
-1. Open the `samples.tsv` in the `config` folder and change to your sample names accordingly:
-```
-sample
-CTX_120
-CTX_125
-CTX_147
-CTX_148
-CTX_104
-CTX_108
-CTX_128
-CTX_154
-```
+1. Open the `samples.tsv` and `experimental_design.tsv` in the `config` folder and change to your sample names, paths and conditions accordingly. It is important to adhere to the column names:
 
+`samples.tsv`:
 |sample_name|fastq1|fastq2|fastqdir|
 |:----|:----|:----|:----|
 |CTX_120|CTX_120_1.fq.gz|CTX_120_2.fq.gz|/mnt/gtklab01/linglab/tdp43/fastq/|
@@ -53,3 +43,92 @@ CTX_154
 |CTX_108|CTX_108_1.fq.gz|CTX_108_2.fq.gz|/mnt/gtklab01/linglab/tdp43/fastq/|
 |CTX_128|CTX_128_1.fq.gz|CTX_128_2.fq.gz|/mnt/gtklab01/linglab/tdp43/fastq/|
 |CTX_154|CTX_154_1.fq.gz|CTX_154_2.fq.gz|/mnt/gtklab01/linglab/tdp43/fastq/|
+
+`experimental_design.tsv`:
+|sample|gender|condition|
+|:----|:----|:----|
+|CTX_120|M|ctr|
+|CTX_125|M|ctr|
+|CTX_147|F|ctr|
+|CTX_148|F|ctr|
+|CTX_104|M|trtment|
+|CTX_108|F|trtment|
+|CTX_128|M|trtment|
+|CTX_154|F|trtment|
+
+2. Open `config.yaml` and change the following paths:
+```
+BASE_PATH: /mnt/cbis/home/yongshan/SpliCeAT
+STRAND: "rf-stranded"
+BOOTSTRAPS: 100
+N_THREADS: 4
+```
+
+3. Open up `sleuth.R` in the `scripts` folder & the `Snakefile` in `workflow` and change the first line to point to your config file location:
+
+`sleuth.R`:
+```
+#### CHANGE THIS ####
+config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/de_analysis/config/config.yaml"
+####################
+...
+```
+`Snakefile`:
+```
+configfile: "/mnt/cbis/home/yongshan/SpliCeAT/de_analysis/config/config.yaml"
+...
+```
+
+## Running Snakemake
+Once the above files are configured correctly, execute a Snakemake dry run with
+```
+snakemake -np
+```
+to check the parameters of the run. Once ready to run, execute
+```
+snakemake --cores 12
+```
+
+## Output files
+You should see the following files in the `results` folder:
+```
+results
+├── kallisto_quant_out
+│   ├── <sample1>
+│   │   ├── abundance.h5
+│   │   ├── abundance.tsv
+│   │   └── run_info.json
+│   ├── <sample2>
+│   │   ├── abundance.h5
+│   │   ├── abundance.tsv
+│   │   └── run_info.json
+│   ├── <sample3>
+│   │   ├── abundance.h5
+│   │   ├── abundance.tsv
+│   │   └── run_info.json
+│   ├── <sample4>
+│   │   ├── abundance.h5
+│   │   ├── abundance.tsv
+│   │   └── run_info.json
+│   ├── <sample5>
+│   │   ├── abundance.h5
+│   │   ├── abundance.tsv
+│   │   └── run_info.json
+│   ├── <sample6>
+│   │   ├── abundance.h5
+│   │   ├── abundance.tsv
+│   │   └── run_info.json
+│   ├── <sample7>
+│   │   ├── abundance.h5
+│   │   ├── abundance.tsv
+│   │   └── run_info.json
+│   └── <sample8>
+│       ├── abundance.h5
+│       ├── abundance.tsv
+│       └── run_info.json
+└── sleuth
+    ├── collapsed_differential_transcript_analysis.csv
+    ├── collapsed_differential_transcript_analysis_tpm.csv
+    ├── uncollapsed_differential_transcript_analysis.csv
+    └── uncollapsed_differential_transcript_analysis_tpm.csv
+```
