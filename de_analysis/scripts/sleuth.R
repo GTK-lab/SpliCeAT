@@ -20,6 +20,7 @@ lgr$info("Done.")
 
 # configuring h5 files to get rid of trailing transcript info - required if using Gencode annotations.
 # If using Ensembl annotations, skip this part
+lgr$info("Configuring h5 files to get rid of trailing transcript info...")
 files <- list.files(paste(config$BASE_PATH, "/de_analysis/results/kallisto_quant_out/", sep=""), 
                     pattern=".h5", 
                     recursive=TRUE, 
