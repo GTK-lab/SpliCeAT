@@ -1,7 +1,4 @@
 BASE_PATH: /mnt/cbis/home/yongshan/SpliCeAT
-samples: /mnt/cbis/home/yongshan/SpliCeAT/de_analysis/config/samples.tsv
-INDEX: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/results/augmented_transcriptome/kallisto_index_augmented_transcriptome
-OUT_FILE: /mnt/cbis/home/yongshan/SpliCeAT/de_analysis/kallisto_quant_out/{sample_name}
 STRAND: "rf-stranded"
 BOOTSTRAPS: 100
 N_THREADS: 4
