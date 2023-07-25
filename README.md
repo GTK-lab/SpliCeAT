@@ -4,7 +4,7 @@
 
 # SpliCeAT: Integrated pipeline for detection and quantification of aberrant transcripts with novel splicing events
 
-This repository contains the following Snakemake pipelines and scripts [^1], to be run in this order:
+This repository contains the following Snakemake pipelines and scripts, to be run in this order:
 1. Differential splicing detection (`ds_detection`)
 2. Generation of augmented transcriptome (`augment_transcriptome`)
 3. Differential expression analysis (`de_analysis`)
@@ -15,7 +15,7 @@ This repository contains the following Snakemake pipelines and scripts [^1], to 
 
 ### What you need *before* starting:
 - FASTQ sample files of 2 conditions (control & treatment)
-- Aligned BAM files using STAR, indexed using samtools
+- Aligned BAM files using STAR, indexed using samtools [^1]
 - Gene annotation (GTF & GFF3) in GENCODE format
 
 Download the respective gene annotations and genome files for the species of interest and place them into a location of your choice:
