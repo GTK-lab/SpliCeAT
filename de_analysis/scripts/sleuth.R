@@ -42,7 +42,7 @@ lgr$info("Configuring experimental design...")
 
 sample_ids <- dir(file.path(paste(config$BASE_PATH, "/de_analysis/results/kallisto_quant_out", sep="")))
 lgr$info("Check that your samples are correct:")
-sample_id
+sample_ids
 
 kal_dirs <- file.path(paste(config$BASE_PATH, "/de_analysis/results/kallisto_quant_out", sep=""), sample_ids, "abundance.h5")
 lgr$info("Check that your h5 file paths are correct:")
