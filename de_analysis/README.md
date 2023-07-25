@@ -1,4 +1,4 @@
-# Differential expression analysis
+![image](https://github.com/ys-lim/SpliCeAT/assets/68455070/0d3f7f64-1bc7-41bd-a391-923a4ca461e5)# Differential expression analysis
 
 **Use:** Performs differential transcript expression analysis using augmented transcriptome (generated in previous [step](https://github.com/ys-lim/SpliCeAT/tree/main/augment_transcriptome))
 
@@ -132,3 +132,15 @@ results
     ├── uncollapsed_differential_transcript_analysis.csv
     └── uncollapsed_differential_transcript_analysis_tpm.csv
 ```
+The differential transcript expression analysis results are found in `collapsed_differential_transcript_analysis.csv` and `uncollapsed_differential_transcript_analysis.csv`. 
+
+Normal differential transcript expression without collapsing:
+<p align="left">
+  <img src="../images/sleuth_results_uncollapsed.png">
+</p>
+
+Results after collapsing transcripts:
+<p align="left">
+  <img src="../images/sleuth_results_collapsed.png">
+</p>
+
