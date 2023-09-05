@@ -18,6 +18,10 @@ fq_dir <- "/mnt/gtklab01/linglab/tdp43/fastq/"
 # set your own experiment name
 experiment_name <- "tdp43_nestin_ctx_e14" 
 
+# declare your pairwise experimental conditions: default is control & treatment, must match the design.csv
+condition_1 <- "control"
+condition_2 <- "treatment"
+
 # path of annotation gff3 file
 gff3_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gff3" 
 
@@ -90,6 +94,8 @@ sink()
 # majiq files
 
 design$sample_alignment <- paste(design$sample, "_Aligned.sortedByCoord.out", sep="")
+design_condition_1 <- filter(design, design == condition_1)
+design_condition_2 <- filter(design, design == condition_2)
 
 # conf file
 sink(paste("./config/",experiment_name,"_conf.txt",sep=""))
@@ -103,7 +109,9 @@ cat(paste("strandness=",unique(design$strand),sep=""))
 cat("\n")
 cat("[experiments]")
 cat("\n")
-cat(paste(experiment_name,"=",paste(design$sample_alignment,collapse=","),sep=""))
+cat(paste(condition_1,"=",paste(design_condition_1$sample_alignment,collapse=","),sep=""))
+cat("\n")
+cat(paste(condition_2,"=",paste(design_condition_2$sample_alignment,collapse=","),sep=""))
 sink()
 
 # confs file
