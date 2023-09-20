@@ -56,10 +56,11 @@ You may obtain the annotation files from Gencode ([mouse](https://www.gencodegen
 3. Open the `prep.R` file and change the following parameters to suit your experimental design:
 
 ```
+############################################### change these ##################################################
 # differential splicing detection directory
 setwd("/mnt/cbis/home/yongshan/SpliCeAT/ds_detection") 
 
-# experimental design csv file - dont need to change if design.csv is in input directory
+# experimental design csv file - not required to change if design.csv is in input directory
 design <- read.csv("./input/design.csv") 
 
 # directory containing your bam alignment files
@@ -70,6 +71,10 @@ fq_dir <- "/mnt/gtklab01/linglab/tdp43/fastq/"
 
 # set your own experiment name
 experiment_name <- "tdp43_nestin_ctx_e14" 
+
+# declare your pairwise experimental conditions: default is control & treatment, must match the design.csv
+condition_1 <- "control"
+condition_2 <- "treatment"
 
 # path of annotation gff3 file
 gff3_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gff3" 
@@ -91,6 +96,7 @@ regtools_strand <- "1"
 
 # directory of leafcutter installation
 leafcutter_dir <- "/mnt/cbis/home/yongshan/leafcutter/" 
+###############################################################################################################
 ```
 
 4. Open the `Snakefile` in `workflow` and change the first line to point to your config file location:
