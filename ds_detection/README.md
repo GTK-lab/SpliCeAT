@@ -10,7 +10,7 @@
 Click on the links for installation instructions. (In brackets are versions used when run by the author)
 - [python](https://www.python.org/downloads/) (3.9.16)
 - [R](https://cran.rstudio.com/) (4.2.2)
-- [julia](https://julialang.org/downloads/) (1.7.2)
+- [julia](https://julialang.org/downloads/) (1.7.2, Whippet only works with julia version < 1.9)
 - [majiq/voila](https://majiq.biociphers.org/app_download/) (2.4.dev3+g85d07819)
 - [whippet](https://github.com/timbitz/Whippet.jl#1-install) (1.6.1)
 - [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) (6.8.1)
