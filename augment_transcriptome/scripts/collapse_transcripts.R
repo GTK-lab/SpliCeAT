@@ -3,6 +3,7 @@
 
 #### CHANGE THIS ####
 config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
+organism <- "mouse" # change to "human" if needed
 ####################
 
 library(lgr)
@@ -49,10 +50,17 @@ t2g_augment <- unique(t2g_augment)
 colnames(t2g_augment) <- c("target_id","ens_gene")
 
 lgr$info("Getting ensembl annotations...")
+
 # load in normal t2g
-ensembl <- useEnsembl(biomart = 'genes', 
+if (organism == "mouse"){
+  ensembl <- useEnsembl(biomart = 'genes', 
                          dataset = 'mmusculus_gene_ensembl',
                          version = config$mouse_ensembl_version)
+} else if (organism == "human") {
+  ensembl <- useEnsembl(biomart = "genes", 
+                        dataset = "hsapiens_gene_ensembl",
+                        version = config$hsapiens_ensembl_version)
+}
 
 t2g <- getBM(attributes = c("ensembl_transcript_id_version", "ensembl_gene_id_version",
                             "external_gene_name"),mart = ensembl)
@@ -75,7 +83,8 @@ write.csv(t2g_augment, file=paste(config$BASE_PATH,"results/augmented_transcript
 lgr$info("Uncollapsed t2g dataframe saved at: %s", paste(config$BASE_PATH,"results/augmented_transcriptome/t2g_augment_uncollapsed.csv",sep=""))
 
 # function for collaspsing transcripts to create tx to tx group
-collapse_transcripts <- function(row){
+if (organism == "mouse"){
+  collapse_transcripts <- function(row){
   if (grepl("ENSMUST",row[["target_id"]])){
     row[["target_id"]]
   } else {
@@ -83,6 +92,16 @@ collapse_transcripts <- function(row){
     paste(s[[1]],".",s[[2]],".","NovelGroup",sep="")
   }
 }
+  } else if (organism == "human") {
+  collapse_transcripts <- function(row){
+  if (grepl("ENST",row[["target_id"]])){
+    row[["target_id"]]
+  } else {
+    s <- strsplit(row[["target_id"]], ".", fixed = TRUE)[[1]]
+    paste(s[[1]],".",s[[2]],".","NovelGroup",sep="")
+  }
+}
+  }
 
 t2g_augment$collapsed_target_id <- apply(t2g_augment,1,collapse_transcripts)
 # remove duplicated target_id entries becos there can be overlapping genes
