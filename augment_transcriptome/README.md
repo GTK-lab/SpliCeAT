@@ -57,19 +57,21 @@ STRINGTIE_COMMAND: /mnt/cbis/home/yongshan/stringtie-2.2.1.Linux_x86_64/stringti
 GTF: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf
 STRINGTIE_THREADS: 4
 
-# minimum junction coverage for Stringtie assembly:
+# minimum junction coverage for Stringtie assembly
 JUNCS_CUTOFF: 20 
 
-# --rf : assume stranded library fr-firststrand; --fr : assume stranded library fr-secondstrand:
+# --rf : assume stranded library fr-firststrand; --fr : assume stranded library fr-secondstrand
 STRAND: rf
 
-# alignments directory should contain all sample BAM & BAI files:
+# alignments directory should contain all sample BAM & BAI files
 ALIGNMENTS_DIR: /mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/
 
 ###################
 # MASTERLISTS PREP
 ###################
+# depending on mouse or human, change ensembl version accordingly. Ignore the other ensembl version if not being used.
 mouse_ensembl_version: 106
+hsapiens_ensembl_version: 106
 majiq_lsv_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/majiq_delta_psi/tdp43_nestin_ctx_e14/lsvs.txt
 leafcutter_cluster_sig_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/tdp43_nestin_ctx_e14_cluster_significance.txt
 leafcutter_effect_size_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/tdp43_nestin_ctx_e14_effect_sizes.txt
