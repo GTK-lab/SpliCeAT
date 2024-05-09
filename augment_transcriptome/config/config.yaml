@@ -21,7 +21,9 @@ ALIGNMENTS_DIR: /mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/
 ###################
 # MASTERLISTS PREP
 ###################
+# depending on mouse or human, change ensembl version accordingly. Ignore the other ensembl version if not being used.
 mouse_ensembl_version: 106
+hsapiens_ensembl_version: 106
 majiq_lsv_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/majiq_delta_psi/tdp43_nestin_ctx_e14/lsvs.txt
 leafcutter_cluster_sig_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/tdp43_nestin_ctx_e14_cluster_significance.txt
 leafcutter_effect_size_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/tdp43_nestin_ctx_e14_effect_sizes.txt
