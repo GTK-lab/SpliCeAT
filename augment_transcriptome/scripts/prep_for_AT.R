@@ -1,5 +1,6 @@
 #### CHANGE THIS ####
 config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
+organism <- "mouse" # change to "human" if needed
 ####################
 
 library(lgr)
@@ -37,9 +38,15 @@ lgr$info("MASTERLISTS PREP")
 # MAJIQ
 lgr$info("Getting Ensembl annotations...")
 
-ensembl <- useEnsembl(biomart = "genes",
-                      dataset = "mmusculus_gene_ensembl",
-                      version = config$mouse_ensembl_version)
+if (organism == "mouse"){
+  ensembl <- useEnsembl(biomart = 'genes', 
+                         dataset = 'mmusculus_gene_ensembl',
+                         version = config$mouse_ensembl_version)
+} else if (organism == "human") {
+  ensembl <- useEnsembl(biomart = "genes", 
+                        dataset = "hsapiens_gene_ensembl",
+                        version = config$hsapiens_ensembl_version)
+}
 
 annotations <- getBM(attributes = c('ensembl_gene_id',"external_gene_name",'description', 'chromosome_name',
                                     'start_position', 'end_position', 'strand'), mart = ensembl)
@@ -220,7 +227,12 @@ gtf_subset <- gtf_full[(elementMetadata(gtf_full)[,"transcript_id"] %in% novel_t
 rtracklayer::export(gtf_subset,paste(config$BASE_PATH,"results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf",sep=""))
 
 # the full gtf with reference transcripts, plus the novel transcripts that we have filtered
-ref_tx <- gtf_full[grepl("ENSMUST",(elementMetadata(gtf_full)[,"transcript_id"]))]
+if (organism == "mouse"){
+  ref_tx <- gtf_full[grepl("ENSMUST",(elementMetadata(gtf_full)[,"transcript_id"]))]
+} else if (organism == "human"){
+  ref_tx <- gtf_full[grepl("ENST",(elementMetadata(gtf_full)[,"transcript_id"]))]
+}
+
 ref_tx <- as.data.frame(ref_tx)
 gtf_subset <- as.data.frame(gtf_subset)
 filtered_gtf <- rbind(ref_tx,gtf_subset)
