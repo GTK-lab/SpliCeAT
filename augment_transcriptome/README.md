@@ -92,6 +92,7 @@ transcripts_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29
 ```
 #### CHANGE THIS ####
 config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
+organism <- "mouse" # change to "human" if needed
 ####################
 ...
 ```
