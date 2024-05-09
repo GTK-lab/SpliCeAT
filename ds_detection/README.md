@@ -48,10 +48,10 @@ Python packages:
 2. Download the respective gene annotations and genome files for the species of interest and place them into a location of your choice:
 
 - A `GFF3` gene annotation file  (e.g. `gencode.vM29.primary_assembly.annotation.gff3`).  Unzip the file using `gunzip` tool.
-- A `GTF` gene annotation file (e.g. `gencode.vM29.primary_assembly.annotation.gtf.gz`).
-- A `FASTA` genome file (e.g. `GRCm39.primary_assembly.genome.fa.gz`).
+- A `GTF` .gz gene annotation file (e.g. `gencode.vM29.primary_assembly.annotation.gtf.gz`).
+- A `FASTA` .gz genome file (e.g. `GRCm39.primary_assembly.genome.fa.gz`).
 
-You may obtain the annotation files from Gencode ([mouse](https://www.gencodegenes.org/mouse/)).
+Note that both the `.gtf` and `.fa` files need to be in `.gz` format (i.e. `.gtf.gz` and `.fa.gz`). You may obtain the annotation files from Gencode ([mouse](https://www.gencodegenes.org/mouse/)).
 
 3. Open the `prep.R` file and change the following parameters to suit your experimental design:
 
