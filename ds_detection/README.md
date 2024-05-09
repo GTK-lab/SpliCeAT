@@ -48,8 +48,8 @@ Python packages:
 2. Download the respective gene annotations and genome files for the species of interest and place them into a location of your choice:
 
 - A `GFF3` gene annotation file  (e.g. `gencode.vM29.primary_assembly.annotation.gff3`).  Unzip the file using `gunzip` tool.
-- A `GTF` .gz gene annotation file (e.g. `gencode.vM29.primary_assembly.annotation.gtf.gz`).
-- A `FASTA` .gz genome file (e.g. `GRCm39.primary_assembly.genome.fa.gz`).
+- A `GTF` gene annotation file in `.gz` format (e.g. `gencode.vM29.primary_assembly.annotation.gtf.gz`).
+- A `FASTA` .gz genome file in `.gz` format (e.g. `GRCm39.primary_assembly.genome.fa.gz`).
 
 Note that both the `.gtf` and `.fa` files need to be in `.gz` format (i.e. `.gtf.gz` and `.fa.gz`). You may obtain the annotation files from Gencode ([mouse](https://www.gencodegenes.org/mouse/)).
 
