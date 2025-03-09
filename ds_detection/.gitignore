@@ -1,0 +1,6 @@
+resources/
+results/
+logs/
+config/leafcutter/
+config/majiq/
+notes.md

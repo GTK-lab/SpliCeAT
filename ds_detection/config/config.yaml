@@ -14,7 +14,7 @@ experiment:
   groups: [ "control", "treated" ] 
 
 
-samples: "input/samples.tsv"
+samples: "input/design.tsv"
 
 
 leafcutter:
