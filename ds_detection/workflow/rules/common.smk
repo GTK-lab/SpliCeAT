@@ -1,85 +1,99 @@
+from snakemake.utils import validate
 import pandas as pd
+import yaml
+from pathlib import Path
 
-experimental_design_majiq = pd.read_table(config["confs"]).set_index("experiment", drop=False)
-samples_majiq = pd.read_table(config["delta_psi_samples"]).set_index("experiment", drop=False)
-experiment_samples_majiq = pd.read_table(config["experiment_sample_names"]).set_index("experiment", drop=False)
-EXPERIMENTS_majiq = experimental_design_majiq["experiment"].tolist()
-SAMPLE_NAMES_majiq = experiment_samples_majiq["experiment"].tolist()
+#validate(config, schema="../schemas/config.schema.yaml")
 
-def get_conf_file(wildcards):
-    return{
-        experimental_design_majiq.loc[wildcards.experiment, "conf_path"]
-    }
-	
-def delta_psi_grp1(wildcards):
-    string = samples_majiq.loc[wildcards.experiment, "grp1"]
-    string_list = string.split()
-    new_string_list = []
-    for i in string_list:
-        new_i = samples_majiq.loc[wildcards.experiment, "dir"]+i+".majiq"
-        new_string_list.append(new_i)
-    return new_string_list
+sample_file = pd.read_csv(config["samples"], sep="\t", dtype=str, comment="#")
+annot = sample_file.set_index("sample_name")
+annot['bam_dirs']= [str(f.parent) for f in [ Path(f) for f in annot['bam_file'] ]]
+annot['bam_stem'] = [str(f.stem) for f in [ Path(f) for f in annot['bam_file'] ]]  # .stem removes the extension
 
-def delta_psi_grp2(wildcards):
-  string = samples_majiq.loc[wildcards.experiment, "grp2"]
-  string_list = string.split()
-  new_string_list = []
-  for i in string_list:
-      new_i = samples_majiq.loc[wildcards.experiment, "dir"]+i+".majiq"
-      new_string_list.append(new_i)
-  return new_string_list
-  
-  
-samples_leafcutter = pd.read_table(config["samples_leafcutter_tsv"]).set_index("sample", drop=False)
-juncs_leafcutter = pd.read_table(config["juncs_file"]).set_index("experiment", drop=False)
-output_junc_leafcutter = pd.read_table(config["output_juncs"]).set_index("experiment", drop=False)
-SAMPLES_leafcutter = samples_leafcutter["sample"].tolist()
-EXPERIMENTS_leafcutter = juncs_leafcutter["experiment"].tolist()
+leafcutter_grouppath = Path('config/leafcutter/groups.tsv')  
+leafcutter_grouppath.parent.mkdir(parents=True, exist_ok=True)
+
+sample_file.to_csv(leafcutter_grouppath,sep="\t",header=False,columns=["sample_name","group"],index=False)
+
+# convert annot into dictionary for parametrization of rules, by deduplicating by sample_name (should only differ by bam_file)
+samples = annot.to_dict(orient="index")
+
+bam_files = list(annot['bam_file'])
+
+def get_group(wildcards):
+    return annot.loc[wildcards.sample, "group"]
+
+def sample_for_group(group):
+    return list(annot[annot['group'] == group].index)
 
 def get_bam(wildcards):
-    output = config["bam_dir"]+samples_leafcutter.loc[wildcards.sample, "bam"]
-    return output
+    return annot.loc[wildcards.sample, "bam_file"]
 
-def get_junc(wildcards):
-    return config["BASE_PATH"]+"/config/"+juncs_leafcutter.loc[wildcards.experiment,"juncs_file"]
-	
-def get_output_junc(wildcards):
-    return config["BASE_PATH"]+"/results/"+output_junc_leafcutter.loc[wildcards.experiment,"junction_files"]
+def get_fq1(wildcards):
+    return annot.loc[wildcards.sample, "fq1"]
 
+def get_fq2(wildcards):
+    return annot.loc[wildcards.sample, "fq2"]
 
-samples_whippet = pd.read_table(config["samples_whippet_tsv"]).set_index("experiment", drop=False)
-fastq_whippet = pd.read_table(config["fastq_tsv"]).set_index("sample", drop=False)
-EXPERIMENTS_whippet = samples_whippet["experiment"].tolist()
-SAMPLES_whippet = fastq_whippet["sample"].tolist()
-delta_whippet = pd.read_table(config["delta_tsv"]).set_index("experiment", drop=False)
-delta_input_tsv_whippet = pd.read_table(config["delta_input_tsv"]).set_index("experiment", drop=False)
+def get_bam_stem(wildcards):
+    return annot.loc[wildcards.sample, "bam_stem"]
 
-def samtools_input(wildcards):
-    string = samples_whippet.loc[wildcards.experiment, "treatment"]
-    string_list = string.split()
-    new_string_list = []
-    for i in string_list:
-        new_i = samples_whippet.loc[wildcards.experiment, "dir"]+i
-        new_string_list.append(new_i)
-    return new_string_list
-	
-def get_fastq(wildcards):
-    fq1 = fastq_whippet.loc[wildcards.sample, "dir"]+fastq_whippet.loc[wildcards.sample, "fq1"]
-    fq2 = fastq_whippet.loc[wildcards.sample, "dir"]+fastq_whippet.loc[wildcards.sample, "fq2"]
-    return [fq1,fq2]
-	
-def experiment_sample(wildcards):
-    output = config["BASE_PATH"]+"/results/quantify/"+fastq_whippet.loc[wildcards.experiment, "experiment"]+"/"+fastq_whippet.loc[wildcards.experiment, "sample"]+"/"+fastq_whippet.loc[wildcards.experiment, "sample"]
-    return output
-	
-def get_index(wildcards):
-    return fastq_whippet.loc[wildcards.sample, "index_dir"]
-	
-def grp1(wildcards):
-    return delta_whippet.loc[wildcards.experiment, "grp1"]
-	
-def grp2(wildcards):
-    return delta_whippet.loc[wildcards.experiment, "grp2"]
-	
-def delta_input(wildcards):
-    return delta_input_tsv_whippet.loc[wildcards.experiment, "psi_gz"]
+def genome_release_name():
+    build = config["ref"]["build"]
+    release = config["ref"]["release"]
+    flavor = config["ref"]["flavor"]
+    if flavor:
+        release += "_"
+    return f"{build}_{release}{flavor}"
+
+def gtf_file_path(filtered=False,gz=True):
+    gz_str = ".gz" if gz else ""
+    filt_str = "_filtered" if filtered else ""
+    top_dir = "results" if filtered else "resources"    
+    return f"{top_dir}/{genome_release_name()}{filt_str}.gtf{gz_str}"
+    
+def gff3_file_path(filtered=False,gz=True):
+    gz_str = ".gz" if gz else ""
+    filt_str = "_filtered" if filtered else ""
+    top_dir = "results" if filtered else "resources"
+    return f"{top_dir}/{genome_release_name()}{filt_str}.gff3{gz_str}"
+    
+def annotation_db_path():
+    return f"resources/{genome_release_name()}.sqlite3"
+
+def genome_file_path(gz=True):
+    gz_str = ".gz" if gz else ""
+    return f"resources/{genome_release_name()}.fa{gz_str}"
+    
+def leafcutter_output():
+    if config['leafcutter']['activate']:
+        return rules.leafcutter.output
+
+def majiq_output():
+    if config['majiq']['activate']:
+        return rules.majiq.output
+
+import configparser
+
+def majiq_files(group):
+    majiq_config = configparser.ConfigParser()
+    majiq_config.read("config/majiq/majiq.ini")
+    stems = majiq_config.get('experiments',group).split(",")
+    files = [f"results/majiq/{f}.majiq" for f in stems]
+    return files
+    
+
+def whippet_output():
+    if config['whippet']['activate']:
+        return rules.whippet.output
+
+def leafcutter_strandedness(strandedness=config["experiment"]["strandedness"]):
+    lookup = {
+        "rf": "RF",
+        "reverse": "RF",
+        "forward": "FR",
+        "fr": "FR",
+        "unstranded": "XS",
+        "yes": "FR"
+    }
+    return lookup[strandedness]
