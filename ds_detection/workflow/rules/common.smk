@@ -67,7 +67,7 @@ def genome_file_path(gz=True):
     
 def leafcutter_output():
     if config['leafcutter']['activate']:
-        return rules.leafcutter.output
+        return rules.leafcutter_differential_splicing.output
 
 def majiq_output():
     if config['majiq']['activate']:
