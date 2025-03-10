@@ -76,9 +76,7 @@ def majiq_output():
 import configparser
 
 def majiq_files(group):
-    majiq_config = configparser.ConfigParser()
-    majiq_config.read("config/majiq/majiq.ini")
-    stems = majiq_config.get('experiments',group).split(",")
+    stems = sample_for_group(group)
     files = [f"results/majiq/{f}.majiq" for f in stems]
     return files
     

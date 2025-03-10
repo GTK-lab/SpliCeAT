@@ -24,6 +24,8 @@ rule majiq:
         "touch {output}"
 
 rule majiq_conf:
+    input:
+        config['samples'],
     log:
         "logs/majiq/build_ini.log",
     output:
