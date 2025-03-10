@@ -17,9 +17,9 @@ rule leafcutter_exons:
 
 rule regtools_junction_extract:
     input:
-        lambda wildcards: get_bam(wildcards)
+        get_bam,
     output:
-        "results/regtools/{sample}.junc"
+        "results/regtools/{sample}.junc",
     container:
         "docker://griffithlab/regtools:release-1.0.0"
     conda:
@@ -82,6 +82,7 @@ rule leafcutter_differential_splicing:
     threads:
         4
     shell:
+        "unset R_LIBS_USER; "
         "leafcutter_ds.R --num_threads={threads} -e {input.exons} -i 1 -g 3 {input.counts} {params.groups_file} -o {params.prefix} 2>{log} 1>&2;"
         "mv {params.prefix}_cluster_significance.txt {output.signif};"
         "mv {params.prefix}_effect_sizes.txt {output.effect_size}" 

@@ -68,14 +68,13 @@ rule whippet_quantify:
     output:
         "results/whippet/quant/{sample}.psi.gz",
     params:
-        #out= "results/whippet/quant/"
-        out = lambda w, output: os.path.splitext(output[0])[0]
+        out = lambda w, output: output[0].removesuffix(".psi.gz")
     log:
         "logs/whippet/{sample}_quant.log",
     conda:
         "../envs/whippet.yaml",
     shell:
-        "echo julia ${{WHIPPET_PATH}}/whippet-quant.jl -o {params.out} -x {input.index} {input.fq1} {input.fq2} 2>{log}"
+        "julia ${{WHIPPET_PATH}}/whippet-quant.jl -o {params.out} -x {input.index} {input.fq1} {input.fq2} 2>{log}"
 
 
 rule whippet_delta:

@@ -2,9 +2,24 @@
 
 **Use:** Performs differential splicing detection (using Majiq, Whippet & Leafcutter) between control & treatment RNA-seq samples
 
-**Input:** Aligned and indexed RNA-seq BAM files, gene annotations
+**Input:** Aligned and indexed RNA-seq BAM files, along with fastq files for each BAM file
 
 **Output:** List of differential splicing events between control & treatment
+
+## Experiment design file
+
+An example experiment design file is in `input/design.tsv`. Each sample must specify a BAM file and paired fastq files. As the pipeline supports a pairwise comparison, the `group` column should specify two groups (e.g., control and treatment).
+
+## Configuration
+
+An example configuration file is provided in `config/config.yaml`. Each of the three underlying tools can be skipped (by specifying `activate: False`). In addition, in order to run majiq you must provide the location of a valid majiq license file.
+
+## Recommendation: Use conda
+
+The workflow is configured to use conda, which should download and configure all of the needed environments. If you are using Snakemake > 4.8.0, then you can run the workflow in a combination of conda and conainers as described in [Ad-hoc combination of Conda package management with containers](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#ad-hoc-combination-of-conda-package-management-with-containers)
+
+
+## Running locally. 
 
 ## Packages required
 Click on the links for installation instructions. (In brackets are versions used when run by the author)

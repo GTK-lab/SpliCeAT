@@ -29,7 +29,7 @@ rule majiq_conf:
     output:
         "config/majiq/majiq.ini"
     conda:
-        "../envs/base.yaml"
+        "../envs/pandas.yaml"
     script:
         "../scripts/build_majiq_ini.py"
 
@@ -42,9 +42,9 @@ rule majiq_build:
     params:
         license=config["majiq"]["license"],
     output:
-        "results/majiq/splicegraph.sql",
-        majiq_sj_files,
-        majiq_majiq_files
+        temp("results/majiq/splicegraph.sql"),
+        temp(majiq_sj_files),
+        temp(majiq_majiq_files)
     log:
         "logs/majiq/majiq_build.log",
     conda:
@@ -82,4 +82,4 @@ rule majiq_delta_psi:
         "majiq --license {params.license} deltapsi "
         "-grp1 {params.grp1} -grp2 {params.grp2} "
         "--logger {log} "
-        "-j {threads} -o {params.output_dir} -n {params.names}"
+        "-j {threads} -o {params.output_dir} -n {params.names} > /dev/null 2> {log}.err"
