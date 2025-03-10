@@ -1,5 +1,6 @@
 from snakemake.utils import validate
 import pandas as pd
+
 import yaml
 from pathlib import Path
 
@@ -10,7 +11,7 @@ annot = sample_file.set_index("sample_name")
 annot['bam_dirs']= [str(f.parent) for f in [ Path(f) for f in annot['bam_file'] ]]
 annot['bam_stem'] = [str(f.stem) for f in [ Path(f) for f in annot['bam_file'] ]]  # .stem removes the extension
 
-leafcutter_grouppath = Path('config/leafcutter/groups.tsv')  
+leafcutter_grouppath = Path('results/leafcutter/groups.tsv')  
 leafcutter_grouppath.parent.mkdir(parents=True, exist_ok=True)
 
 sample_file.to_csv(leafcutter_grouppath,sep="\t",header=False,columns=["sample_name","group"],index=False)
@@ -25,6 +26,18 @@ def get_group(wildcards):
 
 def sample_for_group(group):
     return list(annot[annot['group'] == group].index)
+
+def bamfiles_for_group(group):
+    return list(annot[annot['group'] == group]['bam_file'])
+
+def bamfiles_for_groups(groups):
+    return [bamfiles_for_group(group) for group in groups]
+
+def bamstems_for_group(group):
+    return list(annot[annot['group'] == group]['bam_stem'])
+
+def bamstems_for_groups(groups):
+    return [bamstems_for_group(group) for group in groups]
 
 def get_bam(wildcards):
     return annot.loc[wildcards.sample, "bam_file"]
@@ -76,7 +89,7 @@ def majiq_output():
 import configparser
 
 def majiq_files(group):
-    stems = sample_for_group(group)
+    stems = bamstems_for_group(group)
     files = [f"results/majiq/{f}.majiq" for f in stems]
     return files
     

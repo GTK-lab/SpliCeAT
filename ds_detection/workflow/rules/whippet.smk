@@ -22,8 +22,10 @@ rule whippet:
 
 
 rule whippet_merge_bams:
+    params:
+        bam_groups = config['whippet']['bam_groups'],
     input:
-        bam_files = bam_files,
+        bam_files = bamfiles_for_groups(config['whippet']['bam_groups']),
     output:
         merged="results/whippet/merged.bam",
         merged_index="results/whippet/merged.bam.bai"

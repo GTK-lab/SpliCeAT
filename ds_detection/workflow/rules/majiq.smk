@@ -29,7 +29,7 @@ rule majiq_conf:
     log:
         "logs/majiq/build_ini.log",
     output:
-        "config/majiq/majiq.ini"
+        "results/majiq/majiq.ini"
     conda:
         "../envs/pandas.yaml"
     script:
@@ -39,7 +39,7 @@ rule majiq_conf:
 rule majiq_build:
     input:
         gff3=gff3_file_path(filtered=True),
-        conf_file = "config/majiq/majiq.ini",
+        conf_file = "results/majiq/majiq.ini",
         bams = bam_files,
     params:
         license=config["majiq"]["license"],

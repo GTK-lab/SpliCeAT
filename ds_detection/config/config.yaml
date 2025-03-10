@@ -26,4 +26,6 @@ majiq:
 
 whippet:
   activate: True
+  bam_groups:
+  - "treated"
   bam_min_reads: 100
