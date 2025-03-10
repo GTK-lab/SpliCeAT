@@ -9,7 +9,7 @@ from pathlib import Path
 sys.stderr = open(snakemake.log[0], "w")
 output_file = open(snakemake.output[0],"w")
 
-samples = pd.read_csv(snakemake.config["samples"],sep="\t", dtype=str, comment="#")
+samples = pd.read_csv(snakemake.input["samples"],sep="\t", dtype=str, comment="#")
 bam_files = [ Path(f) for f in samples['bam_file'] ]
 bam_dirs = list(set([str(f.parent) for f in bam_files]))
 bam_dirs = [ f + "/" for f in bam_dirs ]

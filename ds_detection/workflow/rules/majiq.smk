@@ -25,11 +25,12 @@ rule majiq:
 
 rule majiq_conf:
     input:
-        config['samples'],
+        samples=config['samples'],
+        bam_files=bam_files,
     log:
         "logs/majiq/build_ini.log",
     output:
-        "results/majiq/majiq.ini"
+        touch("results/majiq/majiq.ini"),
     conda:
         "../envs/pandas.yaml"
     script:
