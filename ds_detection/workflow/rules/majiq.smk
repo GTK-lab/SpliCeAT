@@ -7,6 +7,7 @@ comparison_groups = config["experiment"]["groups"]
 majiq_final_files = [
     expand("results/majiq/{samples.bam_stem}.sj",samples=annot.itertuples),
     f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.tsv",
+    f"results/majiq/expanded_{'-'.join(comparison_groups)}.deltapsi.tsv",
     f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.voila",
     expand("results/majiq/{samples.bam_stem}.majiq",samples=annot.itertuples)
 ]
@@ -45,7 +46,7 @@ rule majiq_build:
     params:
         license=config["majiq"]["license"],
     output:
-        temp("results/majiq/splicegraph.sql"),
+        "results/majiq/splicegraph.sql",
         temp(majiq_sj_files),
         temp(majiq_majiq_files)
     log:
@@ -86,3 +87,15 @@ rule majiq_delta_psi:
         "-grp1 {params.grp1} -grp2 {params.grp2} "
         "--logger {log} "
         "-j {threads} -o {params.output_dir} -n {params.names} > /dev/null 2> {log}.err"
+
+rule majiq_explode:
+    input:
+        f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.tsv",
+    output:
+        f"results/majiq/expanded_{'-'.join(comparison_groups)}.deltapsi.tsv",
+    conda:
+        "../envs/pandas.yaml"
+    log:
+        "logs/majiq/explode.log"
+    script:
+        "../scripts/explode_majiq_tsv.py"
