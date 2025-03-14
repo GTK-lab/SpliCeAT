@@ -5,14 +5,16 @@ include: "rules/ref.smk"
 include: "rules/leafcutter.smk"
 include: "rules/majiq.smk"
 include: "rules/whippet.smk"
+include: "rules/stringtie.smk"
 
 container: "docker://condaforge/miniforge3:latest"
 
 rule all:
     input:
         [ f for f in [
-            f"results/{genome_release_name()}_filtered.gff3.gz",
+            gff3_file_path(filtered=True,gz=False),
             majiq_output(),
             leafcutter_output(),
             whippet_output(),
+            "results/stringtie/merged.gtf"
         ] if f is not None ]

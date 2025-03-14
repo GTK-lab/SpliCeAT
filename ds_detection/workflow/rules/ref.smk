@@ -77,7 +77,7 @@ rule make_filtered_gff:
         biotype=config['experiment']['biotype'],
         max_support_level = config['experiment']['max_transcript_support_level'],
     output:
-        gff3_file_path(filtered=True)
+        gff3_file_path(filtered=True,gz=False)
     conda:
         "../envs/gffutils.yaml"
     log:
@@ -98,12 +98,14 @@ rule make_filtered_gtf:
     shell:
         "gffread {input} -T | bgzip > {output} 2>{log}"
 
-rule temp_uncompress:
+rule uncompress:
+    wildcard_constraints:
+        filename=".*(?<!\\.gz)"
     input:
         "{filename}.gz"
     log:
         "logs/uncompress_{filename}.log"
     output:
-        temp("{filename}"),
+        "{filename}",
     wrapper:
         "v5.8.3/bio/bgzip"

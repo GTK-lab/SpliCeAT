@@ -1,0 +1,9 @@
+channels:
+ - conda-forge
+ - bioconda
+dependencies:
+ - r-base
+ - r-tidyverse
+ - r-conflicted
+ - bioconductor-rtracklayer
+ - bioconductor-venndetail

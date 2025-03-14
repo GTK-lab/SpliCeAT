@@ -62,13 +62,13 @@ def genome_release_name():
 def gtf_file_path(filtered=False,gz=True):
     gz_str = ".gz" if gz else ""
     filt_str = "_filtered" if filtered else ""
-    top_dir = "results" if filtered else "resources"    
+    top_dir = "results/ref" if filtered else "resources"    
     return f"{top_dir}/{genome_release_name()}{filt_str}.gtf{gz_str}"
     
 def gff3_file_path(filtered=False,gz=True):
     gz_str = ".gz" if gz else ""
     filt_str = "_filtered" if filtered else ""
-    top_dir = "results" if filtered else "resources"
+    top_dir = "results/ref" if filtered else "resources"
     return f"{top_dir}/{genome_release_name()}{filt_str}.gff3{gz_str}"
     
 def annotation_db_path():
@@ -80,7 +80,7 @@ def genome_file_path(gz=True):
     
 def leafcutter_output():
     if config['leafcutter']['activate']:
-        return rules.leafcutter_differential_splicing.output
+        return rules.leafcutter_lsvs.output
 
 def majiq_output():
     if config['majiq']['activate']:

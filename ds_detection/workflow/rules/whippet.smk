@@ -94,4 +94,4 @@ rule whippet_delta:
         "../envs/whippet.yaml",
     shell:
         "julia ${{WHIPPET_PATH}}/whippet-delta.jl "
-        "-a {params.grp1} -b {params.grp2} -o results/whippet/delta_psi "
+        "-a {params.grp1} -b {params.grp2} -o results/whippet/delta_psi > {log} 2>&1"

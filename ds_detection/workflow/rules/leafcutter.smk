@@ -2,18 +2,16 @@
 
 rule leafcutter_exons:
     input:
-        annotation_db_path(),
-    params:
-        biotype=config['experiment']['biotype'],
-        max_support_level = config['experiment']['max_transcript_support_level'],
+        gtf_file_path(filtered=True)
     output:
-        temp("results/leafcutter/exons.txt.gz"),
+        "results/leafcutter/exons.txt.gz",
     conda:
         "../envs/gffutils.yaml"
     log:
         "logs/leafcutter/exons.log",
     script:
         "../scripts/leafcutter_exons.py"
+
 
 rule regtools_junction_extract:
     input:
@@ -50,8 +48,8 @@ rule leafcutter_cluster:
     input:
         rules.create_leafcutter_junction_file.output,
     output:
-        counts=temp("results/leafcutter/leafcutter_perind_numers.counts.gz"),
-        pooled=temp("results/leafcutter/leafcutter_pooled"),
+        counts="results/leafcutter/leafcutter_perind_numers.counts.gz",
+        pooled="results/leafcutter/leafcutter_pooled",
     shadow: "full",
     params:
         rundir=lambda w,output: os.path.dirname(output.counts),
@@ -86,3 +84,17 @@ rule leafcutter_differential_splicing:
         "leafcutter_ds.R --num_threads={threads} -e {input.exons} -i 1 -g 3 {input.counts} {params.groups_file} -o {params.prefix} 2>{log} 1>&2;"
         "mv {params.prefix}_cluster_significance.txt {output.signif};"
         "mv {params.prefix}_effect_sizes.txt {output.effect_size}" 
+
+
+rule leafcutter_lsvs:
+    input:
+        signif="results/leafcutter/cluster_significance.txt",
+        effect_size="results/leafcutter/effect_sizes.txt",
+    output:
+        lsvs="results/leafcutter/leafcutter_lsvs.tsv",
+    log:
+        "logs/leafcutter/lsvs.log",
+    conda:
+        "../envs/pandas.yaml"
+    script:
+        "../scripts/leafcutter_lsvs.py"

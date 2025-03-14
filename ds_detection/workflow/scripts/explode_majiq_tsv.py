@@ -15,6 +15,8 @@ for col in vector_columns:
 # Ensure all list columns have the same length per row
 # Explode the dataframe based on the vector columns
 expanded_df = df.explode(vector_columns).reset_index(drop=True)
+expanded_df['gene_id'] = expanded_df['gene_id'].str.removeprefix("gene:")
+expanded_df['lsv_id'] = expanded_df['lsv_id'].str.removeprefix("gene:")
 
 # Save the output to a new TSV file
 

@@ -40,7 +40,7 @@ rule majiq_conf:
 
 rule majiq_build:
     input:
-        gff3=gff3_file_path(filtered=True),
+        gff3=gff3_file_path(filtered=True,gz=False),
         conf_file = "results/majiq/majiq.ini",
         bams = bam_files,
     params:
