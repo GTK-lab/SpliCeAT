@@ -96,7 +96,7 @@ def majiq_files(group):
 
 def whippet_output():
     if config['whippet']['activate']:
-        return rules.whippet.output
+        return rules.whippet.input
 
 def leafcutter_strandedness(strandedness=config["experiment"]["strandedness"]):
     lookup = {

@@ -5,12 +5,19 @@ from snakemake.script import snakemake # type: ignore
 
 df = pd.read_csv(snakemake.input[0], sep="\t")
 
+df[['lsv_category', 'lsv_type_rest']] = df['lsv_type'].str.split('|', n=1, expand=True)
+
+# Split 'lsv_type_rest' the same way as semicolon-separated columns
+df['lsv_type_rest'] = df['lsv_type_rest'].astype(str).str.split('|')
+
 # Identify columns that contain semicolon-separated values
 vector_columns = [col for col in df.columns if df[col].astype(str).str.contains(';').any()]
 
 # Split all vector columns into lists
 for col in vector_columns:
     df[col] = df[col].astype(str).str.split(';')
+
+vector_columns.append('lsv_type_rest')
 
 # Ensure all list columns have the same length per row
 # Explode the dataframe based on the vector columns

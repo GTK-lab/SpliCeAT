@@ -50,7 +50,7 @@ rule leafcutter_cluster:
     output:
         counts="results/leafcutter/leafcutter_perind_numers.counts.gz",
         pooled="results/leafcutter/leafcutter_pooled",
-    shadow: "full",
+    #shadow: "full",
     params:
         rundir=lambda w,output: os.path.dirname(output.counts),
     log:

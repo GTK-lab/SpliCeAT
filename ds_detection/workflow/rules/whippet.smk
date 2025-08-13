@@ -10,15 +10,9 @@ comparison_groups = config["experiment"]["groups"]
 
 rule whippet:
     input:
-        whippet_final_files
-    conda:
-        "../envs/base.yaml"
+        whippet_final_files,
     log:
         "logs/whippet.log"
-    output:
-        "results/whippet/.donestamp"
-    shell:
-        "touch {output}"
 
 
 rule whippet_merge_bams:

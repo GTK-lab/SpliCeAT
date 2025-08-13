@@ -12,14 +12,18 @@ An example experiment design file is in `input/design.tsv`. Each sample must spe
 
 ## Configuration
 
-An example configuration file is provided in `config/config.yaml`. Each of the three underlying tools can be skipped (by specifying `activate: False`). In addition, in order to run majiq you must provide the location of a valid majiq license file.
+An example configuration file is provided in `config/config.yaml`. Each of the three underlying tools can be skipped (by specifying `activate: False`). 
+
+### Majiq licence
+
+In order to run majiq you must provide the location of a valid majiq license file.
 
 ## Recommendation: Use conda
 
 The workflow is configured to use conda, which should download and configure all of the needed environments. If you are using Snakemake > 4.8.0, then you can run the workflow in a combination of conda and conainers as described in [Ad-hoc combination of Conda package management with containers](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#ad-hoc-combination-of-conda-package-management-with-containers)
 
 
-## Running locally. 
+## Not recommended: running locally
 
 ## Packages required
 Click on the links for installation instructions. (In brackets are versions used when run by the author)
@@ -43,22 +47,21 @@ Python packages:
 
 ## Setting up
 
-1. Upload your `design.csv` in the `input` directory as follows:
+1. Place your `design.csv` in the `input` directory as follows:
 
 `design.csv` : experimental design (change to your own, with the following compulsory columns)
 
-| sample      | design    | genome | strand  | fq1             | fq2             |
-|-------------|-----------|--------|---------|-----------------|-----------------|
-| CTX_120 | control   | mm39   | reverse | CTX_120_1.fq.gz | CTX_120_2.fq.gz |
-| CTX_125     | control   | mm39   | reverse | CTX_125_1.fq.gz | CTX_125_2.fq.gz |
-| CTX_147     | control   | mm39   | reverse | CTX_147_1.fq.gz | CTX_147_2.fq.gz |
-| CTX_148     | control   | mm39   | reverse | CTX_148_1.fq.gz | CTX_148_2.fq.gz |
-| CTX_104 | treatment | mm39   | reverse | CTX_104_1.fq.gz | CTX_104_2.fq.gz |
-| CTX_108     | treatment | mm39   | reverse | CTX_108_1.fq.gz | CTX_108_2.fq.gz |
-| CTX_128     | treatment | mm39   | reverse | CTX_128_1.fq.gz | CTX_128_2.fq.gz |
-| CTX_154     | treatment | mm39   | reverse | CTX_154_1.fq.gz | CTX_154_2.fq.gz |
+|sample_name|group  |bam_file                              |fq1                        |fq2                        |
+|-----------|-------|--------------------------------------|---------------------------|---------------------------|
+|CTX_104    |treated|/path_to_bam/CTX_104.sortedByCoord.bam|/path_to_fq/CTX_104_1.fq.gz|/path_to_fq/CTX_104_2.fq.gz|
+|CTX_108    |treated|/path_to_bam/CTX_108.sortedByCoord.bam|/path_to_fq/CTX_108_1.fq.gz|/path_to_fq/CTX_108_2.fq.gz|
+|CTX_120    |control|/path_to_bam/CTX_120.sortedByCoord.bam|/path_to_fq/CTX_120_1.fq.gz|/path_to_fq/CTX_120_2.fq.gz|
+|CTX_125    |control|/path_to_bam/CTX_125.sortedByCoord.bam|/path_to_fq/CTX_125_1.fq.gz|/path_to_fq/CTX_125_2.fq.gz|
+|CTX_128    |treated|/path_to_bam/CTX_128.sortedByCoord.bam|/path_to_fq/CTX_128_1.fq.gz|/path_to_fq/CTX_128_2.fq.gz|
+|CTX_147    |control|/path_to_bam/CTX_147.sortedByCoord.bam|/path_to_fq/CTX_147_1.fq.gz|/path_to_fq/CTX_147_2.fq.gz|
+|CTX_148    |control|/path_to_bam/CTX_148.sortedByCoord.bam|/path_to_fq/CTX_148_1.fq.gz|/path_to_fq/CTX_148_2.fq.gz|
+|CTX_154    |treated|/path_to_bam/CTX_154.sortedByCoord.bam|/path_to_fq/CTX_154_1.fq.gz|/path_to_fq/CTX_154_2.fq.gz|
 
-(for strand, choose either of: None, reverse, forward)
 
 2. Download the respective gene annotations and genome files for the species of interest and place them into a location of your choice:
 

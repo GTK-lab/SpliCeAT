@@ -5,7 +5,7 @@ include: "rules/ref.smk"
 include: "rules/leafcutter.smk"
 include: "rules/majiq.smk"
 include: "rules/whippet.smk"
-include: "rules/stringtie.smk"
+#include: "rules/stringtie.smk"
 
 container: "docker://condaforge/miniforge3:latest"
 
@@ -16,5 +16,5 @@ rule all:
             majiq_output(),
             leafcutter_output(),
             whippet_output(),
-            "results/stringtie/merged.gtf"
+ #           "results/stringtie/merged.gtf"
         ] if f is not None ]

@@ -19,6 +19,8 @@ samples: "input/design.tsv"
 
 leafcutter:
   activate: True
+  max_intron_size: 500000
+  cluster_support_min: 50
 
 majiq:
   activate: True
@@ -28,4 +30,10 @@ whippet:
   activate: True
   bam_groups:
   - "treated"
-  bam_min_reads: 100
+  bam_min_reads: 20
+
+stringtie:
+  activate: True
+  threads: 4
+  strand: rf
+  min_juncs: 20
