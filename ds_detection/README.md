@@ -25,7 +25,7 @@ The workflow is configured to use conda, which should download and configure all
 
 ## Not recommended: running locally
 
-## Packages required
+### Packages required for running locally
 Click on the links for installation instructions. (In brackets are versions used when run by the author)
 - [python](https://www.python.org/downloads/) (3.9.16)
 - [R](https://cran.rstudio.com/) (4.2.2)
@@ -62,100 +62,17 @@ Python packages:
 |CTX_148    |control|/path_to_bam/CTX_148.sortedByCoord.bam|/path_to_fq/CTX_148_1.fq.gz|/path_to_fq/CTX_148_2.fq.gz|
 |CTX_154    |treated|/path_to_bam/CTX_154.sortedByCoord.bam|/path_to_fq/CTX_154_1.fq.gz|/path_to_fq/CTX_154_2.fq.gz|
 
-
-2. Download the respective gene annotations and genome files for the species of interest and place them into a location of your choice:
-
-- A `GFF3` gene annotation file  (e.g. `gencode.vM29.primary_assembly.annotation.gff3`).  Unzip the file using `gunzip` tool.
-- A `GTF` gene annotation file in `.gz` format (e.g. `gencode.vM29.primary_assembly.annotation.gtf.gz`).
-- A `FASTA` .gz genome file in `.gz` format (e.g. `GRCm39.primary_assembly.genome.fa.gz`).
-
-Note that both the `.gtf` and `.fa` files need to be in `.gz` format (i.e. `.gtf.gz` and `.fa.gz`). You may obtain the annotation files from Gencode ([mouse](https://www.gencodegenes.org/mouse/)).
-
-3. Open the `prep.R` file and change the following parameters to suit your experimental design:
-
-```
-############################################### change these ##################################################
-# differential splicing detection directory
-setwd("/mnt/cbis/home/yongshan/SpliCeAT/ds_detection") 
-
-# experimental design csv file - not required to change if design.csv is in input directory
-design <- read.csv("./input/design.csv") 
-
-# directory containing your bam alignment files
-bam_dir <- "/mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/" 
-
- # directory containing your fastq files
-fq_dir <- "/mnt/gtklab01/linglab/tdp43/fastq/"
-
-# set your own experiment name
-experiment_name <- "tdp43_nestin_ctx_e14" 
-
-# declare your pairwise experimental conditions: default is control & treatment, must match the design.csv
-condition_1 <- "control"
-condition_2 <- "treatment"
-
-# path of annotation gff3 file
-gff3_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gff3" 
-
-# path of annotation gtf.gz file
-annotation_gtf_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf.gz" 
-
-# path of genome fa.gz file
-fasta_file_path <- "/mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa.gz" 
-
-# path of julia command. If you have added the executable to your PATH, simply put "julia"
-julia <- "/mnt/cbis/home/yongshan/julia-1.7.2/bin/julia" 
-
-# directory of whippet scripts
-whippet_bin <- "/mnt/cbis/home/yongshan/Whippet.jl/bin/" 
-
-# Note that: 0 = unstranded, 1 = first-strand/RF, 2, = second-strand/FR
-regtools_strand <- "1" 
-
-# directory of leafcutter installation
-leafcutter_dir <- "/mnt/cbis/home/yongshan/leafcutter/" 
-###############################################################################################################
-```
-
-4. Open the `Snakefile` in `workflow` and change the first line to point to your config file location:
-```
- configfile: "<your_ds_detection_snakemake_dir>/config/config.yaml"
- ...
- ```
-
-5. Run `prep.R` on command line with
-```
-Rscript prep.R
-```
-in order to populate the directories with the necessary helper files. The following 14 files should be successfully created within the `config/` directory:
-- `config.yaml`
-
-### Majiq helper files
-- `<experiment_name>_conf.txt`
-- `confs.tsv`
-- `delta_psi_samples.tsv`
-- `experiment_sample_names.tsv`
-
-### Whippet helper files
-- `delta.tsv`
-- `delta_input.tsv`
-- `fastq.tsv`
-- `samples_whippet.tsv`
-
-### Leafcutter helper files
-- `juncs_file.tsv`
-- `output_junc.tsv`
-- `samples_leafcutter.tsv`
-- `<experiment_name>_groups_file.txt`
-- `<experiment_name>_groups_junc.txt`
-
 ## Running Snakemake
-Once the above finishes running successfully and the necessary helper files are created, execute a Snakemake dry run with
-```
+
+Execute a Snakemake dry run with
+
+```bash
 snakemake -np
 ```
+
 to check the parameters of the run. Once ready to run, execute
-```
+
+```bash
 snakemake --cores 24
 ```
 
