@@ -52,7 +52,7 @@ rule leafcutter_cluster:
         pooled="results/leafcutter/leafcutter_pooled",
     #shadow: "full",
     params:
-        max_intron_length = config["leafcutter"]["max_intron_length"]
+        max_intron_length = config["leafcutter"]["max_intron_length"],
         rundir=lambda w,output: os.path.dirname(output.counts),
     log:
         "logs/leafcutter/cluster.log"
@@ -71,8 +71,8 @@ rule leafcutter_differential_splicing:
     output:
         signif="results/leafcutter/cluster_significance.txt",
         effect_size="results/leafcutter/effect_sizes.txt"
-    params:
-        min_samples_per_group=config["leafcutter"]["min_samples_per_group"]
+    params:,
+        min_samples_per_group=config["leafcutter"]["min_samples_per_group"],
         groups_file = leafcutter_grouppath,
         prefix = lambda w,output: os.path.dirname(output.effect_size),
     conda:
