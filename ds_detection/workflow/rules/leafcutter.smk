@@ -52,13 +52,14 @@ rule leafcutter_cluster:
         pooled="results/leafcutter/leafcutter_pooled",
     #shadow: "full",
     params:
+        max_intron_length = config["leafcutter"]["max_intron_length"]
         rundir=lambda w,output: os.path.dirname(output.counts),
     log:
         "logs/leafcutter/cluster.log"
     conda:
         "../envs/leafcutter.yaml",
     shell:
-        "leafcutter_cluster_regtools.py -j {input} -r {params.rundir} -l 500000"
+        "leafcutter_cluster_regtools.py -j {input} -r {params.rundir} -l {params.max_intron_length}"
  
 
 
@@ -71,6 +72,7 @@ rule leafcutter_differential_splicing:
         signif="results/leafcutter/cluster_significance.txt",
         effect_size="results/leafcutter/effect_sizes.txt"
     params:
+        min_samples_per_group=config["leafcutter"]["min_samples_per_group"]
         groups_file = leafcutter_grouppath,
         prefix = lambda w,output: os.path.dirname(output.effect_size),
     conda:
@@ -81,7 +83,7 @@ rule leafcutter_differential_splicing:
         4
     shell:
         "unset R_LIBS_USER; "
-        "leafcutter_ds.R --num_threads={threads} -e {input.exons} -i 1 -g 3 {input.counts} {params.groups_file} -o {params.prefix} 2>{log} 1>&2;"
+        "leafcutter_ds.R --num_threads={threads} -e {input.exons} -i 1 -g {params.min_samples_per_group} {input.counts} {params.groups_file} -o {params.prefix} 2>{log} 1>&2;"
         "mv {params.prefix}_cluster_significance.txt {output.signif};"
         "mv {params.prefix}_effect_sizes.txt {output.effect_size}" 
 

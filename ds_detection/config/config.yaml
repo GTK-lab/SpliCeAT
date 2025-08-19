@@ -19,7 +19,8 @@ samples: "input/design.tsv"
 
 leafcutter:
   activate: True
-  max_intron_size: 500000
+  max_intron_length: 500000
+  min_samples_per_group: 2
   cluster_support_min: 50
 
 majiq:
