@@ -26,6 +26,7 @@ leafcutter:
 majiq:
   activate: True
   license: "config/majiq/majiq_license_academic_official.lic"
+  build_extra: ""
 
 whippet:
   activate: True

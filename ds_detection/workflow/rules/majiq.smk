@@ -46,6 +46,7 @@ rule majiq_build:
         bams = bam_files,
     params:
         license=config["majiq"]["license"],
+        extra=config["majiq"]["build_extra"],
     output:
         "results/majiq/splicegraph.sql",
         temp(majiq_sj_files),
@@ -58,7 +59,7 @@ rule majiq_build:
         8
     shell:
         "majiq --license {params.license} build {input.gff3} "
-        "--logger {log} "
+        "--logger {log} {params.extra} " 
         "-c {input.conf_file} -j {threads} -o results/majiq >/dev/null 2>&1" 
 
 
