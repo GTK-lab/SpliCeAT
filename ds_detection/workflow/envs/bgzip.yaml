@@ -3,6 +3,7 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  - python >= 3.10
-  - htslib
+  - libdeflate
+  - htslib >= 1.22.1
+
   

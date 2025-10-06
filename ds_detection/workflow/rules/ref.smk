@@ -20,6 +20,8 @@ rule gzip_genome:
     output:
         genome_file_path()
     threads: 1
+    conda:
+        "../envs/bgzip.yaml",
     log:
         "logs/bgzip/genome.log",
     wrapper:
@@ -105,6 +107,8 @@ rule uncompress:
         "{filename}.gz"
     log:
         "logs/uncompress_{filename}.log"
+    conda:
+        "../envs/bgzip.yaml"
     output:
         "{filename}",
     wrapper:

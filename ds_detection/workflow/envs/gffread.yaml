@@ -4,5 +4,4 @@ channels:
   - nodefaults
 dependencies:
   - gffread >= 0.12.7
-  - htslib
   

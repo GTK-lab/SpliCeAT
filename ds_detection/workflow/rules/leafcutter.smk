@@ -71,7 +71,7 @@ rule leafcutter_differential_splicing:
     output:
         signif="results/leafcutter/cluster_significance.txt",
         effect_size="results/leafcutter/effect_sizes.txt"
-    params:,
+    params:
         min_samples_per_group=config["leafcutter"]["min_samples_per_group"],
         groups_file = leafcutter_grouppath,
         prefix = lambda w,output: os.path.dirname(output.effect_size),
