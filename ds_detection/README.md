@@ -96,7 +96,7 @@ results
 │   ├── leafcutter_pooled 
 │   ├── leafcutter_refined 
 │   ├── leafcutter_sortedlibs 
-│   └── <sample>.junc.leafcutter.sorted.gz
+│   └── <sample>.junc.leafcutter.sorted.gz 
 ├── majiq/
 │   ├── control-treated.deltapsi.voila
 │   ├── control-treated.het.tsv
@@ -108,7 +108,7 @@ results
 │   ├── <reference>_chr_filtered.gff3           
 │   └── <reference>_chr_filtered.gtf.gz         
 ├── regtools
-│   └── <sample>.junc ##for all samples
+│   └── <sample>.junc 
 └── whippet/
     ├── quant/
     │   ├── <sample>.gene.tpm.gz
