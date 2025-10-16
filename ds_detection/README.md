@@ -126,7 +126,7 @@ results
 ### Majiq Output
 In order to view the interactive results on Voila web server, execute the following on command line (from your top-level ds_detection Snakemake directory):
 ```
-voila view results/majiq_delta_psi/<experiment_name>/ctr-treatment.deltapsi.voila results/majiq_build/<experiment_name>/splicegraph.sql -p 5000 --host 0.0.0.0
+voila view results/majiq/control-treated.deltapsi.voila  results/majiq/splicegraph.sql -p 5000 --host 0.0.0.0
 ```
 View the results on `http://<remote_server>:5000/` (e.g. `http://atlas.cbis.nus.edu.sg:5000/`) and they should be displayed as follows. Click on `Download LSVs` to get the list of local splicing variations. 
 
@@ -141,7 +141,7 @@ Local splicing variations (LSV) file:
 
 
 ### Whippet output files
-All alternative splicing results are found in the `results/delta_psi.diff.gz` file. Unzip the file on command line as follows:
+All alternative splicing results are found in the `results/whippet/delta_psi.diff.gz` file. Unzip the file on command line as follows:
 ```
 gunzip delta_psi.diff.gz
 ```
@@ -152,18 +152,18 @@ and the results should look like this, where each row is a differential splicing
 
 ### Leafcutter output files
 
-In the `results` directory, you should see the following output files:
-- `<experiment_name>_cluster_significance.txt`
-- `<experiment_name>_effect_sizes.txt`
+In the `results/leafcutter` directory, you should see the following output files:
+- `cluster_significance.txt`
+- `effect_sizes.txt`
 All alternative splicing results are found in the above 2 files. 
 
-`<experiment_name>_cluster_significance.txt` (significance of AS events):
+`cluster_significance.txt` (significance of AS events):
 
 <p align="left">
   <img src="../images/leafcutter_significance.PNG">
 </p>
 
-`<experiment_name>_effect_sizes.txt` (deltaPSI of AS events):
+`effect_sizes.txt` (deltaPSI of AS events):
 <p align="left">
   <img src="../images/leafcutter_effect_size.PNG">
 </p>
