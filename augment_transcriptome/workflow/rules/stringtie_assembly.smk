@@ -4,12 +4,15 @@ rule stringtie_assembly:
     output:
         config["BASE_PATH"]+"results/stringtie_assemblies/{sample}_ref_guided_assembly.gtf"
     params:
-        stringtie=config["STRINGTIE_COMMAND"],
         gtf=config["GTF"],
-        juncs=config["JUNCS_CUTOFF"],
-        threads=config["STRINGTIE_THREADS"],
-        strand=config["STRAND"]
+        juncs=config["stringtie"]["junc_cutoff"],
+        threads=config["stringtie"]["threads"],
+        strand=config["stringtie"]["strand"]
+    conda:
+        "../envs/stringtie.yaml"
+    log:
+        "logs/stringtie/{sample}_stringtie_assembly.log"
     threads:
-        config["STRINGTIE_THREADS"]
+        config["stringtie"]["threads"]
     shell:
-        "{params.stringtie} {input} -G {params.gtf} -o {output} -j {params.juncs} -p {params.threads} --{params.strand}"    
+        "stringtie {input} -G {params.gtf} -o {output} -j {params.juncs} -p {params.threads} --{params.strand} > {log} 2>&1"

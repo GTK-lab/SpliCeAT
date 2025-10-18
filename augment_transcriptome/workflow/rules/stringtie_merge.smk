@@ -4,9 +4,12 @@ rule stringtie_merge:
     output:
         config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly.gtf"
     params:
-        stringtie=config["STRINGTIE_COMMAND"],
         gtf=config["GTF"]
     threads:
-        config["STRINGTIE_THREADS"]
+        config["stringtie"]["threads"]
+    conda:
+        "../envs/stringtie.yaml"
+    log:
+        "logs/stringtie/stringtie_merge.log"
     shell:
-        "{params.stringtie} --merge {input} -G {params.gtf} -i -o {output}"
+        "stringtie --merge {input} -G {params.gtf} -i -o {output} > {log} 2>&1"

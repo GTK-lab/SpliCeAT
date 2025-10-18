@@ -59,8 +59,8 @@ rule majiq_build:
         8
     shell:
         "majiq --license {params.license} build {input.gff3} "
-        "--logger {log} {params.extra} " 
-        "-c {input.conf_file} -j {threads} -o results/majiq >/dev/null 2>&1" 
+        "--logger {log} {params.extra} "
+        "-c {input.conf_file} -j {threads} -o results/majiq >/dev/null 2>&1"
 
 
 rule majiq_delta_psi:
@@ -128,7 +128,7 @@ rule majiq_voila_to_tsv:
     conda:
         "../envs/majiq.yaml"
     shell:
-        "voila tsv {input.splicegraph} {input.voila} -f {output}"
+        "voila tsv {input.splicegraph} {input.voila} -f {output} > {log} 2>&1"
 
 rule majiq_explode:
     input:
