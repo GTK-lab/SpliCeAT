@@ -10,7 +10,11 @@ rule sleuth:
         config["BASE_PATH"]+"/de_analysis/results/sleuth/uncollapsed_differential_transcript_analysis.csv"
     params:
         script=config["BASE_PATH"]+"/de_analysis/scripts/sleuth.R"
+    log:
+        "logs/sleuth.log"
+    conda:
+        "../envs/sleuth.yaml"
     threads:
         12
     shell:
-        "Rscript {params.script}"
+        "Rscript {params.script} > {log} 2>&1 "
