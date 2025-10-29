@@ -1,4 +1,4 @@
-configfile: "/mnt/cbis/home/yongshan/SpliCeAT/de_analysis/config/config.yaml"
+configfile: "config/config.yaml"
 
 include: "rules/common.smk"
 include: "rules/kallisto_quant.smk"

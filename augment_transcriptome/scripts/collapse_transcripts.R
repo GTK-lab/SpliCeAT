@@ -2,7 +2,7 @@
 # Output: tx2tx file, tx2gene file that you can use with sleuth
 
 #### CHANGE THIS ####
-config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/config.yaml"
+config_file_path <- "config/config.yaml"
 organism <- "mouse" # change to "human" if needed
 ####################
 
@@ -53,11 +53,11 @@ lgr$info("Getting ensembl annotations...")
 
 # load in normal t2g
 if (organism == "mouse"){
-  ensembl <- useEnsembl(biomart = 'genes', 
+  ensembl <- useEnsembl(biomart = 'genes',
                          dataset = 'mmusculus_gene_ensembl',
                          version = config$mouse_ensembl_version)
 } else if (organism == "human") {
-  ensembl <- useEnsembl(biomart = "genes", 
+  ensembl <- useEnsembl(biomart = "genes",
                         dataset = "hsapiens_gene_ensembl",
                         version = config$hsapiens_ensembl_version)
 }

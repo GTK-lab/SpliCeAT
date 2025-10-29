@@ -1,3 +1,4 @@
+name: spliceat-majiq
 channels:
   - conda-forge
   - bioconda

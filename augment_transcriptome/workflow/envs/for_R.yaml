@@ -1,4 +1,4 @@
-name: for_R
+name: spliceat-for_R
 channels:
   - conda-forge
   - bioconda

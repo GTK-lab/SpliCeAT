@@ -1,7 +1,7 @@
 # sleuth for differential transcript expression analysis
 
 #### CHANGE THIS ####
-config_file_path <- "/mnt/cbis/home/yongshan/SpliCeAT/de_analysis/config/config.yaml"
+config_file_path <- "config/config.yaml"
 ####################
 
 library(lgr)
@@ -22,9 +22,9 @@ lgr$info("Done.")
 # configuring h5 files to get rid of trailing transcript info - required if using Gencode annotations.
 # If using Ensembl annotations, skip this part
 lgr$info("Configuring h5 files to get rid of trailing transcript info...")
-files <- list.files(paste(config$BASE_PATH, "/de_analysis/results/kallisto_quant_out/", sep=""), 
-                    pattern=".h5", 
-                    recursive=TRUE, 
+files <- list.files(paste(config$BASE_PATH, "/de_analysis/results/kallisto_quant_out/", sep=""),
+                    pattern=".h5",
+                    recursive=TRUE,
                     full.names=TRUE)
 
 for (currentFile in files) {
@@ -72,7 +72,7 @@ so <- sleuth_prep(metadf, ~gender+condition, extra_bootstrap_summary = TRUE,
 
 sleuth_tx_lrt <- sleuth_results(so, 'reduced:full', 'lrt', show_all = FALSE, pval_aggregate = FALSE)
 sleuth_tx_wald <- sleuth_results(so, 'conditiontrtment', 'Wald', show_all = FALSE, pval_aggregate = FALSE)
-                  
+
 colnames(sleuth_tx_lrt) <- c("target_id",
                              "pval_lrt",
                              "qval_lrt",
@@ -156,7 +156,7 @@ colnames(sleuth_gene_mode_wald) <- c("ens_gene",
 
 sleuth_gene_mode_lrt_sleuth_gene_mode_wald_join <- full_join(sleuth_gene_mode_lrt,sleuth_gene_mode_wald,
                                                              by=c("ens_gene", "ext_gene","target_id"))
-                  
+
 lgr$info("Finished sleuth analysis, saving results...")
 write.csv(sleuth_gene_mode_lrt_sleuth_gene_mode_wald_join, paste(config$BASE_PATH, "/de_analysis/results/sleuth/collapsed_differential_transcript_analysis.csv", sep=""))
 
