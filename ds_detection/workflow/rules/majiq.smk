@@ -128,7 +128,7 @@ rule majiq_voila_to_tsv:
     conda:
         "../envs/majiq.yaml"
     shell:
-        "voila tsv {input.splicegraph} {input.voila} -f {output}"
+        "voila tsv {input.splicegraph} {input.voila} -f {output} > {log} 2>{log}.err"
 
 rule majiq_explode:
     input:

@@ -1,3 +1,4 @@
+name: snakemake_whippet
 channels:
   - conda-forge
   - bioconda
