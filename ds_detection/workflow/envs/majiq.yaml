@@ -1,0 +1,12 @@
+name: spliceat-majiq
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10
+  - htslib
+  - pip
+  - pip:
+    - git+https://bitbucket.org/biociphers/majiq_academic.git@v2.5.7
+
+

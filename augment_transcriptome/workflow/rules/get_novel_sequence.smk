@@ -5,11 +5,12 @@ rule get_novel_sequence:
         novel=config["BASE_PATH"]+"results/augmented_transcriptome/merged_stringtie_assembly_novel_exon_filtered.fa",
         merged=config["BASE_PATH"]+"results/augmented_transcriptome/augmented_transcripts.fa"
     params:
-        gffread=config["gffread_path"],
         genome=config["genome_fasta"],
         transcripts=config["transcripts_fasta"]
+    conda:
+        "../../../ds_detection/workflow/envs/gffread.yaml"
     threads:
         4
     shell:
-        "{params.gffread} -w {output.novel} -g {params.genome} {input} && "
+        "gffread -w {output.novel} -g {params.genome} {input} && "
         "cat {params.transcripts} {output.novel} > {output.merged}"

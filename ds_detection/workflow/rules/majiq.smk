@@ -1,0 +1,143 @@
+
+majiq_sj_files = [ f"results/majiq/{f}.sj" for f in annot['bam_stem'] ]
+majiq_majiq_files = [ f"results/majiq/{f}.majiq" for f in annot['bam_stem'] ]
+
+comparison_groups = config["experiment"]["groups"]
+
+majiq_final_files = [
+    expand("results/majiq/{samples.bam_stem}.sj",samples=annot.itertuples),
+    f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.tsv",
+    f"results/majiq/{'-'.join(comparison_groups)}.het.tsv",
+    f"results/majiq/expanded_{'-'.join(comparison_groups)}.deltapsi.tsv",
+    f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.voila",
+    expand("results/majiq/{samples.bam_stem}.majiq",samples=annot.itertuples)
+]
+
+rule majiq:
+    input:
+        majiq_final_files
+    output:
+        "results/majiq/.donestamp"
+    log:
+        "logs/majiq.log"
+    conda:
+        "../envs/base.yaml"
+    shell:
+        "touch {output}"
+
+rule majiq_conf:
+    input:
+        samples=config['samples'],
+        bam_files=bam_files,
+    log:
+        "logs/majiq/build_ini.log",
+    output:
+        touch("results/majiq/majiq.ini"),
+    conda:
+        "../envs/pandas.yaml"
+    script:
+        "../scripts/build_majiq_ini.py"
+
+
+rule majiq_build:
+    input:
+        gff3=gff3_file_path(filtered=True,gz=False),
+        conf_file = "results/majiq/majiq.ini",
+        bams = bam_files,
+    params:
+        license=config["majiq"]["license"],
+        extra=config["majiq"]["build_extra"],
+    output:
+        "results/majiq/splicegraph.sql",
+        temp(majiq_sj_files),
+        temp(majiq_majiq_files)
+    log:
+        "logs/majiq/majiq_build.log",
+    conda:
+        "../envs/majiq.yaml"
+    threads:
+        8
+    shell:
+        "majiq --license {params.license} build {input.gff3} "
+        "--logger {log} {params.extra} "
+        "-c {input.conf_file} -j {threads} -o results/majiq >/dev/null 2>&1"
+
+
+rule majiq_delta_psi:
+    input:
+        sj_files=majiq_sj_files,
+        majiq_files=majiq_majiq_files,
+        splicegraph="results/majiq/splicegraph.sql",
+    output:
+        tsv=f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.tsv",
+        voila=f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.voila",
+    log:
+        "logs/majiq/majiq_deltapsi.log",
+    params:
+        output_dir=lambda w,input: os.path.dirname(input.splicegraph),
+        license=config['majiq']['license'] ,
+        names=lambda _: " ".join(comparison_groups),
+        prefix=lambda _: "-".join(comparison_groups),
+        grp1= lambda _: " ".join(majiq_files(comparison_groups[0])),
+        grp2= lambda _: " ".join(majiq_files(comparison_groups[1])),
+    threads:
+        16
+    conda:
+        "../envs/majiq.yaml"
+    shell:
+        "majiq --license {params.license} deltapsi "
+        "-grp1 {params.grp1} -grp2 {params.grp2} "
+        "--logger {log} "
+        "-j {threads} -o {params.output_dir} -n {params.names} > /dev/null 2> {log}.err"
+
+
+rule majiq_heterogen:
+    input:
+        sj_files=majiq_sj_files,
+        majiq_files=majiq_majiq_files,
+        splicegraph="results/majiq/splicegraph.sql",
+    output:
+        voila=f"results/majiq/{'-'.join(comparison_groups)}.het.voila",
+    log:
+        "logs/majiq/majiq_heterogen.log",
+    params:
+        output_dir=lambda w,input: os.path.dirname(input.splicegraph),
+        license=config['majiq']['license'] ,
+        names=lambda _: " ".join(comparison_groups),
+        prefix=lambda _: "-".join(comparison_groups),
+        grp1= lambda _: " ".join(majiq_files(comparison_groups[0])),
+        grp2= lambda _: " ".join(majiq_files(comparison_groups[1])),
+    threads:
+        16
+    conda:
+        "../envs/majiq.yaml"
+    shell:
+        "majiq --license {params.license} heterogen "
+        "-grp1 {params.grp1} -grp2 {params.grp2} "
+        "--logger {log} "
+        "-j {threads} -o {params.output_dir} -n {params.names} > /dev/null 2> {log}.err;"
+
+rule majiq_voila_to_tsv:
+    input:
+        voila=f"results/majiq/{'-'.join(comparison_groups)}.het.voila",
+        splicegraph="results/majiq/splicegraph.sql",
+    output:
+        f"results/majiq/{'-'.join(comparison_groups)}.het.tsv",
+    log:
+        "logs/majiq/het_voila_to_tsv.log",
+    conda:
+        "../envs/majiq.yaml"
+    shell:
+        "voila tsv {input.splicegraph} {input.voila} -f {output} > {log} 2>&1"
+
+rule majiq_explode:
+    input:
+        f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.tsv",
+    output:
+        f"results/majiq/expanded_{'-'.join(comparison_groups)}.deltapsi.tsv",
+    conda:
+        "../envs/pandas.yaml"
+    log:
+        "logs/majiq/explode.log"
+    script:
+        "../scripts/explode_majiq_tsv.py"

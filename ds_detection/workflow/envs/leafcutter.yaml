@@ -1,0 +1,25 @@
+channels:
+ - conda-forge
+ - bioconda
+dependencies:
+ - r-base=3.6.2
+ - r-r.utils
+ - r-hmisc
+ - r-domc
+ - r-optparse
+ - r-dt
+ - r-intervals
+ - r-shinycssloaders
+ - r-bh
+ - r-rstan
+ - r-rcpp
+ - r-essentials
+ - r-remotes
+ - r-lifecycle
+ - r-rstantools
+ - r-shinyjs
+ - r-oompabase
+ - r-biocmanager
+ - bioconductor-biobase
+ - bioconductor-dirichletmultinomial
+ - regtools

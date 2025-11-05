@@ -1,0 +1,6 @@
+name: spliceat-kallisto
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - kallisto=0.46.1

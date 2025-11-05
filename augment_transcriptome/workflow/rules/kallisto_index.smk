@@ -3,7 +3,11 @@ rule kallisto_index:
         config["BASE_PATH"]+"results/augmented_transcriptome/augmented_transcripts.fa"
     output:
         config["BASE_PATH"]+"results/augmented_transcriptome/kallisto_index_augmented_transcriptome"
+    log:
+        "logs/kallisto_index.log"
+    conda:
+        "../envs/kallisto.yaml"
     threads:
         4
     shell:
-        "kallisto index -i {output} {input}"
+        "kallisto index -i {output} {input} > {log} 2>&1"

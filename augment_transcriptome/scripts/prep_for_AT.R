@@ -215,7 +215,7 @@ union_of_intersect <- union_of_intersect[,c("seqnames","start","end","Strand")]
 colnames(union_of_intersect) <- c("chr", "start", "end", "strand")
 union_of_intersect_granges <- makeGRangesFromDataFrame(union_of_intersect,keep.extra.columns=TRUE)
 
-# getting all exons in gtf_full that contain my high conf splicing coords
+# getting all exons in l that contain my high conf splicing coords
 exon_hits <- gtf_full[queryHits(findOverlaps(gtf_full, union_of_intersect_granges, type="any")),] # this is to find every entry in gtf_full that contains my interested range in exon_hits
 exon_hits <- as.data.frame(exon_hits)
 novel_tx <- filter(exon_hits,grepl("MSTRG",transcript_id))

@@ -1,38 +1,24 @@
-BASE_PATH: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/
-SAMPLES: /mnt/cbis/home/yongshan/SpliCeAT/augment_transcriptome/config/samples.tsv
-
-###################
-# STRINGTIE ASSEMBLY
-###################
-# If you have added the executable to your PATH, simply put "stringtie" for STRINGTIE_COMMAND:
-STRINGTIE_COMMAND: /mnt/cbis/home/yongshan/stringtie-2.2.1.Linux_x86_64/stringtie
-GTF: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.primary_assembly.annotation.gtf
-STRINGTIE_THREADS: 4
-
-# minimum junction coverage for Stringtie assembly
-JUNCS_CUTOFF: 20 
-
-# --rf : assume stranded library fr-firststrand; --fr : assume stranded library fr-secondstrand
-STRAND: rf
-
-# alignments directory should contain all sample BAM & BAI files
-ALIGNMENTS_DIR: /mnt/gtklab01/linglab/tdp43/STAR/tdp43_nestin_ctx_e14/
-
-###################
-# MASTERLISTS PREP
-###################
-# depending on mouse or human, change ensembl version accordingly. Ignore the other ensembl version if not being used.
-mouse_ensembl_version: 106
+# Ignore the ensembl version that is not being used.
+mouse_ensembl_version: 115
 hsapiens_ensembl_version: 106
-majiq_lsv_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/majiq_delta_psi/tdp43_nestin_ctx_e14/lsvs.txt
-leafcutter_cluster_sig_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/tdp43_nestin_ctx_e14_cluster_significance.txt
-leafcutter_effect_size_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/tdp43_nestin_ctx_e14_effect_sizes.txt
-whippet_diff_file_path: /mnt/cbis/home/yongshan/SpliCeAT/ds_detection/results/delta_psi/tdp43_nestin_ctx_e14.diff
 
-###################
-# AUG TRANSCRIPTOME
-###################
-# If you have added the executable to your PATH, simply put "gffread" for gffread_path:
-gffread_path: /mnt/cbis/home/yongshan/gffread/gffread
-genome_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/GRCm39.primary_assembly.genome.fa
-transcripts_fasta: /mnt/gtklab01/linglab/mmusculus_annotation_files/gencode.vM29.transcripts.fa
+# input file paths
+BASE_PATH: /mnt/gtklab01/megha/SpliCeAT/augment_transcriptome/
+SAMPLES: /mnt/gtklab01/megha/SpliCeAT/augment_transcriptome/config/samples.tsv
+ALIGNMENTS_DIR: /mnt/gtklab01/megha/SpliCeAT_add/OG_mm_trimmed/bam/ #dir w sample BAM & BAI files
+
+majiq_lsv_file_path: /mnt/gtklab01/megha/SpliCeAT/ds_detection/results/majiq/majiq-lsvs.txt
+leafcutter_cluster_sig_file_path: /mnt/gtklab01/megha/SpliCeAT/ds_detection/results/leafcutter/cluster_significance.txt
+leafcutter_effect_size_file_path: /mnt/gtklab01/megha/SpliCeAT/ds_detection/results/leafcutter/effect_sizes.txt
+whippet_diff_file_path: /mnt/gtklab01/megha/SpliCeAT/ds_detection/results/whippet/delta_psi.diff
+
+# reference file paths
+GTF: /mnt/gtklab01/megha/Reference/MM_GRCm39_E115_Gencode/gencode.vM38.annotation.gtf
+genome_fasta: /mnt/gtklab01/megha/Reference/MM_GRCm39_E115_Gencode/GRCm39.primary_assembly.genome.fa
+transcripts_fasta: /mnt/gtklab01/megha/Reference/MM_GRCm39_E115_Gencode/gencode.vM38.transcripts.fa
+
+# Stringtie parameters
+stringtie:
+  threads: 4
+  junc_cutoff: 20   # minimum junction coverage for Stringtie assembly
+  strand: rf  # --rf : assume stranded library fr-firststrand, --fr : assume stranded library fr-secondstrand

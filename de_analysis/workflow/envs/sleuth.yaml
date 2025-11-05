@@ -1,0 +1,11 @@
+name: for-sleuth
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base
+  - r-lgr
+  - r-sleuth=0.30.1
+  - r-tidyverse=1.3.2
+  - r-yaml
+  - bioconductor-rhdf5=2.42.0

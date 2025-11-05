@@ -7,9 +7,13 @@ rule prep_for_AT:
         config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly.gtf"
     output:
         config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf"
+    log:
+        "logs/prep_for_AT.log"
+    conda:
+        "../envs/for_R.yaml"
     params:
         script=config["BASE_PATH"]+"scripts/prep_for_AT.R"
     threads:
         4
     shell:
-        "Rscript {params.script}"
+        "Rscript {params.script} > {log} 2>&1"

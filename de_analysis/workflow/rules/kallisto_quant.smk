@@ -11,7 +11,11 @@ rule kallisto_quant:
         N_THREADS = config["N_THREADS"]
     threads:
         config["N_THREADS"]
+    conda:
+        "../../../augment_transcriptome/workflow/envs/kallisto.yaml"
+    log:
+        "logs/kallisto_quant/{sample_name}.log"
     message:
         "--- kallisto quant ---"
     shell:
-        "kallisto quant -i {params.INDEX} -o {params.OUT_FILE} --{params.STRAND} --bootstrap-samples={params.BOOTSTRAPS} --threads={params.N_THREADS} {input}"
+        "kallisto quant -i {params.INDEX} -o {params.OUT_FILE} --{params.STRAND} --bootstrap-samples={params.BOOTSTRAPS} --threads={params.N_THREADS} {input} > {log} 2>&1"

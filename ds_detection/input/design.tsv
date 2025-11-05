@@ -1,0 +1,9 @@
+sample_name	group	bam_file	fq1	fq2
+CTX_104	treated	/mnt/gtklab01/gtk/spliceat-test/results/star/bam/CTX_104.sortedByCoord.bam	/mnt/gtklab01/linglab/tdp43/geo/CTX_104_1.fq.gz	/mnt/gtklab01/linglab/tdp43/geo/CTX_104_2.fq.gz
+CTX_108	treated	/mnt/gtklab01/gtk/spliceat-test/results/star/bam/CTX_108.sortedByCoord.bam	/mnt/gtklab01/linglab/tdp43/geo/CTX_108_1.fq.gz	/mnt/gtklab01/linglab/tdp43/geo/CTX_108_2.fq.gz
+CTX_120	control	/mnt/gtklab01/gtk/spliceat-test/results/star/bam/CTX_120.sortedByCoord.bam	/mnt/gtklab01/linglab/tdp43/geo/CTX_120_1.fq.gz	/mnt/gtklab01/linglab/tdp43/geo/CTX_120_2.fq.gz
+CTX_125	control	/mnt/gtklab01/gtk/spliceat-test/results/star/bam/CTX_125.sortedByCoord.bam	/mnt/gtklab01/linglab/tdp43/geo/CTX_125_1.fq.gz	/mnt/gtklab01/linglab/tdp43/geo/CTX_125_2.fq.gz
+CTX_128	treated	/mnt/gtklab01/gtk/spliceat-test/results/star/bam/CTX_128.sortedByCoord.bam	/mnt/gtklab01/linglab/tdp43/geo/CTX_128_1.fq.gz	/mnt/gtklab01/linglab/tdp43/geo/CTX_128_2.fq.gz
+CTX_147	control	/mnt/gtklab01/gtk/spliceat-test/results/star/bam/CTX_147.sortedByCoord.bam	/mnt/gtklab01/linglab/tdp43/geo/CTX_147_1.fq.gz	/mnt/gtklab01/linglab/tdp43/geo/CTX_147_2.fq.gz
+CTX_148	control	/mnt/gtklab01/gtk/spliceat-test/results/star/bam/CTX_148.sortedByCoord.bam	/mnt/gtklab01/linglab/tdp43/geo/CTX_148_1.fq.gz	/mnt/gtklab01/linglab/tdp43/geo/CTX_148_2.fq.gz
+CTX_154	treated	/mnt/gtklab01/gtk/spliceat-test/results/star/bam/CTX_154.sortedByCoord.bam	/mnt/gtklab01/linglab/tdp43/geo/CTX_154_1.fq.gz	/mnt/gtklab01/linglab/tdp43/geo/CTX_154_2.fq.gz
