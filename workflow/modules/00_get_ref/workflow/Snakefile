@@ -1,0 +1,8 @@
+configfile: "../../../config/config.yaml"
+include: "../../../common_rules/ref.smk"
+include: "../../../common_rules/move_results.smk"
+include: "rules/ensembl.smk"
+
+rule all:
+	input:
+		gtf_file_path(filtered=True,gz=False), genome_file_path(gz=False,dna=True), genome_file_path(gz=False,dna=False), copied_outputs(REF_FILES,ref_target_dir)

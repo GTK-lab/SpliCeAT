@@ -1,8 +1,0 @@
-name: snakemake_samtools
-channels:
-  - conda-forge
-  - bioconda
-  - nodefaults
-dependencies:
-  - samtools
-  

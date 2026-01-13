@@ -1,21 +1,25 @@
+name: config
+
+pipeline_dir: "/mnt/gtklab01/megha/SpliCeAT_new/" #path to SpliCeAT directory
+
 ref:
   species: "Mus_musculus"
   build: "GRCm39"
-  release: "113"
-  genome: 'mm39'
-  flavor: "chr"
+  ensembl_release: 115
+  flavor: "chr" #check ensembl for other options
+
+samples: "design.tsv"
 
 experiment:
-  name: "spliceat_preprint"
+  name: "spliceat_replication"
   biotype: "protein_coding"
   max_transcript_support_level: 3
   strandedness: "reverse"
   readlen: 150
-  groups: [ "control", "treated" ] 
+  groups: [ "control", "treated" ]
 
-
-samples: "input/design.tsv"
-
+bgzip:
+  threads: 4
 
 leafcutter:
   activate: True
@@ -25,7 +29,7 @@ leafcutter:
 
 majiq:
   activate: True
-  license: "config/majiq/majiq_license_academic_official.lic"
+  license: "/mnt/gtklab01/megha/SpliCeAT_add/majiq_license_academic_official.lic"
   build_extra: ""
 
 whippet:
@@ -39,3 +43,7 @@ stringtie:
   threads: 4
   strand: rf
   min_juncs: 20
+
+kallisto:
+  bootstraps: 100
+  threads: 4

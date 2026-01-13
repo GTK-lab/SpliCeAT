@@ -1,0 +1,21 @@
+name: spliceat_leafcutter
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - python=3.8
+  - samtools=1.10
+  - regtools=1.0.0
+  - r-base=3.6.3
+  - r-rstan=2.19.2
+  - r-devtools=2.4.1
+  - r-hmisc=4.5_0
+  - r-oompabase=3.2.9
+  - r-oompadata=3.1.1
+  - r-distributional=0.2.2
+  - r-shiny
+  - r-shinyjs
+  - r-shinycssloaders
+  - bioconductor-dirichletmultinomial=1.26.0
+  - bioconductor-biobase=2.44.0
