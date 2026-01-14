@@ -8,10 +8,10 @@ dependencies:
   - r-yaml
   - r-stringr
   - r-data.table
-  - r-dplyr
-  - r-tidyr
+  - r-tidyverse
+  - r-conflicted
   - bioconductor-rtracklayer
   - bioconductor-venndetail
   - bioconductor-genomicranges
   - bioconductor-biomart
-
+  - bioconductor-plyranges

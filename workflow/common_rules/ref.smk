@@ -1,115 +1,52 @@
+## ref.smk
+## handle reference filenames and move to common results folder
+import os
 
-rule get_genome:
-    output:
-        temp(genome_file_path(gz=False)),
-    params:
-        species=config["ref"]["species"],
-        build=config["ref"]["build"],
-        release=config["ref"]["release"],
-        datatype="dna",
-    cache: True,
-    log:
-        "logs/get_genome.log",
-    cache: "omit-software"  # save space and time with between workflow caching (see docs)
-    wrapper:
-        "v5.8.2/bio/reference/ensembl-sequence"
+# config >> resolve pathnames
+basepath=config['pipeline_dir'] #base directory full path
 
-rule gzip_genome:
-    input:
-        genome_file_path(gz=False),
-    output:
-        genome_file_path()
-    threads: 1
-    conda:
-        "../envs/bgzip.yaml",
-    log:
-        "logs/bgzip/genome.log",
-    wrapper:
-        "v5.8.2/bio/bgzip"        
+sample_file=config["samples"] #design.tsv path wrt config file
+samples_full_path = os.path.join(basepath,'config',sample_file)
+comparison_groups = config["experiment"]["groups"]
 
+# reference file name
+def genome_release_name():
+	species=config['ref']['species']
+	build=config['ref']['build']
+	release=str(config['ref']['ensembl_release'])
+	flavor=config['ref']['flavor']
+	if flavor:
+		release+= "_"
+	return f"{species}_{build}_{release}{flavor}"
 
-rule get_annotation_gff:
-    output:
-        gff3_file_path(),
-        #"resources/annotation.gtf.gz",
-    params:
-        species=config["ref"]["species"],
-        build=config["ref"]["build"],
-        release=config["ref"]["release"],
-        flavor="chr"
-    log:
-        "logs/get_annotation.log",
-    cache: True #"omit-software"  # save space and time with between workflow caching (see docs)
-    wrapper:
-        "v5.8.2/bio/reference/ensembl-annotation"
+def genome_file_path(gz=True,dna=True):
+	gz_str = ".gz" if gz else ""
+	dna_str = "_dna" if dna else "_cds"
+	return f"results/{genome_release_name()}{dna_str}.fa{gz_str}"
 
-rule get_annotation_gtf:
-    output:
-        gtf_file_path(),
-        #"resources/annotation.gtf.gz",
-    params:
-        species=config["ref"]["species"],
-        build=config["ref"]["build"],
-        release=config["ref"]["release"],
-        flavor="chr",
-    log:
-        "logs/get_annotation-gtf.log",
-    cache: "omit-software"  # save space and time with between workflow caching (see docs)
-    wrapper:
-        "v5.8.2/bio/reference/ensembl-annotation"
+def gtf_file_path(filtered=False,gz=True):
+	gz_str = ".gz" if gz else ""
+	filt_str = "_filtered" if filtered else ""
+	return f"results/{genome_release_name()}{filt_str}.gtf{gz_str}"
 
+def gff3_file_path(filtered=False,gz=True):
+	gz_str = ".gz" if gz else ""
+	filt_str = "_filtered" if filtered else ""
+	return f"results/{genome_release_name()}{filt_str}.gff3{gz_str}"
 
-rule make_annotation_db:
-    input:
-        gff3_file_path(),
-    output:
-        annotation_db_path(),
-    log:
-        "logs/annotation_db.log",
-    conda:
-        "../envs/gffutils.yaml"
-    script:
-        "../scripts/make_annotation_db.py"
+def annotation_db_path():
+	return f"results/{genome_release_name()}.sqlite3"
 
-
-rule make_filtered_gff:
-    input:
-        annotation_db_path(),
-    params:
-        biotype=config['experiment']['biotype'],
-        max_support_level = config['experiment']['max_transcript_support_level'],
-    output:
-        gff3_file_path(filtered=True,gz=False)
-    conda:
-        "../envs/gffutils.yaml"
-    log:
-        "logs/ref/filter_gff.log"
-    script:
-        "../scripts/filter_annotation_to_gff.py"
-    
-
-rule make_filtered_gtf:
-    input:
-        gff3_file_path(filtered=True,gz=False),
-    output:
-        gtf_file_path(filtered=True),
-    conda:
-        "../envs/gffread.yaml",
-    log:
-        "logs/ref/filter_gtf.log"
-    shell:
-        "gffread {input} -T | bgzip > {output} 2>{log}"
-
+# gunzip rule
 rule uncompress:
-    wildcard_constraints:
-        filename=".*(?<!\\.gz)"
-    input:
-        "{filename}.gz"
-    log:
-        "logs/uncompress_{filename}.log"
-    conda:
-        "../envs/bgzip.yaml"
-    output:
-        "{filename}",
-    wrapper:
-        "v5.8.3/bio/bgzip"
+	wildcard_constraints:
+		filename=r".+\.(fa|diff|gtf|gff3|gff)"
+	input:
+		"{filename}.gz"
+	conda:
+		"../envs/bgzip.yaml"
+	output:
+		"{filename}",
+	wrapper:
+		"v5.8.3/bio/bgzip"
+

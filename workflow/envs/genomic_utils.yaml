@@ -1,0 +1,11 @@
+name: genomic_utils
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - samtools
+  - regtools
+  - gffread >= 0.12.7
+  - gffutils = 0.13
+  - pybedtools

@@ -1,0 +1,9 @@
+name: spliceat-base
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - python >= 3.10
+  - htslib
+  - pandas
