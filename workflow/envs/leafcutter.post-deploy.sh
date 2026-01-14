@@ -11,5 +11,5 @@ conda env config vars unset R_LIBS_USER
 R --no-environ -s <<EOF
 	options(repos = c(CRAN = "http://cran.us.r-project.org"))
 	Sys.setenv(TAR = '/bin/tar')
-	devtools::install_github("davidaknowles/leafcutter/leafcutter",ref='psi_2019',upgrade = "never")
+	devtools::install_github("davidaknowles/leafcutter/leafcutter",ref='psi_2019', dependencies=FALSE, upgrade = "never")
 EOF

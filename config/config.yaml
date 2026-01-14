@@ -1,6 +1,6 @@
 name: config
 
-pipeline_dir: "/mnt/gtklab01/megha/SpliCeAT_new/" #path to SpliCeAT directory
+pipeline_dir: "/mnt/gtklab01/megha/SpliCeAT/" #path to SpliCeAT directory
 
 ref:
   species: "Mus_musculus"
