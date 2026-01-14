@@ -1,17 +1,16 @@
-
-
+#leafcutter.smk
+#all leafcutter rules
 rule leafcutter_exons:
     input:
-        gtf_file_path(filtered=True)
+        updated_file(gtf_file_path(filtered=True,gz=False),ref_target_dir) #.gtf
     output:
         "results/leafcutter/exons.txt.gz",
     conda:
-        "../envs/gffutils.yaml"
+        "../../../../envs/genomic_utils.yaml"
     log:
         "logs/leafcutter/exons.log",
     script:
         "../scripts/leafcutter_exons.py"
-
 
 rule regtools_junction_extract:
     input:
@@ -21,7 +20,7 @@ rule regtools_junction_extract:
     container:
         "docker://griffithlab/regtools:release-1.0.0"
     conda:
-        "../envs/regtools.yaml"
+        "../../../../envs/genomic_utils.yaml"
     log:
         "logs/regtools/{sample}.log"
     params:
@@ -57,11 +56,9 @@ rule leafcutter_cluster:
     log:
         "logs/leafcutter/cluster.log"
     conda:
-        "../envs/leafcutter.yaml",
+        "../../../../envs/leafcutter.yaml",
     shell:
-        "leafcutter_cluster_regtools.py -j {input} -r {params.rundir} -l {params.max_intron_length}"
- 
-
+        "leafcutter_cluster_regtools.py -j {input} -r {params.rundir} -l {params.max_intron_length}  2>{log} 1>&2"
 
 rule leafcutter_differential_splicing:
     input:
@@ -76,7 +73,7 @@ rule leafcutter_differential_splicing:
         groups_file = leafcutter_grouppath,
         prefix = lambda w,output: os.path.dirname(output.effect_size),
     conda:
-        "../envs/leafcutter.yaml"
+        "../../../../envs/leafcutter.yaml"
     log:
         "logs/leafcutter/ds.log"
     threads:
@@ -85,8 +82,7 @@ rule leafcutter_differential_splicing:
         "unset R_LIBS_USER; "
         "leafcutter_ds.R --num_threads={threads} -e {input.exons} -i 1 -g {params.min_samples_per_group} {input.counts} {params.groups_file} -o {params.prefix} 2>{log} 1>&2;"
         "mv {params.prefix}_cluster_significance.txt {output.signif};"
-        "mv {params.prefix}_effect_sizes.txt {output.effect_size}" 
-
+        "mv {params.prefix}_effect_sizes.txt {output.effect_size}"
 
 rule leafcutter_lsvs:
     input:
@@ -97,6 +93,6 @@ rule leafcutter_lsvs:
     log:
         "logs/leafcutter/lsvs.log",
     conda:
-        "../envs/pandas.yaml"
+        "../../../../envs/base.yaml"
     script:
         "../scripts/leafcutter_lsvs.py"

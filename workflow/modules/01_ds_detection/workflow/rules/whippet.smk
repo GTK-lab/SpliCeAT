@@ -1,3 +1,5 @@
+#whippet.smk
+#all whippet rules
 whippet_final_files = [
     "results/whippet/merged.bam",
     "results/whippet/merged.bam.bai",
@@ -5,8 +7,6 @@ whippet_final_files = [
     expand("results/whippet/quant/{sample}.psi.gz",sample=samples),
     "results/whippet/delta_psi.diff.gz",
 ]
-
-comparison_groups = config["experiment"]["groups"]
 
 rule whippet:
     input:
@@ -24,22 +24,22 @@ rule whippet_merge_bams:
         merged="results/whippet/merged.bam",
         merged_index="results/whippet/merged.bam.bai"
     conda:
-        "../envs/samtools.yaml"
+        "../../../../envs/genomic_utils.yaml"
     log:
         "logs/whippet/merge_bams.log"
     threads: 8,
     shell:
         """
-        samtools merge -o {output.merged} --threads {threads} {input.bam_files}; 
+        samtools merge -o {output.merged} --threads {threads} {input.bam_files};
         samtools index {output.merged}
         """
 
 rule whippet_index:
     input:
-        genome_fa = genome_file_path(),
+        genome_fa = updated_file(genome_file_path(gz=True,dna=True),ref_target_dir), #dna.fa.gz
         bam =   "results/whippet/merged.bam",
         index = "results/whippet/merged.bam.bai",
-        gtf = gtf_file_path(filtered=True),
+        gtf = updated_file(gtf_file_path(filtered=True, gz=False),ref_target_dir)  #filtered.gtf.gz",
     output:
         "results/whippet/whippet_index.jls"
     params:
@@ -47,7 +47,7 @@ rule whippet_index:
     log:
         "logs/whippet/whippet_index.log"
     conda:
-        "../envs/whippet.yaml"
+        "../../../../envs/whippet.yaml"
     shell:
         "julia ${{WHIPPET_PATH}}/whippet-index.jl "
         "--fasta {input.genome_fa} "
@@ -55,7 +55,7 @@ rule whippet_index:
         "--gtf {input.gtf} "
         "--bam-min-reads {params.bam_min_reads} "
         "--index {output} >{log} 2>&1;"
-        
+
 rule whippet_quantify:
     input:
         fq1 = get_fq1,
@@ -68,7 +68,7 @@ rule whippet_quantify:
     log:
         "logs/whippet/{sample}_quant.log",
     conda:
-        "../envs/whippet.yaml",
+        "../../../../envs/whippet.yaml",
     shell:
         "julia ${{WHIPPET_PATH}}/whippet-quant.jl -o {params.out} -x {input.index} {input.fq1} {input.fq2} 2>{log}"
 
@@ -85,7 +85,7 @@ rule whippet_delta:
     log:
         "logs/whippet/delta_psi.log",
     conda:
-        "../envs/whippet.yaml",
+        "../../../../envs/whippet.yaml",
     shell:
         "julia ${{WHIPPET_PATH}}/whippet-delta.jl "
         "-a {params.grp1} -b {params.grp2} -o results/whippet/delta_psi > {log} 2>&1"

@@ -1,8 +1,9 @@
+#majiq.smk
+#all majiq rules
 
 majiq_sj_files = [ f"results/majiq/{f}.sj" for f in annot['bam_stem'] ]
 majiq_majiq_files = [ f"results/majiq/{f}.majiq" for f in annot['bam_stem'] ]
 
-comparison_groups = config["experiment"]["groups"]
 
 majiq_final_files = [
     expand("results/majiq/{samples.bam_stem}.sj",samples=annot.itertuples),
@@ -21,27 +22,26 @@ rule majiq:
     log:
         "logs/majiq.log"
     conda:
-        "../envs/base.yaml"
+        "../../../../envs/base.yaml"
     shell:
         "touch {output}"
 
 rule majiq_conf:
     input:
-        samples=config['samples'],
+        design_tsv=samples_full_path, #full path of design.tsv
         bam_files=bam_files,
     log:
         "logs/majiq/build_ini.log",
     output:
         touch("results/majiq/majiq.ini"),
     conda:
-        "../envs/pandas.yaml"
+        "../../../../envs/base.yaml"
     script:
         "../scripts/build_majiq_ini.py"
 
-
 rule majiq_build:
     input:
-        gff3=gff3_file_path(filtered=True,gz=False),
+        gff3=updated_file(gff3_file_path(filtered=True,gz=False),ref_target_dir), #.gff3
         conf_file = "results/majiq/majiq.ini",
         bams = bam_files,
     params:
@@ -54,14 +54,13 @@ rule majiq_build:
     log:
         "logs/majiq/majiq_build.log",
     conda:
-        "../envs/majiq.yaml"
+        "../../../../envs/majiq.yaml"
     threads:
         8
     shell:
         "majiq --license {params.license} build {input.gff3} "
         "--logger {log} {params.extra} "
         "-c {input.conf_file} -j {threads} -o results/majiq >/dev/null 2>&1"
-
 
 rule majiq_delta_psi:
     input:
@@ -83,13 +82,12 @@ rule majiq_delta_psi:
     threads:
         16
     conda:
-        "../envs/majiq.yaml"
+        "../../../../envs/majiq.yaml"
     shell:
         "majiq --license {params.license} deltapsi "
         "-grp1 {params.grp1} -grp2 {params.grp2} "
         "--logger {log} "
         "-j {threads} -o {params.output_dir} -n {params.names} > /dev/null 2> {log}.err"
-
 
 rule majiq_heterogen:
     input:
@@ -110,7 +108,7 @@ rule majiq_heterogen:
     threads:
         16
     conda:
-        "../envs/majiq.yaml"
+        "../../../../envs/majiq.yaml"
     shell:
         "majiq --license {params.license} heterogen "
         "-grp1 {params.grp1} -grp2 {params.grp2} "
@@ -126,7 +124,7 @@ rule majiq_voila_to_tsv:
     log:
         "logs/majiq/het_voila_to_tsv.log",
     conda:
-        "../envs/majiq.yaml"
+        "../../../../envs/majiq.yaml"
     shell:
         "voila tsv {input.splicegraph} {input.voila} -f {output} > {log} 2>&1"
 
@@ -136,7 +134,7 @@ rule majiq_explode:
     output:
         f"results/majiq/expanded_{'-'.join(comparison_groups)}.deltapsi.tsv",
     conda:
-        "../envs/pandas.yaml"
+        "../../../../envs/base.yaml"
     log:
         "logs/majiq/explode.log"
     script:
