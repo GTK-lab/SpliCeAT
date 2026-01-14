@@ -1,8 +1,9 @@
 import pandas as pd
 
-sample_design = pd.read_table(config["SAMPLES"]).set_index("sample", drop=False)
+sample_file = pd.read_csv(samples_full_path, sep="\t", dtype=str, comment="#")
+sample_design = sample_file.set_index("sample_name", drop=False)
 
-SAMPLES = sample_design["sample"].tolist()
+SAMPLES = sample_design["sample_name"].tolist()
 
-def get_bam_files(wildcards):
-    return [config["ALIGNMENTS_DIR"]+sample_design.loc[wildcards.sample, "sample"]+"_Aligned.sortedByCoord.out.bam"]
+def get_bam(wildcards):
+    return [sample_design.loc[wildcards.sample, "bam_file"]]

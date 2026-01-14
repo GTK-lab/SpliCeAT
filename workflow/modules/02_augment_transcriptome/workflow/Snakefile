@@ -1,4 +1,6 @@
-configfile: "config/config.yaml"
+configfile: "../../../config/config.yaml"
+include: "../../../common_rules/ref.smk"
+include: "../../../common_rules/move_results.smk"
 include: "rules/common.smk"
 include: "rules/stringtie_assembly.smk"
 include: "rules/stringtie_merge.smk"
@@ -9,11 +11,9 @@ include: "rules/collapse_transcripts.smk"
 
 rule all:
     input:
-        expand(config["BASE_PATH"]+"results/stringtie_assemblies/{sample}_ref_guided_assembly.gtf",sample=SAMPLES),
-        config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly.gtf",
-        config["BASE_PATH"]+"results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf",
-        config["BASE_PATH"]+"results/augmented_transcriptome/merged_stringtie_assembly_novel_exon_filtered.fa",
-        config["BASE_PATH"]+"results/augmented_transcriptome/augmented_transcripts.fa",
-        config["BASE_PATH"]+"results/augmented_transcriptome/kallisto_index_augmented_transcriptome",
-        config["BASE_PATH"]+"results/augmented_transcriptome/t2g_augment_uncollapsed.csv",
-        config["BASE_PATH"]+"results/augmented_transcriptome/t2g_augment_collapsed.csv"
+        expand("results/stringtie_assemblies/{sample}_ref_guided_assembly.gtf",sample=SAMPLES),
+        "results/merged_assembly/merged_stringtie_assembly.gtf",
+        "results/merged_assembly/merged_stringtie_assembly_novel_exon_filtered.gtf",
+        "results/augmented_transcriptome/merged_stringtie_assembly_novel_exon_filtered.fa",
+        "results/augmented_transcriptome/augmented_transcripts.fa",
+        copied_outputs(aug_output,aug_output_dir)
