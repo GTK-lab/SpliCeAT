@@ -1,11 +1,16 @@
 import pandas as pd
 
-experimental_design = pd.read_table(config["BASE_PATH"]+"/de_analysis/config/samples.tsv").set_index("sample_name", drop=False)
+sample_file = pd.read_csv(samples_full_path, sep="\t", dtype=str, comment="#")
+sample_design = sample_file.set_index("sample_name", drop=False)
 
-SAMPLES = experimental_design["sample_name"].tolist()
+SAMPLES = sample_design["sample_name"].tolist()
+
+def get_bam(wildcards):
+    return [sample_design.loc[wildcards.sample, "bam_file"]]
+
 
 def get_fastq_files(wildcards):
-    return{
-        "read1": experimental_design.loc[wildcards.sample_name, "fastqdir"] + experimental_design.loc[wildcards.sample_name, "fastq1"],
-        "read2": experimental_design.loc[wildcards.sample_name, "fastqdir"] + experimental_design.loc[wildcards.sample_name, "fastq2"]
+    return {
+        "read1": sample_design.loc[wildcards.sample_name, "fq1"],
+        "read2": sample_design.loc[wildcards.sample_name, "fq2"]
     }
