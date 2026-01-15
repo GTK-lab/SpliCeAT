@@ -131,12 +131,12 @@ voila view results/majiq/control-treated.deltapsi.voila  results/majiq/splicegra
 View the results on `http://<remote_server>:5000/` (e.g. `http://atlas.cbis.nus.edu.sg:5000/`) and they should be displayed as follows. Click on `Download LSVs` to get the list of local splicing variations.
 
 <p align="left">
-  <img src="../images/majiq_results.png">
+  <img src="../../../images/majiq_results.png">
 </p>
 
 Local splicing variations (LSV) file:
 <p align="left">
-  <img src="../images/majiq_lsv.PNG">
+  <img src="../../../images/majiq_lsv.PNG">
 </p>
 
 
@@ -147,7 +147,7 @@ gunzip delta_psi.diff.gz
 ```
 and the results should look like this, where each row is a differential splicing event:
 <p align="left">
-  <img src="../images/whippet_results.PNG">
+  <img src="../../../images/whippet_results.PNG">
 </p>
 
 ### Leafcutter output files
@@ -160,12 +160,12 @@ All alternative splicing results are found in the above 2 files.
 `cluster_significance.txt` (significance of AS events):
 
 <p align="left">
-  <img src="../images/leafcutter_significance.PNG">
+  <img src="../../../images/leafcutter_significance.PNG">
 </p>
 
 `effect_sizes.txt` (deltaPSI of AS events):
 <p align="left">
-  <img src="../images/leafcutter_effect_size.PNG">
+  <img src="../../../images/leafcutter_effect_size.PNG">
 </p>
 
 ---
