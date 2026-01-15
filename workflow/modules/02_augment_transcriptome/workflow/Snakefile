@@ -2,12 +2,9 @@ configfile: "../../../config/config.yaml"
 include: "../../../common_rules/ref.smk"
 include: "../../../common_rules/move_results.smk"
 include: "rules/common.smk"
-include: "rules/stringtie_assembly.smk"
-include: "rules/stringtie_merge.smk"
+include: "rules/stringtie.smk"
 include: "rules/prep_for_AT.smk"
-include: "rules/get_novel_sequence.smk"
 include: "rules/kallisto_index.smk"
-include: "rules/collapse_transcripts.smk"
 
 rule all:
     input:

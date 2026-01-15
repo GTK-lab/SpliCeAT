@@ -9,7 +9,7 @@ rule stringtie_assembly:
         threads=config["stringtie"]["threads"],
         strand=config["stringtie"]["strand"]
     conda:
-        "../envs/stringtie.yaml"
+        "../../../../envs/stringtie.yaml"
     log:
         "logs/stringtie/{sample}_stringtie_assembly.log"
     threads:
@@ -27,7 +27,7 @@ rule stringtie_merge:
     threads:
         config["stringtie"]["threads"]
     conda:
-        "../envs/stringtie.yaml"
+        "../../../../envs/stringtie.yaml"
     log:
         "logs/stringtie/stringtie_merge.log"
     shell:

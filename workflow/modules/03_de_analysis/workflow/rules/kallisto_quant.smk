@@ -17,4 +17,4 @@ rule kallisto_quant:
     message:
         "--- kallisto quant ---"
     shell:
-        "kallisto quant -i {params.INDEX} -o {params.OUT_FILE} {params.STRAND} --bootstrap-samples={params.BOOTSTRAPS} --threads={params.N_THREADS} {input} > {log} 2>&1"
+        "kallisto quant -i {params.INDEX} -o {params.OUT_FILE} {params.STRAND} --bootstrap-samples={params.BOOTSTRAPS} --threads={threads} {input} > {log} 2>&1"

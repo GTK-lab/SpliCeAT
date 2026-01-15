@@ -13,7 +13,7 @@ rule sleuth:
     log:
         "logs/sleuth.log"
     conda:
-        "../envs/sleuth.yaml"
+        "../../../../envs/sleuth.yaml"
     threads:
         12
     script:
