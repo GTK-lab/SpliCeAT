@@ -5,10 +5,10 @@
 # SpliCeAT: Integrated pipeline for detection and quantification of aberrant transcripts with novel splicing events
 
 This repository contains the following Snakemake pipelines and scripts, to be run in this order:
--  Preparatory Step (`00_get_ref`) [^1]
-1. Differential splicing detection (`01_ds_detection`)
-2. Generation of augmented transcriptome (`02_augment_transcriptome`)
-3. Differential expression analysis (`03_de_analysis`)
+1. Preparatory Step (`00_get_ref`) [^1]
+2. Differential splicing detection (`01_ds_detection`)
+3. Generation of augmented transcriptome (`02_augment_transcriptome`)
+4. Differential expression analysis (`03_de_analysis`)
 
 <p align="center">
   <img src="images/Workflow.png" width="550">
