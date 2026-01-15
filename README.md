@@ -14,6 +14,48 @@ This repository contains the following Snakemake pipelines and scripts, to be ru
   <img src="images/Workflow.png" width="550">
 </p>
 
+### Pipeline Structure
+```
+SpliCeAT/
+├── config/
+├── workflow/
+│   ├── common_rules/
+│   ├── envs/
+│   └── modules/
+│       ├── Snakefile (-> pending)
+│       ├── 00_get_ref/
+│       │   ├── workflow
+│       │   │   ├── Snakefile
+│       │   │   ├── rules/
+│       │   │   └── scripts/
+│       │   └── logs
+│       ├── 01_ds_detection/
+│       │   ├── workflow/
+│       │   │   ├── Snakefile
+│       │   │   ├── rules/
+│       │   │   └── scripts/
+│       │   └── logs/
+│       ├── 02_augment_transcriptome/
+│       │   ├── workflow/
+│       │   │   ├── Snakefile	
+│       │   │   ├── rules/
+│       │   │   └── scripts/
+│       │   └── logs/
+│       └── 03_de_analysis/
+│           ├── workflow/
+│           │   ├── Snakefile
+│           │   ├── rules/
+│           │   └── scripts/
+│           └── logs/
+└── results/ (-> working on this)
+    ├── r0_get_ref
+    ├── r1_ds_detection 
+    ├── r2_augment_transcriptome
+    └── r3_de_analysis			
+```
+
+Each module can be run seperately from its specific folder. The snakemake files are designed to run from outside the corresponding workflow directories to avoid path conflicts.
+
 ### What you need *before* starting:
 - FASTQ sample files of 2 conditions (control & treatment)
 - Aligned BAM files using STAR, indexed using samtools [^2]
