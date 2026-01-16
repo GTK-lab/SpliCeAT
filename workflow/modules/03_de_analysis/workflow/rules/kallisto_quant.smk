@@ -2,10 +2,10 @@ rule kallisto_quant:
     input:
         unpack(get_fastq_files)
     output:
-        "results/kallisto_quant_out/{sample_name}/abundance.tsv"
+        "results/kallisto_quant_out/{sample}/abundance.tsv"
     params:
         INDEX = updated_file(aug_index,aug_output_dir),
-        OUT_FILE = "results/kallisto_quant_out/{sample_name}",
+        OUT_FILE = "results/kallisto_quant_out/{sample}",
         STRAND = lambda wildcards: "--rf-stranded" if config["experiment"]["strandedness"] == "reverse" else "--fr-stranded",
         BOOTSTRAPS = config["kallisto"]["bootstraps"],
     threads:
@@ -13,7 +13,7 @@ rule kallisto_quant:
     conda:
         "../../../../envs/kallisto.yaml"
     log:
-        "logs/kallisto_quant/{sample_name}.log"
+        "logs/kallisto_quant/{sample}.log"
     message:
         "--- kallisto quant ---"
     shell:
