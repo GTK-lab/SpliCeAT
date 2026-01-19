@@ -3,12 +3,7 @@
 import os
 
 # config >> resolve pathnames
-basepath=config['pipeline_dir'] #base directory full path
-
-sample_file=config["samples"] #design.tsv path wrt config file
-samples_full_path = os.path.join(basepath,'config',sample_file)
-comparison_groups = config["experiment"]["groups"]
-
+#basepath=config['pipeline_dir'] #base directory full path
 # reference file name
 def genome_release_name():
 	species=config['ref']['species']

@@ -21,7 +21,7 @@ REF_FILES = [
 	genome_file_path(gz=False,dna=False), #cds.fa
 	gff3_file_path(filtered=True,gz=False) #.gff3
 ]
-ref_target_dir=os.path.join(basepath, "results", "references")
+ref_target_dir=os.path.join(PROJECT_ROOT, "results", "references")
 
 rule copy_ref_files:
 	input:
@@ -42,12 +42,12 @@ rule copy_ref_files:
 
 # regarding ds_detection files
 ds_output = [
-	f"results/majiq/{'-'.join(comparison_groups)}.het.tsv",
+	f"results/majiq/{'-'.join(GROUPS)}.het.tsv",
 	"results/whippet/delta_psi.diff",
 	"results/leafcutter/cluster_significance.txt",
 	"results/leafcutter/effect_sizes.txt"
 ]
-ds_output_dir=os.path.join(basepath, "results", "ds_output")
+ds_output_dir=os.path.join(PROJECT_ROOT, "results", "ds_output")
 
 rule DS_GetOutput:
 	input:
@@ -73,7 +73,7 @@ aug_output = [
 	"results/augmented_transcriptome/t2g_augment_collapsed.csv",
 	"results/augmented_transcriptome/t2g_augment_uncollapsed.csv"
 ]
-aug_output_dir=os.path.join(basepath, "results", "augment_output")
+aug_output_dir=os.path.join(PROJECT_ROOT, "results", "augment_output")
 
 rule Augment_GetOutput:
 	input:

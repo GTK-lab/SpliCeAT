@@ -1,7 +1,7 @@
 configfile: "../../../config/config.yaml"
+include: "../../../common_rules/utils.smk"
 include: "../../../common_rules/ref.smk"
 include: "../../../common_rules/move_results.smk"
-include: "../../../common_rules/utils.smk"
 include: "rules/common.smk"
 include: "rules/leafcutter.smk"
 include: "rules/majiq.smk"

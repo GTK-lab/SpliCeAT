@@ -32,7 +32,7 @@ rule regtools_junction_extract:
 
 rule create_leafcutter_junction_file:
     input:
-        expand("results/regtools/{sample}.junc",sample=samples),
+        expand("results/regtools/{sample}.junc",sample=SAMPLES),
     output:
         temp("results/leafcutter/junction_files.txt"),
     log:

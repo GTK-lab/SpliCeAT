@@ -7,10 +7,10 @@ majiq_majiq_files = [ f"results/majiq/{f}.majiq" for f in annot['bam_stem'] ]
 
 majiq_final_files = [
     expand("results/majiq/{samples.bam_stem}.sj",samples=annot.itertuples),
-    f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.tsv",
-    f"results/majiq/{'-'.join(comparison_groups)}.het.tsv",
-    f"results/majiq/expanded_{'-'.join(comparison_groups)}.deltapsi.tsv",
-    f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.voila",
+    f"results/majiq/{'-'.join(GROUPS)}.deltapsi.tsv",
+    f"results/majiq/{'-'.join(GROUPS)}.het.tsv",
+    f"results/majiq/expanded_{'-'.join(GROUPS)}.deltapsi.tsv",
+    f"results/majiq/{'-'.join(GROUPS)}.deltapsi.voila",
     expand("results/majiq/{samples.bam_stem}.majiq",samples=annot.itertuples)
 ]
 
@@ -68,17 +68,17 @@ rule majiq_delta_psi:
         majiq_files=majiq_majiq_files,
         splicegraph="results/majiq/splicegraph.sql",
     output:
-        tsv=f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.tsv",
-        voila=f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.voila",
+        tsv=f"results/majiq/{'-'.join(GROUPS)}.deltapsi.tsv",
+        voila=f"results/majiq/{'-'.join(GROUPS)}.deltapsi.voila",
     log:
         "logs/majiq/majiq_deltapsi.log",
     params:
         output_dir=lambda w,input: os.path.dirname(input.splicegraph),
         license=config['majiq']['license'] ,
-        names=lambda _: " ".join(comparison_groups),
-        prefix=lambda _: "-".join(comparison_groups),
-        grp1= lambda _: " ".join(majiq_files(comparison_groups[0])),
-        grp2= lambda _: " ".join(majiq_files(comparison_groups[1])),
+        names=lambda _: " ".join(GROUPS),
+        prefix=lambda _: "-".join(GROUPS),
+        grp1= lambda _: " ".join(majiq_files(GROUPS[0])),
+        grp2= lambda _: " ".join(majiq_files(GROUPS[1])),
     threads:
         16
     conda:
@@ -95,16 +95,16 @@ rule majiq_heterogen:
         majiq_files=majiq_majiq_files,
         splicegraph="results/majiq/splicegraph.sql",
     output:
-        voila=f"results/majiq/{'-'.join(comparison_groups)}.het.voila",
+        voila=f"results/majiq/{'-'.join(GROUPS)}.het.voila",
     log:
         "logs/majiq/majiq_heterogen.log",
     params:
         output_dir=lambda w,input: os.path.dirname(input.splicegraph),
         license=config['majiq']['license'] ,
-        names=lambda _: " ".join(comparison_groups),
-        prefix=lambda _: "-".join(comparison_groups),
-        grp1= lambda _: " ".join(majiq_files(comparison_groups[0])),
-        grp2= lambda _: " ".join(majiq_files(comparison_groups[1])),
+        names=lambda _: " ".join(GROUPS),
+        prefix=lambda _: "-".join(GROUPS),
+        grp1= lambda _: " ".join(majiq_files(GROUPS[0])),
+        grp2= lambda _: " ".join(majiq_files(GROUPS[1])),
     threads:
         16
     conda:
@@ -117,10 +117,10 @@ rule majiq_heterogen:
 
 rule majiq_voila_to_tsv:
     input:
-        voila=f"results/majiq/{'-'.join(comparison_groups)}.het.voila",
+        voila=f"results/majiq/{'-'.join(GROUPS)}.het.voila",
         splicegraph="results/majiq/splicegraph.sql",
     output:
-        f"results/majiq/{'-'.join(comparison_groups)}.het.tsv",
+        f"results/majiq/{'-'.join(GROUPS)}.het.tsv",
     log:
         "logs/majiq/het_voila_to_tsv.log",
     conda:
@@ -130,9 +130,9 @@ rule majiq_voila_to_tsv:
 
 rule majiq_explode:
     input:
-        f"results/majiq/{'-'.join(comparison_groups)}.deltapsi.tsv",
+        f"results/majiq/{'-'.join(GROUPS)}.deltapsi.tsv",
     output:
-        f"results/majiq/expanded_{'-'.join(comparison_groups)}.deltapsi.tsv",
+        f"results/majiq/expanded_{'-'.join(GROUPS)}.deltapsi.tsv",
     conda:
         "../../../../envs/base.yaml"
     log:

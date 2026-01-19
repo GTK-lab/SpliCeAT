@@ -1,4 +1,5 @@
 configfile: "../../../config/config.yaml"
+include: "../../../common_rules/utils.smk"
 include: "../../../common_rules/ref.smk"
 include: "../../../common_rules/move_results.smk"
 include: "rules/ensembl.smk"
