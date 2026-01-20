@@ -42,6 +42,6 @@ rule uncompress:
 		"../envs/bgzip.yaml"
 	output:
 		"{filename}",
-	wrapper:
-		"v5.8.3/bio/bgzip"
+	shell:
+		"gunzip -c {input} > {output}"
 

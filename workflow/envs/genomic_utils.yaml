@@ -4,6 +4,7 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
+  - python= 3.12
   - samtools
   - regtools
   - gffread >= 0.12.7
