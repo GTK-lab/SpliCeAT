@@ -51,6 +51,7 @@ rule index_bams:
 		"v3.5.3/bio/samtools/index"
 
 def STAR_output():
-	if config.get("star", {}).get("activate", False):
+	if config.get("STAR", {}).get("activate", False):
 		return expand(os.path.join(STR_DIR, "aligned_BAM", "{sample}_Aligned.sortedByCoord.out.bam.bai"), sample=SAMPLES)
+	return []
 

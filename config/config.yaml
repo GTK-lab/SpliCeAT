@@ -1,7 +1,7 @@
 name: config
 
 pipeline_dir: "/mnt/gtklab01/megha/SpliCeAT/" #path to SpliCeAT directory
-results_dir: "/mnt/gtklab01/megha/SpliCeAT/results/" #path to results directory
+results_dir: "/mnt/gtklab01/megha/SpliCeAT/" #path to results directory
 
 ref:
   species: "Homo_sapiens" #Mus_musculus

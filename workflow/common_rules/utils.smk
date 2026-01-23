@@ -33,7 +33,7 @@ SL_DIR = os.path.join(R3_DE, "sleuth")
 original_design_path = os.path.join(PROJECT_ROOT,'config',config["samples"])
 original_df=pd.read_csv(original_design_path, sep="\t", dtype=str, comment="#")
 
-star_active = config.get('star', {}).get('activate', False)
+star_active = config.get('STAR', {}).get('activate', False)
 samples_full_path = os.path.join(RESULTS_DIR, "samples.tsv")
 
 if os.path.exists(samples_full_path):
