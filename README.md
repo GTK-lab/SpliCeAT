@@ -48,10 +48,11 @@ SpliCeAT/
 │           │   └── scripts/
 │           └── logs/
 └── results/
-    ├── r0_get_ref
-    ├── r1_ds_detection
-    ├── r2_augment_transcriptome
-    └── r3_de_analysis
+    ├── samples.tsv
+    ├── r0_get_ref/
+    ├── r1_ds_detection/
+    ├── r2_augment_transcriptome/
+    └── r3_de_analysis/
 ```
 
 Each module can be run seperately from its specific folder. The snakemake files are designed to run from outside the corresponding workflow directories to avoid path conflicts.
