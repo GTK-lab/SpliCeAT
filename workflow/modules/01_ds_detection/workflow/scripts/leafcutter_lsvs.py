@@ -14,7 +14,7 @@ df_effect['cluster'] = df_effect['cluster'].str[:-2]  # Remove last two characte
 
 # Reorder columns for clarity
 cols = ['chr', 'start', 'end', 'cluster', 'strand'] + \
-    [col for col in df_effect.columns if col not in ['chr', 'start', 'end', 'cluster', 'strand', 'intron']]
+	[col for col in df_effect.columns if col not in ['chr', 'start', 'end', 'cluster', 'strand', 'intron']]
 
 df_effect = df_effect[cols]
 
@@ -40,7 +40,7 @@ lsvs = pd.merge(df_clusters,df_effect)
 ## reversing the insistence of leafcutter_ds.R
 lsvs['chr'] = lsvs['chr'].str.removeprefix("chr")
 cols = ['chr', 'start', 'end', 'cluster', 'strand'] + \
-    [col for col in lsvs.columns if col not in ['chr', 'start', 'end', 'cluster', 'strand']]
+	[col for col in lsvs.columns if col not in ['chr', 'start', 'end', 'cluster', 'strand']]
 
 lsvs = lsvs[cols]
 

@@ -20,11 +20,11 @@ grouped_bam_names = samples.groupby("group")["bam_name"].agg(",".join).to_dict()
 majiq_config = configparser.ConfigParser()
 
 majiq_config['info'] = {
-        "experiment" : snakemake.config["experiment"]["name"],
-        "genome" : snakemake.config["ref"]["build"],
-        "bamdirs" : ",".join(bam_dirs),
-        "strandedness" : snakemake.config["experiment"]["strandedness"]
-    }
+		"experiment" : snakemake.config["experiment"]["name"],
+		"genome" : snakemake.config["ref"]["build"],
+		"bamdirs" : ",".join(bam_dirs),
+		"strandedness" : snakemake.config["experiment"]["strandedness"]
+	}
 
 majiq_config['experiments'] = grouped_bam_names
 

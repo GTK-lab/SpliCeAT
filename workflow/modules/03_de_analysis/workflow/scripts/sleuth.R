@@ -2,10 +2,10 @@
 
 # SNAKEMAKE PARAMS
 kallisto_input <- snakemake@input[["kallisto_tsv"]]
-t2g_collapsed <- snakemake@input[["aug_files"]][2]
-t2g_uncollapsed <- snakemake@input[["aug_files"]][3]
+t2g_collapsed <- snakemake@input[["t2g_aug_collapsed"]]
+t2g_uncollapsed <- snakemake@input[["t2g_aug_uncollapsed"]]
 
-module_path <- snakemake@params[["module_path"]]
+kq_out <- snakemake@params[["kallisto_quant_out"]]
 design_matrix <- snakemake@params[["design_matrix"]]
 
 result_collapsed_tpm <- snakemake@output[["result_collapsed_tpm"]]
@@ -44,7 +44,7 @@ lgr$info("Done.")
 # configuring h5 files to get rid of trailing transcript info - required if using Gencode annotations.
 # If using Ensembl annotations, skip this part
 lgr$info("Configuring h5 files to get rid of trailing transcript info...")
-files <- list.files(paste(module_path, "results/kallisto_quant_out/", sep=""),
+files <- list.files(paste(kq_out),
                     pattern=".h5",
                     recursive=TRUE,
                     full.names=TRUE)
@@ -65,18 +65,17 @@ lgr$info("==== Begin Analysis 1: NO collapsing ====")
 
 lgr$info("Configuring experimental design...")
 
-sample_ids <- dir(file.path(paste(module_path, "results/kallisto_quant_out", sep="")))
+sample_ids <- dir(file.path(paste(kq_out)))
 lgr$info("Check that your samples are correct:")
 sample_ids
 
-kal_dirs <- file.path(paste(module_path, "results/kallisto_quant_out", sep=""), sample_ids, "abundance.h5")
+kal_dirs <- file.path(paste(kq_out), sample_ids, "abundance.h5")
 lgr$info("Check that your h5 file paths are correct:")
 kal_dirs
 
 lgr$info("Loading in experimental design...")
 metadf <- read.table(paste(design_matrix, sep=""), sep = '\t', header = TRUE, colClasses = c("character"))
 metadf$sample <- metadf$sample_name
-metadf$sample_name <- NULL
 
 metadf <- metadf[order(metadf$sample, decreasing=FALSE),]
 metadf <- dplyr::mutate(metadf, path = kal_dirs)
@@ -85,13 +84,15 @@ metadf
 
 metadf$group <- as.factor(metadf$group)
 metadf$group <- relevel(metadf$group, "control")
+lvls <- levels(metadf$group)
+lgr$info("Detected groups: %s", paste(lvls, collapse = ", "))
 
 lgr$info("Starting sleuth analysis...")
 
-so <- sleuth_prep(metadf, ~gender+group, extra_bootstrap_summary = TRUE,
+so <- sleuth_prep(metadf, ~group, extra_bootstrap_summary = TRUE,
                   gene_mode=FALSE, transformation_function = function(x) log2(x + 0.5)) %>%
-      sleuth_fit(~gender, 'reduced') %>%
-      sleuth_fit(~gender+group, 'full') %>%
+      sleuth_fit(~1, 'reduced') %>%
+      sleuth_fit(~group, 'full') %>%
       sleuth_lrt('reduced', 'full') %>%
       sleuth_wt(which_beta = 'grouptreated')
 
@@ -127,11 +128,11 @@ sleuth_tx_lrt_sleuth_tx_wald_join <- full_join(sleuth_tx_lrt,sleuth_tx_wald,by=c
 
 lgr$info("Finished sleuth analysis, saving results...")
 
-write.csv(sleuth_tx_lrt_sleuth_tx_wald_join,paste(module_path, result_uncollapsed, sep=""))
+write.csv(sleuth_tx_lrt_sleuth_tx_wald_join,paste( result_uncollapsed))
 
 sleuth_matrix <- sleuth_to_matrix(so, 'obs_norm', 'tpm')
 sleuth_matrix <- as.data.frame(sleuth_matrix)
-write.csv(sleuth_matrix, paste(module_path, result_uncollapsed_tpm, sep=""))
+write.csv(sleuth_matrix, paste(result_uncollapsed_tpm))
 lgr$info("==== End Analysis 1 ====")
 
 ############## ANALYSIS 2 - WITH COLLAPSING ################
@@ -139,11 +140,11 @@ lgr$info("==== End Analysis 1 ====")
 lgr$info("==== Begin Analysis 2: WITH collapsing ====")
 lgr$info("Starting sleuth analysis...")
 
-so <- sleuth_prep(metadf, ~gender+group, target_mapping = t2g_augment_collapsed,
+so <- sleuth_prep(metadf, ~group, target_mapping = t2g_augment_collapsed,
                   aggregation_column = 'collapsed_target_id', extra_bootstrap_summary = TRUE,
                   gene_mode=TRUE, transformation_function = function(x) log2(x + 0.5)) %>%
-      sleuth_fit(~gender, 'reduced') %>%
-      sleuth_fit(~gender+group, 'full') %>%
+      sleuth_fit(~1, 'reduced') %>%
+      sleuth_fit(~group, 'full') %>%
       sleuth_lrt('reduced', 'full') %>%
       sleuth_wt(which_beta = 'grouptreated')
 
@@ -183,11 +184,11 @@ sleuth_gene_mode_lrt_sleuth_gene_mode_wald_join <- full_join(sleuth_gene_mode_lr
                                                              by=c("ens_gene", "ext_gene","target_id"))
 
 lgr$info("Finished sleuth analysis, saving results...")
-write.csv(sleuth_gene_mode_lrt_sleuth_gene_mode_wald_join, paste(module_path, result_collapsed, sep=""))
+write.csv(sleuth_gene_mode_lrt_sleuth_gene_mode_wald_join, paste(result_collapsed, sep=""))
 
 sleuth_matrix <- sleuth_to_matrix(so, 'obs_norm', 'tpm')
 sleuth_matrix <- as.data.frame(sleuth_matrix)
 
-write.csv(sleuth_matrix, paste(module_path, result_collapsed_tpm, sep=""))
+write.csv(sleuth_matrix, paste(result_collapsed_tpm, sep=""))
 lgr$info("==== End Analysis 2 ====")
 lgr$remove_appender("snakemake_file_log")

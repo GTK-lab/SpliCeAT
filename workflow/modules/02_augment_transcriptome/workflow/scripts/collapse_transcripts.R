@@ -5,7 +5,6 @@
 gtf_merged <- snakemake@input[["gtf_merged"]]
 gtf_filtered <- snakemake@input[["gtf_filtered"]]
 
-module_path <- snakemake@params[["module_path"]]
 organism <- snakemake@params[["organism"]]
 ensembl <- snakemake@params[["ensembl"]]
 
@@ -45,9 +44,9 @@ lgr$info("Done.")
 lgr$info("Loading in stringtie merged GTF...")
 # note: do i still need this mapping part?
 # import stringtie merged GTF - contains the mappings you need for gene to MSTRG identifier
-merged_stringtie_gtf_full <- rtracklayer::import(paste(module_path,gtf_merged,sep=""))
+merged_stringtie_gtf_full <- rtracklayer::import(paste(gtf_merged))
 # contains ONLY transcripts with HIGH CONFIDENCE splicing events
-filtered_stringtie_gtf <- rtracklayer::import(paste(module_path,gtf_filtered,sep=""))
+filtered_stringtie_gtf <- rtracklayer::import(paste(gtf_filtered))
 
 # load all as a dataframe
 merged_stringtie_gtf_full_df <- as.data.frame(merged_stringtie_gtf_full)
@@ -97,8 +96,8 @@ lgr$info("Combining reference transcripts and high-confidence novel transcripts 
 t2g_augment <- rbind(t2g, t2g_augment)
 head(t2g_augment)
 tail(t2g_augment)
-write.csv(t2g_augment, file=paste(module_path,out_uncollapsed,sep=""), row.names=FALSE)
-lgr$info("Uncollapsed t2g dataframe saved at: %s", paste(module_path,out_uncollapsed,sep=""))
+write.csv(t2g_augment, file=paste(out_uncollapsed), row.names=FALSE)
+lgr$info("Uncollapsed t2g dataframe saved at: %s", paste(out_uncollapsed,sep=""))
 
 # function for collaspsing transcripts to create tx to tx group
 if (organism == "Mus_musculus") {
@@ -125,7 +124,7 @@ t2g_augment$collapsed_target_id <- apply(t2g_augment,1,collapse_transcripts)
 # remove duplicated target_id entries becos there can be overlapping genes
 t2g_augment <- t2g_augment[!duplicated(t2g_augment[c('target_id')]),]
 
-write.csv(t2g_augment, file=paste(module_path,out_collapsed,sep=""), row.names=FALSE)
+write.csv(t2g_augment, file=paste(out_collapsed), row.names=FALSE)
 
-lgr$info("Collapsed t2g dataframe saved at: %s", paste(module_path,out_collapsed,sep=""))
+lgr$info("Collapsed t2g dataframe saved at: %s", paste(out_collapsed))
 lgr$remove_appender("snakemake_file_log")

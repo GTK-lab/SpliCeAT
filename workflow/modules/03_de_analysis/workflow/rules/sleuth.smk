@@ -1,20 +1,22 @@
+import os
 rule sleuth:
-    input:
-        aug_files=copied_outputs(aug_output,aug_output_dir),
-        kallisto_tsv=expand("results/kallisto_quant_out/{sample_name}/abundance.tsv", sample_name = SAMPLES)
-    output:
-        result_collapsed_tpm="results/sleuth/collapsed_differential_transcript_analysis_tpm.csv",
-        result_collapsed="results/sleuth/collapsed_differential_transcript_analysis.csv",
-        result_uncollapsed_tpm="results/sleuth/uncollapsed_differential_transcript_analysis_tpm.csv",
-        result_uncollapsed="results/sleuth/uncollapsed_differential_transcript_analysis.csv"
-    params:
-        module_path= os.path.join(config["pipeline_dir"], "workflow/modules/03_de_analysis/"),
-        design_matrix= os.path.join(config["pipeline_dir"], "config/",config["samples"])
-    log:
-        "logs/sleuth.log"
-    conda:
-        "../../../../envs/sleuth.yaml"
-    threads:
-        12
-    script:
-        "../scripts/sleuth.R"
+	input:
+		t2g_aug_collapsed=os.path.join(AT_DIR,"t2g_augment_collapsed.csv"),
+		t2g_aug_uncollapsed=os.path.join(AT_DIR,"t2g_augment_uncollapsed.csv"),
+		kallisto_tsv=expand(os.path.join(KQ_DIR,"{sample_name}/abundance.tsv"), sample_name = SAMPLES)
+	output:
+		result_collapsed_tpm=os.path.join(SL_DIR,"collapsed_differential_transcript_analysis_tpm.csv"),
+		result_collapsed=os.path.join(SL_DIR,"collapsed_differential_transcript_analysis.csv"),
+		result_uncollapsed_tpm=os.path.join(SL_DIR,"uncollapsed_differential_transcript_analysis_tpm.csv"),
+		result_uncollapsed=os.path.join(SL_DIR,"uncollapsed_differential_transcript_analysis.csv")
+	params:
+		kallisto_quant_out=KQ_DIR,
+		design_matrix= samples_full_path
+	log:
+		"logs/sleuth.log"
+	conda:
+		"../../../../envs/sleuth.yaml"
+	threads:
+		12
+	script:
+		"../scripts/sleuth.R"

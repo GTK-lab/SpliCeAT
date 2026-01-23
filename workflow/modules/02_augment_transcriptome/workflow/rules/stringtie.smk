@@ -1,10 +1,11 @@
+import os
 rule stringtie_assembly:
 	input:
-		get_bam
+		get_bam,
+		gtf=gtf_file_path(filtered=True,gz=False) #.gtf
 	output:
-		"results/stringtie_assemblies/{sample}_ref_guided_assembly.gtf"
+		os.path.join(ST_DIR,"{sample}_ref_guided_assembly.gtf")
 	params:
-		gtf=updated_file(gtf_file_path(filtered=True,gz=False),ref_target_dir), #.gtf
 		juncs=config["stringtie"]["min_juncs"],
 		strand=config["stringtie"]["strand"]
 	conda:
@@ -15,17 +16,16 @@ rule stringtie_assembly:
 		config["stringtie"]["threads"]
 	shell:
 		"""
-		stringtie {input} -G {params.gtf} -o {output} -j {params.juncs} -p {threads} --{params.strand} -v 2>&1 | tee {log}.raw | grep --line-buffered -Ei "warning|error|critical|invalid|fail" > {log} || true
+		stringtie {input} -G {input.gtf} -o {output} -j {params.juncs} -p {threads} --{params.strand} -v 2>&1 | tee {log}.raw | grep --line-buffered -Ei "warning|error|critical|invalid|fail" > {log} || true
 		"""
 	#verbose mode + filter to catch warnings to primary log file
 
 rule stringtie_merge:
 	input:
-		expand("results/stringtie_assemblies/{sample}_ref_guided_assembly.gtf", sample=SAMPLES)
+		expand(os.path.join(ST_DIR,"{sample}_ref_guided_assembly.gtf"), sample=SAMPLES),
+		ref_gtf=gtf_file_path(filtered=True,gz=False) #.gtf
 	output:
-		"results/merged_assembly/merged_stringtie_assembly.gtf"
-	params:
-		gtf=updated_file(gtf_file_path(filtered=True,gz=False),ref_target_dir) #.gtf
+		os.path.join(MG_DIR,"merged_stringtie_assembly.gtf")
 	threads:
 		config["stringtie"]["threads"]
 	conda:
@@ -34,6 +34,6 @@ rule stringtie_merge:
 		"logs/stringtie/stringtie_merge.log"
 	shell:
 		"""
-		stringtie --merge {input} -G {params.gtf} -i -o {output} -p {threads} -v 2>&1 | tee {log}.raw | grep --line-buffered -Ei "warning|error|critical|invalid|fail" > {log} || true
+		stringtie --merge {input} -G {input.ref_gtf} -i -o {output} -p {threads} -v 2>&1 | tee {log}.raw | grep --line-buffered -Ei "warning|error|critical|invalid|fail" > {log} || true
 		"""
 	#verbose mode + filter to catch warnings to primary log file

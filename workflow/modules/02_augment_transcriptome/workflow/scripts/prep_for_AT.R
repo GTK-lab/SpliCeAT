@@ -4,17 +4,20 @@
 
 # SNAKEMAKE PARAMS
 ds_files <- snakemake@input[["ds_files"]]
+
 majiq_het_tsv <- ds_files[1]
 whippet_delta_psi <- ds_files[2]
 leafcutter_cluster_file <- ds_files[3]
 leafcutter_effect_size_file <- ds_files[4]
+
 
 gtf_merged <- snakemake@input[["gtf_merged"]]
 
 merged_filtered_gtf <- snakemake@output[["merged_filtered_gtf"]]
 merged_fil_withRef_gtf <- snakemake@output[["merged_fil_withRef_gtf"]]
 
-module_path <- snakemake@params[["module_path"]]
+masterlist_dir <- snakemake@params[["masterlist_dir"]]
+
 species    <- snakemake@params[["organism"]]
 version <- snakemake@params[["ensembl"]]
 n_threads   <- snakemake@threads
@@ -135,9 +138,9 @@ majiq_lsv_final <- majiq_lsv_final |>
     dplyr::select(gene_ids, Ensembl_ID, type, Coord, prefix)
 
 # write to majiq_masterlist
-dir.create(paste(module_path,"masterlists",sep=""))
-write.csv(majiq_lsv_final,paste(module_path,"masterlists/majiq_masterlist.csv",sep=""),row.names = FALSE)
-lgr$info("Majiq masterlist created at: %s",paste(module_path,"masterlists/majiq_masterlist.csv",sep=""))
+dir.create(masterlist_dir)
+write.csv(majiq_lsv_final,paste(masterlist_dir,"/majiq_masterlist.csv",sep=""),row.names = FALSE)
+lgr$info("Majiq masterlist created at: %s",paste(masterlist_dir,"/majiq_masterlist.csv",sep=""))
 
 
 ### LEAFCUTTER MASTERLIST
@@ -174,8 +177,8 @@ leafcutter_final <- leafcutter_final |> dplyr::rename(intron_start = start, intr
 
 leafcutter_final_filtered <- filter(leafcutter_final, P_Adjust <0.05 & abs(deltapsi) >= 0.2)
 
-write.csv(leafcutter_final_filtered,paste(module_path,"masterlists/leafcutter_masterlist.csv",sep=""),row.names = FALSE)
-lgr$info("Leafcutter masterlist created at: %s",paste(module_path,"masterlists/leafcutter_masterlist.csv",sep=""))
+write.csv(leafcutter_final_filtered,paste(masterlist_dir,"/leafcutter_masterlist.csv",sep=""),row.names = FALSE)
+lgr$info("Leafcutter masterlist created at: %s",paste(masterlist_dir,"/leafcutter_masterlist.csv",sep=""))
 
 ### WHIPPET MASTERLIST
 lgr$info("Processing Whippet input file...")
@@ -231,9 +234,9 @@ whippet_diff_final <- whippet_diff_final |>
 whippet_diff_final$Gene_strand[whippet_diff_final$Gene_strand=="-1"]<-"-"
 whippet_diff_final$Gene_strand[whippet_diff_final$Gene_strand=="1"]<-"+"
 
-write.csv(whippet_diff_final, paste(module_path,"masterlists/whippet_masterlist.csv",sep=""),row.names = FALSE)
+write.csv(whippet_diff_final, paste(masterlist_dir,"/whippet_masterlist.csv",sep=""),row.names = FALSE)
 
-lgr$info("Whippet masterlist created at: %s",paste(module_path,"masterlists/whippet_masterlist.csv",sep=""))
+lgr$info("Whippet masterlist created at: %s",paste(masterlist_dir,"/whippet_masterlist.csv",sep=""))
 
 ### GET INTERSECTIONS
 # get intersections of majiq, whippet, leafcutter
@@ -258,9 +261,9 @@ filter_genes <- function(whippet_csv, majiq_csv, leafcutter_csv){
   result <- list("majiq_genes" = majiq_genes, "whippet_genes" = whippet_genes, "leafcutter_genes" = leafcutter_genes)
 }
 
-filtered_genes <- filter_genes(paste(module_path,"masterlists/whippet_masterlist.csv",sep=""),
-                               paste(module_path,"masterlists/majiq_masterlist.csv",sep=""),
-                               paste(module_path,"masterlists/leafcutter_masterlist.csv",sep=""))
+filtered_genes <- filter_genes(paste(masterlist_dir,"/whippet_masterlist.csv",sep=""),
+                               paste(masterlist_dir,"/majiq_masterlist.csv",sep=""),
+                               paste(masterlist_dir,"/leafcutter_masterlist.csv",sep=""))
 
 # create venn object
 ven <- venndetail(list(Whippet = filtered_genes$whippet_genes,
@@ -291,7 +294,7 @@ union <- as.data.frame(union[order(union$Gene_name),])
 colnames(union) <- "Gene_name"
 
 # merging with whippet masterlist to get event details
-master_whippet_df <- read.csv(paste(module_path,"masterlists/whippet_masterlist.csv",sep=""),header=TRUE,check.names=FALSE)
+master_whippet_df <- read.csv(paste(masterlist_dir,"/whippet_masterlist.csv",sep=""),header=TRUE,check.names=FALSE)
 master_whippet_df$Description <- sub(" \\[.*", "", master_whippet_df$Description)
 
 df_to_display <- merge(union, master_whippet_df, by = 'Gene_name')
@@ -301,19 +304,19 @@ df_to_display <- df_to_display |>
     Coordinates = CE_coord,
     Strand = Gene_strand
   )
-write.csv(df_to_display, paste(module_path,"masterlists/union_of_intersects_events.csv",sep=""),row.names = FALSE)
-lgr$info("Intersections file created at: %s",paste(module_path,"masterlists/union_of_intersects_events.csv",sep=""))
+write.csv(df_to_display, paste(masterlist_dir,"/union_of_intersects_events.csv",sep=""),row.names = FALSE)
+lgr$info("Intersections file created at: %s",paste(masterlist_dir,"/union_of_intersects_events.csv",sep=""))
 
 ### FILTERING FOR SPLICE EVENTS
 lgr$info("FILTERING FOR SPLICE EVENTS")
 lgr$info("Processing merged Stringtie GTF file...")
 
-gtf_full <- rtracklayer::import(paste(module_path,gtf_merged,sep=""))
+gtf_full <- rtracklayer::import(paste(gtf_merged))
 
 # I only want exons in granges
 gtf_full <- gtf_full[(elementMetadata(gtf_full)[,"type"] == "exon")]
 
-union_of_intersect <- read.csv(paste(module_path,"masterlists/union_of_intersects_events.csv",sep=""))
+union_of_intersect <- read.csv(paste(masterlist_dir,"/union_of_intersects_events.csv",sep=""))
 union_of_intersect <- union_of_intersect[,c("Gene_name","Coordinates", "Strand")]
 
 union_of_intersect[c('seqnames', 'ranges')] <- str_split_fixed(union_of_intersect$Coordinates, ':', 2)
@@ -332,9 +335,9 @@ novel_tx <- filter(exon_hits,grepl("MSTRG",transcript_id))
 novel_tx <- unique(novel_tx$transcript_id)
 
 # getting full transcript entries of the novel tx we are interested in. Gtf here only contains the novel transcripts
-gtf_full <- rtracklayer::import(paste(module_path,gtf_merged,sep=""))
+gtf_full <- rtracklayer::import(paste(gtf_merged))
 gtf_subset <- gtf_full[(elementMetadata(gtf_full)[,"transcript_id"] %in% novel_tx)]
-rtracklayer::export(gtf_subset,paste(module_path,merged_filtered_gtf,sep=""))
+rtracklayer::export(gtf_subset,paste(merged_filtered_gtf,sep=""))
 
 # the full gtf with reference transcripts, plus the novel transcripts that we have filtered
 if (species == "Mus_musculus"){
@@ -346,7 +349,7 @@ if (species == "Mus_musculus"){
 ref_tx <- as.data.frame(ref_tx)
 gtf_subset <- as.data.frame(gtf_subset)
 filtered_gtf <- rbind(ref_tx,gtf_subset)
-rtracklayer::export(filtered_gtf,paste(module_path,merged_fil_withRef_gtf,sep=""))
+rtracklayer::export(filtered_gtf,paste(merged_fil_withRef_gtf))
 
-lgr$info("Filtered Stringtie file created at: %s",paste(module_path,merged_filtered_gtf,sep=""))
+lgr$info("Filtered Stringtie file created at: %s",paste(merged_filtered_gtf,sep=""))
 lgr$remove_appender("snakemake_file_log")

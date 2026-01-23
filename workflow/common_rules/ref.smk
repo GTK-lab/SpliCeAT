@@ -2,8 +2,6 @@
 ## handle reference filenames and move to common results folder
 import os
 
-# config >> resolve pathnames
-#basepath=config['pipeline_dir'] #base directory full path
 # reference file name
 def genome_release_name():
 	species=config['ref']['species']
@@ -17,22 +15,25 @@ def genome_release_name():
 def genome_file_path(gz=True,dna=True):
 	gz_str = ".gz" if gz else ""
 	dna_str = "_dna" if dna else "_cds"
-	return f"results/{genome_release_name()}{dna_str}.fa{gz_str}"
+	filename = f"{genome_release_name()}{dna_str}.fa{gz_str}"
+	return os.path.join(RF_DIR, filename)
 
 def gtf_file_path(filtered=False,gz=True):
 	gz_str = ".gz" if gz else ""
 	filt_str = "_filtered" if filtered else ""
-	return f"results/{genome_release_name()}{filt_str}.gtf{gz_str}"
+	filename = f"{genome_release_name()}{filt_str}.gtf{gz_str}"
+	return os.path.join(RF_DIR, filename)
 
 def gff3_file_path(filtered=False,gz=True):
 	gz_str = ".gz" if gz else ""
 	filt_str = "_filtered" if filtered else ""
-	return f"results/{genome_release_name()}{filt_str}.gff3{gz_str}"
+	filename = f"{genome_release_name()}{filt_str}.gff3{gz_str}"
+	return os.path.join(RF_DIR, filename)
 
 def annotation_db_path():
-	return f"results/{genome_release_name()}.sqlite3"
+	filename= f"{genome_release_name()}.sqlite3"
+	return os.path.join(RF_DIR, filename)
 
-# gunzip rule
 rule uncompress:
 	wildcard_constraints:
 		filename=r".+\.(fa|diff|gtf|gff3|gff)"
@@ -44,4 +45,3 @@ rule uncompress:
 		"{filename}",
 	shell:
 		"gunzip -c {input} > {output}"
-

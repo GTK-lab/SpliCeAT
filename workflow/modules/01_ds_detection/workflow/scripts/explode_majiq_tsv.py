@@ -15,7 +15,7 @@ vector_columns = [col for col in df.columns if df[col].astype(str).str.contains(
 
 # Split all vector columns into lists
 for col in vector_columns:
-    df[col] = df[col].astype(str).str.split(';')
+	df[col] = df[col].astype(str).str.split(';')
 
 vector_columns.append('lsv_type_rest')
 

@@ -1,20 +1,23 @@
+#update!!
+import os
+
 rule kallisto_quant:
-    input:
-        unpack(get_fastq_files)
-    output:
-        "results/kallisto_quant_out/{sample}/abundance.tsv"
-    params:
-        INDEX = updated_file(aug_index,aug_output_dir),
-        OUT_FILE = "results/kallisto_quant_out/{sample}",
-        STRAND = lambda wildcards: "--rf-stranded" if config["experiment"]["strandedness"] == "reverse" else "--fr-stranded",
-        BOOTSTRAPS = config["kallisto"]["bootstraps"],
-    threads:
-        config["kallisto"]["threads"]
-    conda:
-        "../../../../envs/kallisto.yaml"
-    log:
-        "logs/kallisto_quant/{sample}.log"
-    message:
-        "--- kallisto quant ---"
-    shell:
-        "kallisto quant -i {params.INDEX} -o {params.OUT_FILE} {params.STRAND} --bootstrap-samples={params.BOOTSTRAPS} --threads={threads} {input} > {log} 2>&1"
+	input:
+		unpack(get_fastq_files)
+	output:
+		os.path.join(KQ_DIR,"{sample}/abundance.tsv")
+	params:
+		INDEX =  os.path.join(AT_DIR,"kallisto_index_augmented_transcriptome"),
+		OUT_FILE = os.path.join(KQ_DIR,"{sample}"),
+		STRAND = lambda wildcards: "--rf-stranded" if config["experiment"]["strandedness"] == "reverse" else "--fr-stranded",
+		BOOTSTRAPS = config["kallisto"]["bootstraps"],
+	threads:
+		config["kallisto"]["threads"]
+	conda:
+		"../../../../envs/kallisto.yaml"
+	log:
+		"logs/kallisto_quant/{sample}.log"
+	message:
+		"--- kallisto quant ---"
+	shell:
+		"kallisto quant -i {params.INDEX} -o {params.OUT_FILE} {params.STRAND} --bootstrap-samples={params.BOOTSTRAPS} --threads={threads} {input} > {log} 2>&1"

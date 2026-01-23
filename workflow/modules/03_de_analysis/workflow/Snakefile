@@ -1,14 +1,15 @@
 configfile: "../../../config/config.yaml"
 include: "../../../common_rules/utils.smk"
 include: "../../../common_rules/ref.smk"
-include: "../../../common_rules/move_results.smk"
 include: "rules/kallisto_quant.smk"
 include: "rules/sleuth.smk"
 
+import os
+
 rule all:
-    input:
-        expand("results/kallisto_quant_out/{sample_name}/abundance.tsv",sample_name=SAMPLES),
-        "results/sleuth/collapsed_differential_transcript_analysis_tpm.csv",
-        "results/sleuth/collapsed_differential_transcript_analysis.csv",
-        "results/sleuth/uncollapsed_differential_transcript_analysis_tpm.csv",
-        "results/sleuth/uncollapsed_differential_transcript_analysis.csv"
+	input:
+		expand(os.path.join(KQ_DIR,"{sample_name}/abundance.tsv"), sample_name = SAMPLES),
+		result_collapsed_tpm=os.path.join(SL_DIR,"collapsed_differential_transcript_analysis_tpm.csv"),
+		result_collapsed=os.path.join(SL_DIR,"collapsed_differential_transcript_analysis.csv"),
+		result_uncollapsed_tpm=os.path.join(SL_DIR,"uncollapsed_differential_transcript_analysis_tpm.csv"),
+		result_uncollapsed=os.path.join(SL_DIR,"uncollapsed_differential_transcript_analysis.csv")
