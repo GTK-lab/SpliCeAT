@@ -20,7 +20,7 @@ experiment:
   groups: [ "control", "treated" ]
 
 STAR:
-  activate: True
+  activate: False
   threads: 16
   index_extra: ""
   align_extra: "--twopassMode Basic"

@@ -65,7 +65,8 @@ annot['bam_dirs']= [str(f.parent) for f in [ Path(f) for f in annot['bam_file'] 
 annot['bam_stem'] = [str(f.stem) for f in [ Path(f) for f in annot['bam_file'] ]]  # .stem removes the extension
 
 SAMPLES = annot["sample_name"].tolist() # list of all sample names
-GROUPS = config["experiment"].get("groups", annot["group"].unique().tolist() if "group" in annot.columns else []) # list of comparison groups
+GROUPS = config["experiment"]["groups"]
+# list of comparison groups
 
 # convert annot into dictionary for parametrization of rules, by deduplicating by sample_name (should only differ by bam_file)
 samples = annot.to_dict(orient="index")

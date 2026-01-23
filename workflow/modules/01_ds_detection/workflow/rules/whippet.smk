@@ -37,10 +37,10 @@ rule whippet_merge_bams:
 
 rule whippet_index:
 	input:
-		genome_fa = genome_file_path(gz=True,dna=True), #dna.fa.gz ##update!!
+		genome_fa = genome_file_path(gz=True,dna=True), #dna.fa.gz
 		bam =   os.path.join(WP_DIR, "merged.bam"),
 		index = os.path.join(WP_DIR, "merged.bam.bai"),
-		gtf = gtf_file_path(filtered=True, gz=False) #filtered.gtf.gz" ##update!!
+		gtf = gtf_file_path(filtered=True, gz=False) #filtered.gtf.gz
 	output:
 		os.path.join(WP_DIR, "whippet_index.jls")
 	params:
