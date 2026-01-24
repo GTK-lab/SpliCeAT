@@ -8,6 +8,7 @@ whippet_final_files = [
 	os.path.join(WP_DIR, "whippet_index.jls"),
 	expand(os.path.join(WP_DIR, "quant/{sample}.psi.gz"),sample=SAMPLES),
 	os.path.join(WP_DIR, "whippet_delta_psi.diff.gz"),
+	os.path.join(WP_DIR,"whippet_delta_psi.diff"),
 ]
 
 rule whippet:

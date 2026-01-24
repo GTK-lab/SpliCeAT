@@ -13,5 +13,5 @@ rule all:
 		os.path.join(AT_DIR,"merged_stringtie_assembly_novel_exon_filtered.fa"),
 		os.path.join(AT_DIR,"augmented_transcripts.fa"),
 		os.path.join(AT_DIR,"kallisto_index_augmented_transcriptome"),
-		uncollapsed=os.path.join(AT_DIR,"t2g_augment_uncollapsed.csv"),
-		collapsed=os.path.join(AT_DIR,"t2g_augment_collapsed.csv")
+		os.path.join(AT_DIR,"t2g_augment_uncollapsed.csv"),
+		os.path.join(AT_DIR,"t2g_augment_collapsed.csv")
