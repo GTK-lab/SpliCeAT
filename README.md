@@ -93,6 +93,24 @@ An example experiment design file is in `config/design.tsv`
 - In order to run majiq you must provide the location of a **valid majiq license file**
 - The absolute path of the results directory can be specified by the user, if no input is provided, results will be stored in the pipeline directory.
 
+### Run Snakemake Pipeline 
+
+The workflow is configured to use conda, which should download and configure all of the needed environments. If you are using Snakemake > 4.8.0, then you can run the workflow in a combination of conda and conainers as described in [Ad-hoc combination of Conda package management with containers](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#ad-hoc-combination-of-conda-package-management-with-containers)
+
+Execute a Snakemake dry run with
+
+```bash
+snakemake -np
+```
+
+to check the parameters of the run. Once ready to run, execute
+
+```bash
+snakemake --use-conda --cores 24
+```
+
+---
+
 [^1]: This step isn't required if user is providing their own reference files. This would require modifications to be made (at the user's discretion) to the Snakemake rules that require the corresponding references.
 
 [^2]: Majiq will throw errors if ambiguous bases are present in the BAM or Fasta files. Appropriate trimming and filtering might need to be performed using [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) or [Fastp](https://github.com/OpenGene/fastp) prior to running this pipeline.
