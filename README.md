@@ -70,7 +70,7 @@ git clone -b restructure https://github.com/meg-hz/SpliCeAT.git
 ###  Experiment Design File
 - Place your `design.tsv` in the `config` directory
 - Each sample must specify the paired fastq files
-- If alignment has been done prior to running the pipeline (`STAR activate: False`), then an additional column (`bam_files`) must be present containing paths of the resultant alignment files [^4]
+- If alignment has been done prior to running the pipeline (`STAR activate: False`), then an additional column (`bam_file`) must be present containing paths of the resultant alignment files [^4]
 - The pipeline supports pairwise comparison, so the `group` column should specify two groups (e.g., control and treatment).
 An example experiment design file is in `config/design.tsv`
 
