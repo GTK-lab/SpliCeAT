@@ -1,4 +1,5 @@
-# Differential splicing detection
+# Differential splicing detection 
+(incomplete documentation)
 
 **Use:** Performs differential splicing detection (using Majiq, Whippet & Leafcutter) between control & treatment RNA-seq samples
 **Input:** Aligned and indexed RNA-seq BAM files, along with fastq files for each BAM file
