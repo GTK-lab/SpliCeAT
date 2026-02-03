@@ -21,7 +21,7 @@ rule majiq:
 	output:
 		os.path.join(MJ_DIR,".donestamp")
 	log:
-		"logs/majiq.log"
+		"logs/majiq/majiq.log"
 	conda:
 		"../../../../envs/base.yaml"
 	shell:
@@ -135,7 +135,8 @@ rule majiq_voila_to_tsv:
 
 rule majiq_explode:
 	input:
-		os.path.join(MJ_DIR,f"majiq_{group_prefix}.deltapsi.tsv"),
+		dPSI_tsv= os.path.join(MJ_DIR,f"majiq_{group_prefix}.deltapsi.tsv"),
+		het_tsv= os.path.join(MJ_DIR,f"majiq_{group_prefix}.het.tsv")
 	output:
 		os.path.join(MJ_DIR,f"majiq_expanded_{group_prefix}.deltapsi.tsv"),
 	conda:

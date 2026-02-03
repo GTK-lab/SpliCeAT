@@ -1,10 +1,27 @@
 import pandas as pd
 from snakemake.script import snakemake # type: ignore
+import logging
+import sys
 
-# Load the TSV file
+# Setup logging to Snakemake log file
+logging.basicConfig(
+    filename=snakemake.log[0],
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s: %(message)s'
+)
+# Load deltapsi TSV file
+df = pd.read_csv(snakemake.input.dPSI_tsv, sep="\t")
 
-df = pd.read_csv(snakemake.input[0], sep="\t")
+# get strand information from het file
+het_df = pd.read_csv(snakemake.input.het_tsv, sep="\t",comment='#')
+strand_map = het_df[['lsv_id', 'strand','seqid']].drop_duplicates()
 
+logging.info(f"dPSI LSV ID sample: '{df['lsv_id'].iloc[0]}'")
+logging.info(f"HET LSV ID sample:  '{het_df['lsv_id'].iloc[0]}'")
+
+# Merge strand information into the main dataframe
+df = df.merge(strand_map, on='lsv_id', how='left')
+df['strand'] = df['strand'].replace({1: '+', -1: '-', '1': '+', '-1': '-'})
 df[['lsv_category', 'lsv_type_rest']] = df['lsv_type'].str.split('|', n=1, expand=True)
 
 # Split 'lsv_type_rest' the same way as semicolon-separated columns
