@@ -10,6 +10,7 @@ dependencies:
   - r-data.table
   - r-tidyverse
   - r-conflicted
+  - r-igraph
   - bioconductor-rtracklayer
   - bioconductor-venndetail
   - bioconductor-genomicranges

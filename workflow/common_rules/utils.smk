@@ -113,12 +113,10 @@ def bamstems_for_group(group):
 def bamstems_for_groups(groups):
 	return [bamstems_for_group(group) for group in groups]
 
-## list dependencies
-ds_output = [
-	os.path.join(MJ_DIR,f"majiq_{'-'.join(GROUPS)}.het.tsv"),
+ds_det_output = [
+	os.path.join(MJ_DIR,f"majiq_expanded_{'-'.join(GROUPS)}.deltapsi.tsv"),
 	os.path.join(WP_DIR, "whippet_delta_psi.diff"),
-	os.path.join(LC_DIR, "leafcutter_cluster_significance.txt"),
-	os.path.join(LC_DIR, "leafcutter_effect_sizes.txt")
+	os.path.join(LC_DIR, "leafcutter_lsvs.tsv")
 ]
 
 # for augment_transcriptome
@@ -127,10 +125,4 @@ MG_DIR = os.path.join(R2_AT, "merged_assembly")
 ST_DIR = os.path.join(R2_AT, "stringtie_assemblies")
 ML_DIR = os.path.join(R2_AT, "masterlists")
 
-aug_index = os.path.join(AT_DIR,"kallisto_index_augmented_transcriptome")
-aug_output = [
-	aug_index,
-	os.path.join(AT_DIR,"t2g_augment_collapsed.csv"),
-	os.path.join(AT_DIR,"t2g_augment_uncollapsed.csv")
-]
 

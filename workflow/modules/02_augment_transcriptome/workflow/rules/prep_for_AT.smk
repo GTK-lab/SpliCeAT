@@ -3,7 +3,7 @@ import os
 
 rule prep_for_AT:
 	input:
-		ds_files = ds_output, ##update!!
+		ds_files = ds_det_output,
 		gtf_merged=os.path.join(MG_DIR,"merged_stringtie_assembly.gtf")
 	output:
 		merged_filtered_gtf=os.path.join(MG_DIR,"merged_stringtie_assembly_novel_exon_filtered.gtf"),

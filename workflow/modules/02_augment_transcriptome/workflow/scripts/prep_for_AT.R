@@ -1,355 +1,234 @@
-### prep_for_AT.R
-# Prepares splicing masterlists
-# Filters merged Stringtie GTF with high confidence splice events
-
-# SNAKEMAKE PARAMS
-ds_files <- snakemake@input[["ds_files"]]
-
-majiq_het_tsv <- ds_files[1]
-whippet_delta_psi <- ds_files[2]
-leafcutter_cluster_file <- ds_files[3]
-leafcutter_effect_size_file <- ds_files[4]
-
-
-gtf_merged <- snakemake@input[["gtf_merged"]]
-
-merged_filtered_gtf <- snakemake@output[["merged_filtered_gtf"]]
-merged_fil_withRef_gtf <- snakemake@output[["merged_fil_withRef_gtf"]]
-
+# Accessing Snakemake variables
+species        <- snakemake@params[["organism"]]
+version        <- snakemake@params[["ensembl"]]
+gtf_merged     <- snakemake@input[["gtf_merged"]]
+ds_files       <- snakemake@input[["ds_files"]]
 masterlist_dir <- snakemake@params[["masterlist_dir"]]
+log_file       <- snakemake@log[[1]]
 
-species    <- snakemake@params[["organism"]]
-version <- snakemake@params[["ensembl"]]
-n_threads   <- snakemake@threads
+# Outputs
+output_consensus             <- snakemake@output[["consensus_LSVs"]]
+merged_filtered_gtf          <- snakemake@output[["merged_filtered_gtf"]]
+merged_fil_withRef_gtf       <- snakemake@output[["merged_fil_withRef_gtf"]]
 
-# LOGGER SETUP
+# Masterlist paths
+if (!dir.exists(masterlist_dir)) dir.create(masterlist_dir, recursive = TRUE)
+whippet_out      <- file.path(masterlist_dir, "whippet_lsvs_final.tsv")
+majiq_out        <- file.path(masterlist_dir, "majiq_lsvs_final.tsv")
+leafcutter_out   <- file.path(masterlist_dir, "leafcutter_lsvs_final.tsv")
+all_lsvs_out     <- file.path(masterlist_dir, "all_lsvs_final.tsv")
+output_consensus <- file.path(masterlist_dir,"consensus_LSVs.tsv")
+
+# Logger Setup
 library(lgr)
-log_file <- snakemake@log[[1]]
 log_con <- file(log_file, open = "a")
-
 sink(log_con, append = FALSE)
 sink(log_con, append = FALSE, type = "message")
+lgr$info("Starting Consensus Analysis")
 
-lgr$set_appenders(list())
-lgr$set_propagate(FALSE)
-
-lgr$add_appender(AppenderFile$new(log_file, threshold = "all"), name = "snakemake_file_log")
-
-options(lgr.log_messages = TRUE)
-options(lgr.log_warnings = TRUE)
-options(warn = 1)
-
-# LIBRARIES
+# Libraries
 lgr$info("Loading libraries...")
-
 suppressMessages({
-library(yaml)
-library(biomaRt)
-library(stringr)
-library(data.table)
-library(VennDetail)
-suppressMessages(library(dplyr))
-library(GenomicRanges)
-library(rtracklayer)
-library(tidyr)
+  library(yaml)
+  library(biomaRt)
+  library(stringr)
+  library(data.table)
+  library(dplyr)
+  library(GenomicRanges)
+  library(rtracklayer)
+  library(tidyr)
+  library(lgr)
+  library(igraph)
 })
 
-lgr$info("Done.")
 
-lgr$info("MASTERLISTS PREP")
+## 1. TOOL PROCESSING
 
-### ENSEMBL ANNOTATIONS
-lgr$info("Getting Ensembl annotations...")
+# LEAFCUTTER: only splice junctions
+lgr$info("Leafcutter: Processing LSVs...")
+leafcutter <- read.table(ds_files[3], sep = "\t", header = TRUE) %>%
+  filter(p.adjust < 0.05 & abs(deltapsi) >= 0.2) %>%
+  mutate(genes = str_remove(genes, "^gene:"),
+         genes = ifelse(genes == "" | genes == ".", NA_character_, genes),
+         tool = "Leafcutter",
+		 feature_type = "intron",
+         lsv_id = paste0(chr, ":", start, "-", end),
+         p_adj = as.numeric(p.adjust)) %>%
+  select(genes, chr, strand, start, end, tool, feature_type, lsv_id, dpsi = deltapsi, p_adj)
 
-target_dataset <- switch(
-  species,
-  Mus_musculus = "mmusculus_gene_ensembl",
-  Homo_sapiens = "hsapiens_gene_ensembl",
-  stop(paste0("Unsupported organism: %s", species))
-)
+lgr$info(sprintf("Leafcutter: %d entries are missing gene annotations (NA).", sum(is.na(leafcutter$genes))))
+lgr$info(sprintf("Leafcutter: Filtering Complete. %d entries present.", nrow(leafcutter)))
 
-ensembl <- NULL
-try({
-  ensembl <- useEnsembl(
-    biomart = "genes",
-    dataset = target_dataset,
-    version = version
-  )
-}, silent = TRUE)
+write.table(leafcutter, leafcutter_out, sep="\t", row.names=F, quote=F)
+lgr$info(sprintf("Leafcutter: LSV masterlist generated at %s ",leafcutter_out))
 
+# WHIPPET: exons and intron retentions
+lgr$info("Whippet: Processing LSVs...")
+whippet_raw <- readLines(ds_files[2])
+whippet_raw <- whippet_raw[whippet_raw != "" & !grepl("^#", whippet_raw)]
+whippet_df <- as.data.frame(do.call(rbind, strsplit(whippet_raw, "\t", fixed = TRUE)))
+colnames(whippet_df) <- c("Gene", "Node", "Coord", "Strand", "Type", "Psi_A", "Psi_B", "DeltaPsi", "Probability", "Complexity", "Entropy")
 
-if (is.null(ensembl)) {
-  host <- "https://www.ensembl.org"
+whippet <- whippet_df %>%
+  filter(grepl("^-?[0-9.]+", DeltaPsi) & grepl("^[0-9.]+", Probability)) %>%
+  mutate(across(c(DeltaPsi, Probability), as.numeric)) %>%
+  filter(abs(DeltaPsi) >= 0.2 & Probability >= 0.95 & Type %in% c("CE","AA","AD","RI")) %>%
+  separate(Coord, into = c("chr", "coords"), sep = ":") %>%
+  separate(coords, into = c("start", "end"), sep = "-") %>%
+  mutate(start = as.numeric(start),
+         end = as.numeric(end),
+	     genes = str_remove(str_remove(Gene, "^gene:"), "\\.[0-9]+$"),
+         genes = ifelse(genes == "" | genes == ".", NA_character_, genes),
+         tool = "Whippet",
+		 feature_type = ifelse(Type == "RI", "intron_retention", "exon_node"),
+         lsv_id = paste0(chr, ":", start, "-", end)) %>%
+  select(genes, chr, strand = Strand, start, end, tool, feature_type, lsv_id, dpsi = DeltaPsi, prob = Probability)
 
-  marts <- listMarts(host = host)
-  mart_name <- marts$biomart[grep("ENSEMBL_MART_ENSEMBL", marts$biomart)][1]
-  datasets <- listDatasets(useMart(mart_name, host = host))
+lgr$info(sprintf("Whippet: Filtering Complete. %d entries present.", nrow(whippet)))
 
-  if (!(target_dataset %in% datasets$dataset)) {
-    stop(paste0("Dataset '", target_dataset, "' not found in live Ensembl."))
-  }
+write.table(whippet, whippet_out, sep="\t", row.names=F, quote=F)
+lgr$info(sprintf("Whippet: LSV masterlist generated at %s ",whippet_out))
 
-  ensembl <- useMart(
-    biomart = mart_name,
-    dataset = target_dataset,
-    host = host
-  )
-}
+# MAJIQ: only splice junctions
+lgr$info("Majiq: Processing LSVs....")
+majiq_raw <- read.table(ds_files[1], sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+colnames(majiq_raw) <- tolower(colnames(majiq_raw))
+majiq <- majiq_raw %>%
+  mutate(across(c(mean_dpsi_per_lsv_junction, probability_changing), as.numeric)) %>%
+  filter(abs(mean_dpsi_per_lsv_junction) >= 0.2 & probability_changing >= 0.95) %>%
+  separate(junctions_coords, into = c("s_raw", "e_raw"), sep = "-", extra = "drop") %>%
+  mutate(start = as.integer(pmin(as.numeric(s_raw), as.numeric(e_raw))),
+         end = as.integer(pmax(as.numeric(s_raw), as.numeric(e_raw))),
+         genes = str_remove(gene_id, "^gene:"),
+		 tool = "Majiq",
+		 feature_type = "intron",
+         lsv_id = paste0(seqid, ":", start, "-", end)) %>%
+  select(genes, chr = seqid, strand, start, end, tool, feature_type, lsv_id, dpsi = mean_dpsi_per_lsv_junction, prob = probability_changing)
 
-# Inform which Ensembl was used
-if (exists("host")) {
-	lgr$info("Connected to live Ensembl at %s", paste(host))
-} else {
-	lgr$info("Connected to versioned Ensembl: %s release ", paste(version))
-}
+lgr$info(sprintf("Majiq: Filtering Complete. %d entries present.", nrow(majiq)))
 
-# Retrieve annotations from the mart
-annotations <- getBM(
-  attributes = c(
-    'ensembl_gene_id',
-    'external_gene_name',
-    'description',
-    'chromosome_name',
-    'start_position',
-    'end_position',
-    'strand'
-  ),
-  mart = ensembl
-)
-lgr$info("Done.")
+write.table(majiq, majiq_out, sep="\t", row.names=F, quote=F)
+lgr$info(sprintf("Majiq: LSV masterlist generated at %s.",majiq_out))
 
-### MAJIQ MASTERLIST
-lgr$info("Processing Majiq LSV file...")
+## 2. CLUSTERING
 
-# split lsv columns based on colon and select necessary columns
-majiq_ids <- read.table(majiq_het_tsv, sep = "\t",header=TRUE, stringsAsFactors = FALSE)$lsv_id
-majiq_lsv_final <- data.frame(lsv_id = majiq_ids, stringsAsFactors = FALSE) |>
-    tidyr::separate(
-        lsv_id,
-        into = c("prefix", "Ensembl_ID", "type", "Coord"),
-        sep = ":",
-        remove = TRUE
-    )
+lgr$info("CLUSTERING: Converting outputs to GRanges Objects...")
+all_lsvs <- bind_rows(leafcutter, whippet, majiq) %>%
+  mutate(start = as.numeric(start), end = as.numeric(end))
 
-majiq_lsv_final <- majiq_lsv_final |>
-    mutate(
-        gene_ids = str_replace(Ensembl_ID, pattern = "\\.[0-9]+$", replacement = "")
-    ) |>
-    dplyr::select(gene_ids, Ensembl_ID, type, Coord, prefix)
+all_gr <- GRanges(all_lsvs$chr, IRanges(all_lsvs$start, all_lsvs$end), all_lsvs$strand)
+start_pts <- GRanges(seqnames(all_gr), IRanges(start(all_gr), width=1), strand(all_gr))
+end_pts   <- GRanges(seqnames(all_gr), IRanges(end(all_gr), width=1), strand(all_gr))
 
-# write to majiq_masterlist
-dir.create(masterlist_dir)
-write.csv(majiq_lsv_final,paste(masterlist_dir,"/majiq_masterlist.csv",sep=""),row.names = FALSE)
-lgr$info("Majiq masterlist created at: %s",paste(masterlist_dir,"/majiq_masterlist.csv",sep=""))
+hits_s <- as.data.frame(findOverlaps(start_pts, start_pts, maxgap = 1))
+hits_e <- as.data.frame(findOverlaps(end_pts, end_pts, maxgap = 1))
 
+lgr$info("CLUSTERING: Building Graph of neighbourhood events...")
 
-### LEAFCUTTER MASTERLIST
-lgr$info("Processing Leafcutter input files...")
-leafcutter_cluster_sig <- read.table(leafcutter_cluster_file,sep="\t",header=TRUE)
-leafcutter_cluster_sig <- leafcutter_cluster_sig[,c(1,6,7)]
-
-leafcutter_effect_sizes <- read.table(leafcutter_effect_size_file,sep="\t",header=TRUE)
-leafcutter_effect_sizes[c("chr","start","stop","cluster")] <- str_split_fixed(leafcutter_effect_sizes$intron, ':', 4)
-
-leafcutter_effect_sizes$start <- as.numeric(leafcutter_effect_sizes$start)
-leafcutter_effect_sizes$stop <- as.numeric(leafcutter_effect_sizes$stop)
-
-leafcutter_effect_sizes$cluster_joined <- paste(leafcutter_effect_sizes$chr,":",leafcutter_effect_sizes$cluster,sep="")
-leafcutter_effect_sizes <- leafcutter_effect_sizes[,c(1,5:10)]
-
-leafcutter_final <- left_join(leafcutter_effect_sizes,
-                              leafcutter_cluster_sig,
-                              by = c("cluster_joined"="cluster"))
-
-leafcutter_final <- left_join(leafcutter_final, annotations, by = c("genes"="ensembl_gene_id"))
-
-leafcutter_final <- leafcutter_final |> dplyr::rename(intron_start = start, intron_end = stop, Ensembl_ID = genes, P_Adjust = p.adjust, Genes = external_gene_name ) |>
-    dplyr::select(
-    Ensembl_ID,
-    chr,
-    Genes,
-    intron_start,
-    intron_end,
-    deltapsi,
-    P_Adjust,
-    intron
-  )
-
-leafcutter_final_filtered <- filter(leafcutter_final, P_Adjust <0.05 & abs(deltapsi) >= 0.2)
-
-write.csv(leafcutter_final_filtered,paste(masterlist_dir,"/leafcutter_masterlist.csv",sep=""),row.names = FALSE)
-lgr$info("Leafcutter masterlist created at: %s",paste(masterlist_dir,"/leafcutter_masterlist.csv",sep=""))
-
-### WHIPPET MASTERLIST
-lgr$info("Processing Whippet input file...")
-
-# read whippet diff file and select necessary columns
-whippet_diff <- read.table(whippet_delta_psi, sep = '\t', header = TRUE, row.names=NULL)
-colnames(whippet_diff) <- c("Gene", "Node", "Coord", "Strand", "Type", "Psi_A", "Psi_B", "DeltaPsi", "Probability", "Complexity", "Entropy")
-whippet_diff <- whippet_diff[, c("Gene","Coord","Type","DeltaPsi","Probability")]
-
-# clean Gene IDs to match Ensembl ID format
-whippet_diff <- whippet_diff |>
+mirrors <- inner_join(hits_s, hits_e, by = c("queryHits", "subjectHits"))
+docking <- rbind(hits_s, hits_e) %>%
   mutate(
-    gene_ids = sub("^gene:", "", Gene),
-    gene_ids = sub("\\.[0-9]+$", "", gene_ids)
+    type_q = all_lsvs$feature_type[queryHits],
+    type_s = all_lsvs$feature_type[subjectHits]
+  ) %>%
+  filter(
+    (type_q == "exon_node" & type_s == "intron") |
+    (type_q == "intron" & type_s == "exon_node")
   )
 
-whippet_diff_dt <- as.data.table(whippet_diff)
-whippet_diff_highest_prob <- whippet_diff_dt[
-  whippet_diff_dt[, .I[Probability == max(Probability)], by=gene_ids]$V1
-]
+lgr$info("CLUSTERING: Filtering for repeats...")
+valid_connections <- rbind(mirrors[,1:2], docking[,1:2]) %>% unique()
+g <- graph_from_edgelist(as.matrix(valid_connections), directed = FALSE)
+all_lsvs$cluster <- components(g)$membership
 
-# obtain chromosome ranges
-whippet_diff_highest_prob <- whippet_diff_highest_prob |>
-  tidyr::separate(Coord, into = c("CE_chr","CE_range"), sep = ":",remove = FALSE) |>
-  tidyr::separate(CE_range, into = c("CE_start","CE_stop"), sep = "-")
+# 3.VALIDATION
+lgr$info("VALIDATION: Checking for overlaps between tools...")
+site_validation <- rbind(
+  data.frame(idx = hits_s$queryHits, tool = all_lsvs$tool[hits_s$subjectHits]),
+  data.frame(idx = hits_e$queryHits, tool = all_lsvs$tool[hits_e$subjectHits])
+) %>%
+  group_by(idx) %>%
+  summarise(tools_at_this_site = n_distinct(tool)) %>%
+  filter(tools_at_this_site >= 2)
 
-whippet_diff_final <- whippet_diff_highest_prob %>%
-  left_join(
-    annotations,
-    by = c("gene_ids" = "ensembl_gene_id")
-  )
+valid_clusters <- all_lsvs %>%
+  mutate(row_idx = row_number()) %>%
+  filter(row_idx %in% site_validation$idx) %>%
+  pull(cluster) %>% unique()
 
-whippet_diff_final <- whippet_diff_final |>
-  dplyr::rename(
-    Ensembl_ID = gene_ids,
-    Ensembl_ID_version = Gene,
-    CE_coord = Coord,
-    Type = Type,
-    DeltaPSI = DeltaPsi,
-    Probability = Probability,
-    CE_chr = CE_chr,
-    CE_start = CE_start,
-    CE_stop = CE_stop,
-    Gene_name = external_gene_name,
-    Description = description,
-    Gene_chr = chromosome_name,
-    Gene_start = start_position,
-    Gene_stop = end_position,
-    Gene_strand = strand
-  )
+lgr$info("VALIDATION: Generating Final Consensus Matrix...")
 
-# replace -1 and 1 with - and +
-whippet_diff_final$Gene_strand[whippet_diff_final$Gene_strand=="-1"]<-"-"
-whippet_diff_final$Gene_strand[whippet_diff_final$Gene_strand=="1"]<-"+"
+consensus_matrix <- all_lsvs %>%
+  filter(cluster %in% valid_clusters) %>%
+  group_by(cluster, chr, strand) %>%
+  summarise(
+    genes = paste(unique(na.omit(genes)), collapse = ","),
+    final_start = min(start),
+    final_end = max(end),
 
-write.csv(whippet_diff_final, paste(masterlist_dir,"/whippet_masterlist.csv",sep=""),row.names = FALSE)
+    n_tools = n_distinct(tool),
 
-lgr$info("Whippet masterlist created at: %s",paste(masterlist_dir,"/whippet_masterlist.csv",sep=""))
+	majiq_event_type = paste(unique(feature_type[tool == "Majiq"]), collapse = "|"),
+	majiq_dpsi = paste(formatC(dpsi[tool == "Majiq"], digits = 3, format = "f"), collapse = "|"),
+	majiq_prob = paste(formatC(prob[tool == "Majiq"], digits = 3, format = "f"), collapse = "|"),
 
-### GET INTERSECTIONS
-# get intersections of majiq, whippet, leafcutter
-lgr$info("Getting intersections of Majiq, Whippet, Leafcutter...")
+    # Tool-specific summaries
+    whippet_event_type = paste(unique(feature_type[tool == "Whippet"]), collapse = "|"),
+    whippet_dpsi = paste(formatC(dpsi[tool == "Whippet"], digits = 3, format = "f"), collapse = "|"),
+	whippet_prob   = paste(formatC(prob[tool == "Whippet"], digits = 3, format = "f"), collapse = "|"),
 
-# get all Gene Names that pass filtering from each masterlist
-filter_genes <- function(whippet_csv, majiq_csv, leafcutter_csv){
-  whippet_df <- read.csv(whippet_csv,header=TRUE,check.names=FALSE)
-  majiq_df <- read.csv(majiq_csv,header=TRUE,check.names=FALSE)
-  leafcutter_df <- read.csv(leafcutter_csv,header=TRUE,check.names=FALSE)
+    leafcutter_event_type = paste(unique(feature_type[tool == "Leafcutter"]), collapse = "|"),
+	leaf_dpsi = paste(formatC(dpsi[tool == "Leafcutter"], digits = 3, format = "f"), collapse = "|"),
+	leafcutter_p_adj = paste(formatC(p_adj[tool == "Leafcutter"], digits = 3, format = "e"), collapse = "|"),
 
-  whippet_df_filtered <- filter(whippet_df, abs(DeltaPSI) >= 0.2 & Probability >= 0.95)
-  whippet_df_filtered <- whippet_df_filtered[!(is.na(whippet_df_filtered$Gene_name) | whippet_df_filtered$Gene_name==""), ]
-  whippet_genes <- sort(unique(na.omit(whippet_df_filtered[["Gene_name"]])))
+    .groups = 'drop'
+  ) %>%
+  filter(n_tools >= 2) %>%
+  select(
+    genes,
+    chr,
+    strand,
+    start = final_start,
+    end = final_end,
+    cluster,
+    n_tools,
+    everything()
+  ) %>%
+  mutate(across(where(is.character), ~na_if(., "")))
 
-  majiq_df <- majiq_df[!(is.na(majiq_df$external_gene_name) | majiq_df$external_gene_name==""), ]
-  majiq_genes <- sort(unique(na.omit(majiq_df[["external_gene_name"]])))
+write.table(consensus_matrix, output_consensus, sep="\t", row.names=FALSE, quote=FALSE)
+lgr$info(sprintf("VALIDATION: Generated Consensus TSV. %d events exported.", nrow(consensus_matrix)))
 
-  leafcutter_df <- leafcutter_df[!(is.na(leafcutter_df$Genes) | leafcutter_df$Genes==""), ]
-  leafcutter_genes <- sort(unique(na.omit(leafcutter_df[["Genes"]])))
+# 4. GTF FILTERING
+lgr$info("CONSTRUCTING GTF: Processing merged Stringtie GTF file...")
+gtf_full <- rtracklayer::import(gtf_merged)
 
-  result <- list("majiq_genes" = majiq_genes, "whippet_genes" = whippet_genes, "leafcutter_genes" = leafcutter_genes)
-}
+consensus_gr <- makeGRangesFromDataFrame(
+  consensus_matrix,
+  keep.extra.columns = TRUE,
+  seqnames.field = "chr",
+  start.field = "start",
+  end.field = "end"
+)
 
-filtered_genes <- filter_genes(paste(masterlist_dir,"/whippet_masterlist.csv",sep=""),
-                               paste(masterlist_dir,"/majiq_masterlist.csv",sep=""),
-                               paste(masterlist_dir,"/leafcutter_masterlist.csv",sep=""))
+hits <- findOverlaps(gtf_full, consensus_gr)
+overlapping_tx_ids <- unique(mcols(gtf_full[queryHits(hits)])$transcript_id)
+novel_supported_tx <- overlapping_tx_ids[grepl("MSTRG", overlapping_tx_ids)]
 
-# create venn object
-ven <- venndetail(list(Whippet = filtered_genes$whippet_genes,
-                       MAJIQ = filtered_genes$majiq_genes,
-                       Leafcutter = filtered_genes$leafcutter_genes))
+# novel isoforms only -> merged_stringtie_assembly_novel_exon_filtered.gtf
+gtf_novel_only <- gtf_full[mcols(gtf_full)$transcript_id %in% novel_supported_tx]
 
-# Getting elements in subset
-shared <- as.data.frame(getSet(ven, subset = c("Shared"))$Detail)
-colnames(shared) <- "Gene_name"
+rtracklayer::export(gtf_novel_only, merged_filtered_gtf, format="gtf")
+lgr$info(sprintf("CONSTRUCTING GTF: Filtering complete. %d entries present.", length(novel_supported_tx)))
+lgr$info(sprintf("CONSTRUCTING GTF: Novel-only GTF generated at %s", merged_filtered_gtf))
 
-MAJIQ_Leafcutter <- as.data.frame(getSet(ven, subset = c("MAJIQ_Leafcutter"))$Detail)
-colnames(MAJIQ_Leafcutter) <- "Gene_name"
-Whippet_Leafcutter <- as.data.frame(getSet(ven, subset = c("Whippet_Leafcutter"))$Detail)
-colnames(Whippet_Leafcutter) <- "Gene_name"
-Whippet_MAJIQ <- as.data.frame(getSet(ven, subset = c("Whippet_MAJIQ"))$Detail)
-colnames(Whippet_MAJIQ) <- "Gene_name"
+# augmented to reference GTF
+ref_pattern <- ifelse(species == "Mus_musculus", "ENSMUST", "ENST")
 
-MAJIQ <- as.data.frame(getSet(ven, subset = c("MAJIQ"))$Detail)
-colnames(MAJIQ) <- "Gene_name"
-Leafcutter <- as.data.frame(getSet(ven, subset = c("Leafcutter"))$Detail)
-colnames(Leafcutter) <- "Gene_name"
-Whippet <- as.data.frame(getSet(ven, subset = c("Whippet"))$Detail)
-colnames(Whippet) <- "Gene_name"
+gtf_with_ref <- c(
+  gtf_full[grepl(ref_pattern, mcols(gtf_full)$transcript_id)],
+  gtf_novel_only
+)
 
-# only want union of intersect
-union <- rbind(shared, MAJIQ_Leafcutter,Whippet_Leafcutter,Whippet_MAJIQ)
-union <- as.data.frame(union[order(union$Gene_name),])
-colnames(union) <- "Gene_name"
-
-# merging with whippet masterlist to get event details
-master_whippet_df <- read.csv(paste(masterlist_dir,"/whippet_masterlist.csv",sep=""),header=TRUE,check.names=FALSE)
-master_whippet_df$Description <- sub(" \\[.*", "", master_whippet_df$Description)
-
-df_to_display <- merge(union, master_whippet_df, by = 'Gene_name')
-df_to_display <- df_to_display[,c("Gene_name", "Description","CE_coord", "CE_chr","CE_start","CE_stop","Type","DeltaPSI","Probability", "Gene_strand")]
-df_to_display <- df_to_display |>
-  dplyr::rename(
-    Coordinates = CE_coord,
-    Strand = Gene_strand
-  )
-write.csv(df_to_display, paste(masterlist_dir,"/union_of_intersects_events.csv",sep=""),row.names = FALSE)
-lgr$info("Intersections file created at: %s",paste(masterlist_dir,"/union_of_intersects_events.csv",sep=""))
-
-### FILTERING FOR SPLICE EVENTS
-lgr$info("FILTERING FOR SPLICE EVENTS")
-lgr$info("Processing merged Stringtie GTF file...")
-
-gtf_full <- rtracklayer::import(paste(gtf_merged))
-
-# I only want exons in granges
-gtf_full <- gtf_full[(elementMetadata(gtf_full)[,"type"] == "exon")]
-
-union_of_intersect <- read.csv(paste(masterlist_dir,"/union_of_intersects_events.csv",sep=""))
-union_of_intersect <- union_of_intersect[,c("Gene_name","Coordinates", "Strand")]
-
-union_of_intersect[c('seqnames', 'ranges')] <- str_split_fixed(union_of_intersect$Coordinates, ':', 2)
-union_of_intersect[c('start', 'end')] <- str_split_fixed(union_of_intersect$ranges, '-', 2)
-
-union_of_intersect <- union_of_intersect[,c("seqnames","start","end","Strand")]
-
-colnames(union_of_intersect) <- c("chr", "start", "end", "strand")
-union_of_intersect_granges <- makeGRangesFromDataFrame(union_of_intersect,keep.extra.columns=TRUE)
-
-# getting all exons in l that contain my high conf splicing coords
-exon_hits <- gtf_full[queryHits(findOverlaps(gtf_full, union_of_intersect_granges, type="any")),] # this is to find every entry in gtf_full that contains my interested range in exon_hits
-
-exon_hits <- as.data.frame(exon_hits)
-novel_tx <- filter(exon_hits,grepl("MSTRG",transcript_id))
-novel_tx <- unique(novel_tx$transcript_id)
-
-# getting full transcript entries of the novel tx we are interested in. Gtf here only contains the novel transcripts
-gtf_full <- rtracklayer::import(paste(gtf_merged))
-gtf_subset <- gtf_full[(elementMetadata(gtf_full)[,"transcript_id"] %in% novel_tx)]
-rtracklayer::export(gtf_subset,paste(merged_filtered_gtf,sep=""))
-
-# the full gtf with reference transcripts, plus the novel transcripts that we have filtered
-if (species == "Mus_musculus"){
-  ref_tx <- gtf_full[grepl("ENSMUST",(elementMetadata(gtf_full)[,"transcript_id"]))]
-} else if (species == "Homo_sapiens"){
-  ref_tx <- gtf_full[grepl("ENST",(elementMetadata(gtf_full)[,"transcript_id"]))]
-}
-
-ref_tx <- as.data.frame(ref_tx)
-gtf_subset <- as.data.frame(gtf_subset)
-filtered_gtf <- rbind(ref_tx,gtf_subset)
-rtracklayer::export(filtered_gtf,paste(merged_fil_withRef_gtf))
-
-lgr$info("Filtered Stringtie file created at: %s",paste(merged_filtered_gtf,sep=""))
-lgr$remove_appender("snakemake_file_log")
+rtracklayer::export(gtf_with_ref, merged_fil_withRef_gtf, format="gtf")
+lgr$info("CONSTRUCTING GTF: Complete Augmented GTF generated at %s", merged_fil_withRef_gtf)
