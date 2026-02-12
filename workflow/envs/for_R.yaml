@@ -11,8 +11,11 @@ dependencies:
   - r-tidyverse
   - r-conflicted
   - r-igraph
+  - r-gtools
   - bioconductor-rtracklayer
   - bioconductor-venndetail
   - bioconductor-genomicranges
+  - bioconductor-genomicfeatures
+  - bioconductor-txdbmaker
   - bioconductor-biomart
   - bioconductor-plyranges

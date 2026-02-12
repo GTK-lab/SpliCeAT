@@ -1,25 +1,72 @@
 #transcriptome augmentation
 import os
 
+rule generate_masterlists:
+	input:
+		majiq_in = os.path.join(MJ_DIR,f"majiq_expanded_{'-'.join(GROUPS)}.deltapsi.tsv"),
+		whippet_in = os.path.join(WP_DIR, "whippet_delta_psi.diff"),
+		leafcutter_in = os.path.join(LC_DIR, "leafcutter_lsvs.tsv")
+	output:
+		whippet_out = os.path.join(ML_DIR, "whippet_lsvs_final.tsv"),
+		majiq_out = os.path.join(ML_DIR, "majiq_lsvs_final.tsv"),
+		leafcutter_out = os.path.join(ML_DIR, "leafcutter_lsvs_final.tsv")
+	params:
+		masterlist_dir = ML_DIR,
+		species = config["ref"]["species"],
+		ensembl = config["ref"]["ensembl_release"]
+	log:
+		"logs/generate_masterlists.log"
+	conda:
+		"../../../../envs/for_R.yaml"
+	script:
+		"../scripts/generate_masterlists.R"
+
+rule get_gene_overlap:
+	input:
+		whippet_ms = os.path.join(ML_DIR, "whippet_lsvs_final.tsv"),
+		majiq_ms = os.path.join(ML_DIR, "majiq_lsvs_final.tsv"),
+		leafcutter_ms = os.path.join(ML_DIR, "leafcutter_lsvs_final.tsv")
+	output:
+		gene_consensus = os.path.join(ML_DIR, "Consensus_Genes_count.tsv"),
+		consensus_events = os.path.join(ML_DIR, "Consensus_Gene_LSVs.tsv")
+	log:
+		"logs/gene_consensus.log"
+	conda:
+		"../../../../envs/for_R.yaml"
+	script:
+		"../scripts/gene_consensus.R"
+
+rule get_granges_overlap:
+	input:
+		consensus_events = os.path.join(ML_DIR, "Consensus_Gene_LSVs.tsv")
+	output:
+		consensus_events_counts = os.path.join(ML_DIR, "Consensus_GRanges_count.tsv"),
+		consensus_events_LSVs = os.path.join(ML_DIR, "Consensus_GRanges_LSVs.tsv")
+	log:
+		"logs/granges_consensus.log"
+	conda:
+		"../../../../envs/for_R.yaml"
+	script:
+		"../scripts/LSV_consensus.R"
+
 rule prep_for_AT:
 	input:
-		ds_files = ds_det_output,
-		gtf_merged=os.path.join(MG_DIR,"merged_stringtie_assembly.gtf")
+		consensus_events_LSVs = os.path.join(ML_DIR, "Consensus_GRanges_LSVs.tsv"),
+		stringtie_gtf=os.path.join(MG_DIR,"merged_stringtie_assembly.gtf")
 	output:
-		merged_filtered_gtf=os.path.join(MG_DIR,"merged_stringtie_assembly_novel_exon_filtered.gtf"),
-		merged_fil_withRef_gtf=os.path.join(MG_DIR,"merged_stringtie_assembly_novel_exon_filtered_with_reference.gtf")
+		merged_filtered_gtf=os.path.join(MG_DIR,"stringtie_filtered_novel_exons.gtf"),
+		merged_fil_withRef_gtf=os.path.join(MG_DIR,"stringtie_filtered_with_reference.gtf")
 	log:
 		"logs/prep_for_AT.log"
 	conda:
 		"../../../../envs/for_R.yaml"
 	params:
-		masterlist_dir = ML_DIR,
-		organism = config["ref"]["species"],
-		ensembl=config["ref"]["ensembl_release"]
+		species = config["ref"]["species"]
 	threads:
 		4
 	script:
 		"../scripts/prep_for_AT.R"
+
 
 rule collapse_transcripts:
 	input:
