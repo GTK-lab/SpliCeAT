@@ -71,7 +71,7 @@ rule prep_for_AT:
 rule collapse_transcripts:
 	input:
 		gtf_merged=os.path.join(MG_DIR,"merged_stringtie_assembly.gtf"),
-		gtf_filtered=os.path.join(MG_DIR,"merged_stringtie_assembly_novel_exon_filtered.gtf")
+		gtf_filtered=os.path.join(MG_DIR,"stringtie_filtered_novel_exons.gtf")
 	output:
 		uncollapsed=os.path.join(AT_DIR,"t2g_augment_uncollapsed.csv"),
 		collapsed=os.path.join(AT_DIR,"t2g_augment_collapsed.csv")
@@ -89,7 +89,7 @@ rule collapse_transcripts:
 
 rule get_novel_sequence:
 	input:
-		os.path.join(MG_DIR,"merged_stringtie_assembly_novel_exon_filtered.gtf")
+		os.path.join(MG_DIR,"stringtie_filtered_novel_exons.gtf")
 	output:
 		novel=os.path.join(AT_DIR,"merged_stringtie_assembly_novel_exon_filtered.fa"),
 		merged=os.path.join(AT_DIR,"augmented_transcripts.fa")

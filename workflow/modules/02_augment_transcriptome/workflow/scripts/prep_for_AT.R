@@ -25,7 +25,6 @@ suppressMessages({
 lgr$info("CONSTRUCTING GTF: Processing merged Stringtie GTF file...")
 gtf_raw <- rtracklayer::import(stringtie_gtf)
 
-# Clean IDs and ensure character type to handle NA values
 mcols(gtf_raw)$transcript_id <- gsub("transcript:", "", as.character(mcols(gtf_raw)$transcript_id))
 mcols(gtf_raw)$gene_id       <- gsub("gene:", "", as.character(mcols(gtf_raw)$gene_id))
 
@@ -65,7 +64,7 @@ lgr$info(sprintf("CONSTRUCTING GTF: Filtering complete. %d novel transcripts val
 ref_pattern <- ifelse(species == "Mus_musculus", "ENSMUST", "ENST")
 
 lgr$info("CONSTRUCTING GTF: Merging novel supported transcripts with reference...")
-# Fixed the parenthesis typo here:
+
 gtf_with_ref <- c(
   gtf_clean[grepl(ref_pattern, as.character(mcols(gtf_clean)$transcript_id))],
   gtf_novel_only
