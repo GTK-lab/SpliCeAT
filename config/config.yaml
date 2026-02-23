@@ -1,11 +1,11 @@
 name: config
 
-pipeline_dir: "/mnt/gtklab01/megha/SpliCeAT/" #path to SpliCeAT directory
-results_dir: "/mnt/gtklab01/megha/SpliCeAT/" #path to results directory
+pipeline_dir: "/mnt/mbi/home/e1353064/meg_thesis/SpliCeAT" #path to SpliCeAT directory
+results_dir: "/mnt/gtklab01/megha/SP_results_260129" #path to results directory
 
 ref:
-  species: "Homo_sapiens" #Mus_musculus
-  build: "GRCh38" #GRCm39
+  species: "Mus_musculus" #Homo_sapiens
+  build: "GRCm39" #GRCh38
   ensembl_release: 115
   flavor: "chr" #check ensembl for other options
 

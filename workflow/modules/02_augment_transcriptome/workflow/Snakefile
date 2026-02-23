@@ -8,7 +8,7 @@ include: "rules/kallisto_index.smk"
 rule all:
 	input:
 		expand(os.path.join(ST_DIR,"{sample}_ref_guided_assembly.gtf"),sample=SAMPLES),
-		os.path.join(MG_DIR,"merged_stringtie_assembly.gtf"),
+		os.path.join(ST_DIR,"merged_stringtie_assembly.gtf"),
 		os.path.join(MG_DIR,"stringtie_filtered_novel_exons.gtf"),
 		os.path.join(AT_DIR,"merged_stringtie_assembly_novel_exon_filtered.fa"),
 		os.path.join(AT_DIR,"augmented_transcripts.fa"),

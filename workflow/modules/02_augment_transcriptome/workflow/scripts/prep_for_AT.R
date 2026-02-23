@@ -28,6 +28,10 @@ gtf_raw <- rtracklayer::import(stringtie_gtf)
 mcols(gtf_raw)$transcript_id <- gsub("transcript:", "", as.character(mcols(gtf_raw)$transcript_id))
 mcols(gtf_raw)$gene_id       <- gsub("gene:", "", as.character(mcols(gtf_raw)$gene_id))
 
+if ("ref_gene_id" %in% colnames(mcols(gtf_raw))) {
+    mcols(gtf_raw)$ref_gene_id <- gsub("gene:", "", as.character(mcols(gtf_raw)$ref_gene_id))
+}
+
 # Keep only features with valid strands for TxDb construction
 gtf_clean <- gtf_raw[strand(gtf_raw) %in% c("+", "-")]
 

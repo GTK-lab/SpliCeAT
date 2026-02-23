@@ -42,29 +42,43 @@ library(biomaRt)
 lgr$info("Done.")
 
 lgr$info("Loading in stringtie merged GTF...")
-# note: do i still need this mapping part?
-# import stringtie merged GTF - contains the mappings you need for gene to MSTRG identifier
-merged_stringtie_gtf_full <- rtracklayer::import(paste(gtf_merged))
-# contains ONLY transcripts with HIGH CONFIDENCE splicing events
-filtered_stringtie_gtf <- rtracklayer::import(paste(gtf_filtered))
-
 # load all as a dataframe
-merged_stringtie_gtf_full_df <- as.data.frame(merged_stringtie_gtf_full)
-filtered_stringtie_gtf_df <- as.data.frame(filtered_stringtie_gtf)
+stringtie_gtf_df <- as.data.frame(rtracklayer::import(paste(gtf_merged))) #stringtie final output for MSTRG identifier
+filtered_gtf_df <- as.data.frame(rtracklayer::import(paste(gtf_filtered))) #augmented transcriptome -> only novel high-confidence transcripts
+
+# cleaning for cross reference
+clean_ids <- function(x) {
+  x <- gsub("transcript:", "", as.character(x))
+  x <- gsub("gene:", "", as.character(x))
+  return(x)
+}
+
+stringtie_gtf_df$transcript_id <- clean_ids(stringtie_gtf_df$transcript_id)
+stringtie_gtf_df$gene_id       <- clean_ids(stringtie_gtf_df$gene_id)
+stringtie_gtf_df$ref_gene_id   <- clean_ids(stringtie_gtf_df$ref_gene_id)
+
+filtered_gtf_df$transcript_id    <- clean_ids(filtered_gtf_df$transcript_id)
+filtered_gtf_df$gene_id          <- clean_ids(filtered_gtf_df$gene_id)
+
 
 lgr$info("Getting transcript-to-gene mappings in stringtie GTF...")
 # get MSTRG:ENSMUSG mappings
-mappings <- merged_stringtie_gtf_full_df[,c("gene_id","ref_gene_id")]
-mappings <- unique(na.omit(mappings))
+mappings <- stringtie_gtf_df %>%
+  dplyr::select(gene_id, ref_gene_id) %>%
+  distinct()
+
 
 lgr$info("Annotating high-confidence filtered transcripts with gene...")
-# map the filtered novel transcripts to give them the ENSMUSG column
-filtered_stringtie_gtf_df_with_refgeneid <- dplyr::inner_join(filtered_stringtie_gtf_df,mappings,by="gene_id")
+t2g_augment <- filtered_gtf_df %>%
+  filter(type == "transcript") %>%
+  dplyr::select(target_id = transcript_id, gene_id) %>%
+  distinct() %>%
+  left_join(mappings, by = "gene_id") %>%
+  # If there is no ref_gene_id, use the MSTRG gene_id as a placeholder
+  mutate(ens_gene = ifelse(is.na(ref_gene_id) | ref_gene_id == "", gene_id, ref_gene_id)) %>%
+  dplyr::select(target_id, ens_gene)
 
-# now we have the gene id for the novel transcripts - can combine with t2g
-t2g_augment <- filtered_stringtie_gtf_df_with_refgeneid[,c("transcript_id","ref_gene_id")]
-t2g_augment <- unique(t2g_augment)
-colnames(t2g_augment) <- c("target_id","ens_gene")
+lgr$info(sprintf("Processed %d novel transcripts for augmentation.", nrow(t2g_novel)))
 
 lgr$info("Getting ensembl annotations...")
 

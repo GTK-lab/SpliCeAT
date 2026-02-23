@@ -52,7 +52,7 @@ rule get_granges_overlap:
 rule prep_for_AT:
 	input:
 		consensus_events_LSVs = os.path.join(ML_DIR, "Consensus_GRanges_LSVs.tsv"),
-		stringtie_gtf=os.path.join(MG_DIR,"merged_stringtie_assembly.gtf")
+		stringtie_gtf=os.path.join(ST_DIR,"merged_stringtie_assembly.gtf")
 	output:
 		merged_filtered_gtf=os.path.join(MG_DIR,"stringtie_filtered_novel_exons.gtf"),
 		merged_fil_withRef_gtf=os.path.join(MG_DIR,"stringtie_filtered_with_reference.gtf")
@@ -70,7 +70,7 @@ rule prep_for_AT:
 
 rule collapse_transcripts:
 	input:
-		gtf_merged=os.path.join(MG_DIR,"merged_stringtie_assembly.gtf"),
+		gtf_merged=os.path.join(ST_DIR,"merged_stringtie_assembly.gtf"),
 		gtf_filtered=os.path.join(MG_DIR,"stringtie_filtered_novel_exons.gtf")
 	output:
 		uncollapsed=os.path.join(AT_DIR,"t2g_augment_uncollapsed.csv"),
