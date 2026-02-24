@@ -41,7 +41,7 @@ leafcutter <- read.table(leafcutter_in, sep = "\t", header = TRUE) %>%
          end = as.numeric(end),
          tool = "Leafcutter",
 		 feature_type = "splice_junction",
-         lsv_id = paste0(chr, ":", start, "-", end),
+         lsv_id = paste0(chr, ":", start, "-", end, ":", strand),
          p_adj = as.numeric(p.adjust)) %>%
   dplyr::select(gene_id=clean_id, chr, strand, start, end, tool, feature_type, lsv_id, dpsi = deltapsi, p_adj)
 
@@ -68,7 +68,7 @@ whippet <- whippet_df %>%
          genes = ifelse(genes == "" | genes == ".", NA_character_, genes),
          tool = "Whippet",
 		 feature_type = ifelse(Type == "RI", "intron_retention", "exon_node"),
-         lsv_id = paste0(chr, ":", start, "-", end)) %>%
+         lsv_id = paste0(chr, ":", start, "-", end, ":", Strand)) %>%
   dplyr::select(gene_id= genes, chr, strand = Strand, start, end, tool, feature_type, lsv_id, dpsi = DeltaPsi, prob = Probability)
 
 lgr$info(sprintf("WHIPPET: Filtering Complete. %d entries present.", nrow(whippet)))
@@ -86,7 +86,7 @@ majiq <- majiq_raw %>%
          end = as.integer(pmax(as.numeric(s_raw), as.numeric(e_raw))),
 		 tool = "Majiq",
 		 feature_type = ifelse(lsv_type_rest == "i", "intron_retention", "splice_junction"),
-         lsv_id = paste0(seqid, ":", start, "-", end)) %>%
+         lsv_id = paste0(seqid, ":", start, "-", end, ":", strand)) %>%
   dplyr::select(gene_id, chr = seqid, strand, start, end, tool, feature_type, lsv_id, dpsi = mean_dpsi_per_lsv_junction, prob = probability_changing)
 
 lgr$info(sprintf("MAJIQ: Filtering Complete. %d entries present.", nrow(majiq)))

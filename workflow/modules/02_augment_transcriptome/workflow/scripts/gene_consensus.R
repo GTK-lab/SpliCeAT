@@ -28,7 +28,7 @@ lgr$info("Aggregating gene-level detections across tools...")
 all_events <- bind_rows(majiq_df, whippet_df, leafcutter_df) %>%
   separate_rows(gene_id, sep = ",") %>%
   mutate(gene_id = str_trim(gene_id)) %>%
-  group_by(tool, gene_id, lsv_id) %>%
+  group_by(tool, gene_id, lsv_id, strand) %>%
   slice_max(order_by = abs(dpsi), n = 1, with_ties = FALSE) %>%
   ungroup() %>%
   distinct()
