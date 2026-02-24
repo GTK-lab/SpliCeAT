@@ -93,6 +93,8 @@ rule get_novel_sequence:
 	output:
 		novel=os.path.join(AT_DIR,"merged_stringtie_assembly_novel_exon_filtered.fa"),
 		merged=os.path.join(AT_DIR,"augmented_transcripts.fa")
+	log:
+		"logs/get_novel_sequence.log"
 	params:
 		genome=genome_file_path(gz=False,dna=True),
 		transcripts=genome_file_path(gz=False,dna=False),
@@ -102,4 +104,4 @@ rule get_novel_sequence:
 		4
 	shell:
 		"gffread -w {output.novel} -g {params.genome} {input} && "
-		"cat {params.transcripts} {output.novel} > {output.merged}"
+		"cat {params.transcripts} {output.novel} > {output.merged} > /dev/null 2> {log}"

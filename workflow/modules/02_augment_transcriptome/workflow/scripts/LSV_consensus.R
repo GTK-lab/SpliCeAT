@@ -74,53 +74,87 @@ valid_clusters <- all_lsvs %>%
 
 lgr$info("VALIDATION: Generating Final Consensus Matrix...")
 
+# 1. Pre-calculate tool presence and total tool count per cluster
+
 clean_paste <- function(x) {
   x <- x[!is.na(x) & x != "" & x != "NA"]
-  if(length(x) == 0) return(NA)
+  if(length(x) == 0) return(NA_character_)
   paste(unique(x), collapse = ",")
 }
 
-consensus_matrix <- all_lsvs %>%
+cluster_stats <- all_lsvs %>%
   filter(cluster %in% valid_clusters) %>%
-  group_by(cluster, chr, strand) %>%
+  group_by(cluster) %>%
   summarise(
-	gene_ids = clean_paste(gene_id),
-    gene_names = clean_paste(gene_name),
-
-    final_start = min(start),
-    final_end = max(end),
+    majiq_in_cluster = "Majiq" %in% tool,
+    whippet_in_cluster = "Whippet" %in% tool,
+    leaf_in_cluster = "Leafcutter" %in% tool,
     n_tools = n_distinct(tool),
+    .groups = "drop"
+  )
 
-	majiq_type = clean_paste(feature_type[tool == "Majiq"]),
-    majiq_dpsi = clean_paste(formatC(dpsi[tool == "Majiq"], digits = 3, format = "f")),
-    majiq_prob = clean_paste(formatC(prob[tool == "Majiq"], digits = 3, format = "f")),
+# 2. Coordinate-level summarization
+# This collapses tools finding the EXACT same coordinates into one row
+coords_summary <- all_lsvs %>%
+  filter(cluster %in% valid_clusters) %>%
+  group_by(cluster, chr, strand, start, end) %>%
+  summarise(
+    gene_ids   = clean_paste(gene_id),
+    gene_names = clean_paste(gene_name),
+    # Identify which tools found THIS specific coordinate
+    tools_here = list(unique(tool)),
+    # Capture the specific feature types for these tools at these coords
+    majiq_type_here = clean_paste(feature_type[tool == "Majiq"]),
+    whippet_type_here = clean_paste(feature_type[tool == "Whippet"]),
+    leaf_type_here = clean_paste(feature_type[tool == "Leafcutter"]),
 
-    # Tool-specific summaries
-    whippet_type = clean_paste(feature_type[tool == "Whippet"]),
-    whippet_dpsi = clean_paste(formatC(dpsi[tool == "Whippet"], digits = 3, format = "f")),
-    whippet_prob = clean_paste(formatC(prob[tool == "Whippet"], digits = 3, format = "f")),
-
-    leafcutter_event_type = paste(unique(feature_type[tool == "Leafcutter"]), collapse = "|"),
-	leaf_dpsi = paste(formatC(dpsi[tool == "Leafcutter"], digits = 3, format = "f"), collapse = "|"),
-	leafcutter_p_adj = paste(formatC(p_adj[tool == "Leafcutter"], digits = 3, format = "e"), collapse = "|"),
-
+    # Capture metrics
+    m_dpsi = clean_paste(formatC(dpsi[tool == "Majiq"], digits=3, format="f")),
+    m_prob = clean_paste(formatC(prob[tool == "Majiq"], digits=3, format="f")),
+    w_dpsi = clean_paste(formatC(dpsi[tool == "Whippet"], digits=3, format="f")),
+    w_prob = clean_paste(formatC(prob[tool == "Whippet"], digits=3, format="f")),
+    l_dpsi = clean_paste(formatC(dpsi[tool == "Leafcutter"], digits=3, format="f")),
+    l_padj = clean_paste(formatC(p_adj[tool == "Leafcutter"], digits=3, format="e")),
     .groups = 'drop'
+  )
+
+# 3. Join with Cluster Stats to add (boundary_match) labels
+consensus_matrix <- coords_summary %>%
+  left_join(cluster_stats, by = "cluster") %>%
+  mutate(
+    # MAJIQ final columns
+    majiq_type = case_when(
+      !is.na(majiq_type_here) ~ majiq_type_here,
+      majiq_in_cluster ~ "(boundary_match)",
+      TRUE ~ NA_character_
+    ),
+    # WHIPPET final columns
+    whippet_type = case_when(
+      !is.na(whippet_type_here) ~ whippet_type_here,
+      whippet_in_cluster ~ "(boundary_match)",
+      TRUE ~ NA_character_
+    ),
+    # LEAFCUTTER final columns
+    leafcutter_type = case_when(
+      !is.na(leaf_type_here) ~ leaf_type_here,
+      leaf_in_cluster ~ "(boundary_match)",
+      TRUE ~ NA_character_
+    )
   ) %>%
   filter(n_tools >= 2) %>%
   dplyr::select(
-    gene_ids,
-	gene_names,
-    chr,
-    strand,
-    start = final_start,
-    end = final_end,
-    cluster,
-    n_tools,
-    everything()
+    cluster, chr, strand, start, end, gene_ids, gene_names, n_tools,
+    majiq_type, majiq_dpsi = m_dpsi, majiq_prob = m_prob,
+    whippet_type, whippet_dpsi = w_dpsi, whippet_prob = w_prob,
+    leafcutter_type, leaf_dpsi = l_dpsi, leaf_padj = l_padj
   ) %>%
+  filter(n_tools >= 2) %>%
   arrange(chr, start)
 
-consensus_matrix <- consensus_matrix[gtools::mixedorder(consensus_matrix$chr), ]
+consensus_matrix <- consensus_matrix[gtools::mixedorder(consensus_matrix$chr), ] %>%
+  dplyr::select(cluster, chr, strand, start, end, gene_ids, gene_names, everything())
+
+write.table(consensus_matrix, consensus_events, sep="\t", row.names=FALSE, quote=FALSE)
 
 gene_summary_tsv <- all_lsvs %>%
   filter(cluster %in% valid_clusters) %>%
@@ -138,7 +172,5 @@ gene_summary_tsv <- all_lsvs %>%
   arrange(desc(n_tools), gene_id)
 
 write.table(gene_summary_tsv, consensus_counts, sep="\t", row.names=FALSE, quote=FALSE)
-
-write.table(consensus_matrix, consensus_events, sep="\t", row.names=FALSE, quote=FALSE)
 lgr$info(sprintf("VALIDATION: Generated Consensus TSV. %d events exported.", nrow(consensus_matrix)))
 

@@ -1,144 +1,95 @@
-# this script collapses all novel transcripts in a gene into a meta-novel transcript
-# Output: tx2tx file, tx2gene file that you can use with sleuth
-
 # SNAKEMAKE PARAMS
-gtf_merged <- snakemake@input[["gtf_merged"]]
+gtf_merged   <- snakemake@input[["gtf_merged"]]
 gtf_filtered <- snakemake@input[["gtf_filtered"]]
-
-organism <- snakemake@params[["organism"]]
-ensembl <- snakemake@params[["ensembl"]]
-
+organism     <- snakemake@params[["organism"]]
+ensembl_ver  <- snakemake@params[["ensembl"]] # Renamed to avoid conflict with biomaRt object
 out_uncollapsed <- snakemake@output[["uncollapsed"]]
-out_collapsed <- snakemake@output[["collapsed"]]
-n_threads <- snakemake@threads
+out_collapsed   <- snakemake@output[["collapsed"]]
 
-# LOGGER SETUP
-library(lgr)
 log_file <- snakemake@log[[1]]
-log_con <- file(log_file, open = "a")
 
+# LIBRARIES
+suppressMessages({
+  library(dplyr)
+  library(rtracklayer)
+  library(biomaRt)
+  library(data.table)
+  library(lgr)
+})
+
+library(lgr)
+log_con <- file(log_file, open = "a")
 sink(log_con, append = FALSE)
 sink(log_con, append = FALSE, type = "message")
 
-lgr$set_appenders(list())
-lgr$set_propagate(FALSE)
+lgr$info("Loading and cleaning GTFs...")
 
-lgr$add_appender(AppenderFile$new(log_file, threshold = "all"), name = "snakemake_file_log")
-
-options(lgr.log_messages = TRUE)
-options(lgr.log_warnings = TRUE)
-options(warn = 1)
-
-# LIBRARIES
-lgr$info("Loading libraries...")
-
-suppressMessages({
-library(yaml)
-library(dplyr)
-library(rtracklayer)
-library(biomaRt)
-})
-
-lgr$info("Done.")
-
-lgr$info("Loading in stringtie merged GTF...")
-# load all as a dataframe
-stringtie_gtf_df <- as.data.frame(rtracklayer::import(paste(gtf_merged))) #stringtie final output for MSTRG identifier
-filtered_gtf_df <- as.data.frame(rtracklayer::import(paste(gtf_filtered))) #augmented transcriptome -> only novel high-confidence transcripts
-
-# cleaning for cross reference
+# Helper to strip prefixes and version decimals
 clean_ids <- function(x) {
-  x <- gsub("transcript:", "", as.character(x))
-  x <- gsub("gene:", "", as.character(x))
+  x <- gsub("transcript:|gene:", "", as.character(x))
+  x <- ifelse(grepl("^MSTRG", x),
+              # For MSTRG: Keep the FULL ID (MSTRG.123.1) so it stays unique for gffread
+              x,
+              # For Ensembl: Strip the version (ENSMUST000.14 -> ENSMUST000)
+              sub("\\..*$", "", x)
+  )
   return(x)
 }
 
-stringtie_gtf_df$transcript_id <- clean_ids(stringtie_gtf_df$transcript_id)
-stringtie_gtf_df$gene_id       <- clean_ids(stringtie_gtf_df$gene_id)
-stringtie_gtf_df$ref_gene_id   <- clean_ids(stringtie_gtf_df$ref_gene_id)
+stringtie_gtf_df <- as.data.frame(rtracklayer::import(gtf_merged)) %>%
+  mutate(across(c(transcript_id, gene_id, ref_gene_id), clean_ids))
 
-filtered_gtf_df$transcript_id    <- clean_ids(filtered_gtf_df$transcript_id)
-filtered_gtf_df$gene_id          <- clean_ids(filtered_gtf_df$gene_id)
+filtered_gtf_df <- as.data.frame(rtracklayer::import(gtf_filtered)) %>%
+  mutate(across(c(transcript_id, gene_id), clean_ids))
 
-
-lgr$info("Getting transcript-to-gene mappings in stringtie GTF...")
-# get MSTRG:ENSMUSG mappings
-mappings <- stringtie_gtf_df %>%
+lgr$info("Mapping MSTRG to Ensembl Gene IDs...")
+# Create a map between StringTie gene IDs and Reference Gene IDs
+gene_map <- stringtie_gtf_df %>%
+  filter(!is.na(ref_gene_id) & ref_gene_id != "") %>%
   dplyr::select(gene_id, ref_gene_id) %>%
   distinct()
 
+lgr$info("Fetching Reference annotations from BioMart...")
+mart <- useEnsembl(biomart = "genes",
+                   dataset = ifelse(organism == "Mus_musculus", "mmusculus_gene_ensembl", "hsapiens_gene_ensembl"),
+                   version = ensembl_ver)
 
-lgr$info("Annotating high-confidence filtered transcripts with gene...")
-t2g_augment <- filtered_gtf_df %>%
-  filter(type == "transcript") %>%
+# Get reference t2g (without versions)
+t2g_ref <- getBM(attributes = c("ensembl_transcript_id", "ensembl_gene_id", "external_gene_name"), mart = mart) %>%
+  dplyr::rename(target_id = ensembl_transcript_id,
+                ens_gene = ensembl_gene_id,
+                ext_gene = external_gene_name)
+
+lgr$info("Building Augmented T2G...")
+# Prepare novel transcripts
+t2g_novel <- filtered_gtf_df %>%
+  filter(type == "transcript" & grepl("MSTRG", transcript_id)) %>%
   dplyr::select(target_id = transcript_id, gene_id) %>%
   distinct() %>%
-  left_join(mappings, by = "gene_id") %>%
-  # If there is no ref_gene_id, use the MSTRG gene_id as a placeholder
-  mutate(ens_gene = ifelse(is.na(ref_gene_id) | ref_gene_id == "", gene_id, ref_gene_id)) %>%
-  dplyr::select(target_id, ens_gene)
+  left_join(gene_map, by = "gene_id") %>%
+  # If no ref_gene_id found, keep the MSTRG gene ID
+  mutate(ens_gene = ifelse(is.na(ref_gene_id), gene_id, ref_gene_id)) %>%
+  # Join with reference gene names (Left join ensures orphans aren't dropped)
+  left_join(distinct(t2g_ref, ens_gene, ext_gene), by = "ens_gene") %>%
+  mutate(ext_gene = ifelse(is.na(ext_gene), ens_gene, ext_gene)) %>%
+  dplyr::select(target_id, ens_gene, ext_gene)
 
-lgr$info(sprintf("Processed %d novel transcripts for augmentation.", nrow(t2g_novel)))
+# Combine Ref and Novel
+t2g_final <- bind_rows(t2g_ref, t2g_novel) %>% distinct(target_id, .keep_all = TRUE)
 
-lgr$info("Getting ensembl annotations...")
+# Fill empty gene names with the Gene ID so your plots aren't blank
+t2g_final <- t2g_final %>%
+  mutate(ext_gene = ifelse(is.na(ext_gene) | ext_gene == "", ens_gene, ext_gene))
 
-# load in normal t2g
-if (organism == "Mus_musculus"){
-  ensembl <- useEnsembl(biomart = 'genes',
-                         dataset = 'mmusculus_gene_ensembl',
-                         version = ensembl)
-} else if (organism == "Homo_sapiens"){
-  ensembl <- useEnsembl(biomart = "genes",
-                        dataset = "hsapiens_gene_ensembl",
-                        version = ensembl)
-}
+write.csv(t2g_final, file = out_uncollapsed, row.names = FALSE)
+lgr$info("Uncollapsed T2G saved.")
 
-t2g <- getBM(attributes = c("ensembl_transcript_id_version", "ensembl_gene_id_version",
-                            "external_gene_name"),mart = ensembl)
+lgr$info("Creating Collapsed Groups...")
+# Vectorized collapse logic
+t2g_final <- t2g_final %>%
+  mutate(collapsed_target_id = ifelse(grepl("MSTRG", target_id),
+                                      paste0(ens_gene, ".NovelGroup"),
+                                      target_id))
 
-t2g <- dplyr::rename(t2g, target_id = ensembl_transcript_id_version,
-                     ens_gene = ensembl_gene_id_version, ext_gene = external_gene_name)
-
-# mapping of ens_gene to ext_gene (ENSMUSG:gene name)
-ens_gene_ext_gene <- unique(t2g[,c(2,3)])
-
-# augment my high-confidence transcripts with gene name
-t2g_augment <- dplyr::inner_join(t2g_augment,ens_gene_ext_gene,by="ens_gene")
-
-lgr$info("Combining reference transcripts and high-confidence novel transcripts into a t2g dataframe...")
-# now we rbind it with normal t2g to create an AUGMENTED T2G
-t2g_augment <- rbind(t2g, t2g_augment)
-head(t2g_augment)
-tail(t2g_augment)
-write.csv(t2g_augment, file=paste(out_uncollapsed), row.names=FALSE)
-lgr$info("Uncollapsed t2g dataframe saved at: %s", paste(out_uncollapsed,sep=""))
-
-# function for collaspsing transcripts to create tx to tx group
-if (organism == "Mus_musculus") {
-  collapse_transcripts <- function(row){
-  if (grepl("ENSMUST",row[["target_id"]])){
-    row[["target_id"]]
-  } else {
-    s <- strsplit(row[["target_id"]], ".", fixed = TRUE)[[1]]
-    paste(s[[1]],".",s[[2]],".","NovelGroup",sep="")
-  }
-}
-  } else if (organism == "Homo_sapiens") {
-  collapse_transcripts <- function(row){
-  if (grepl("ENST",row[["target_id"]])){
-    row[["target_id"]]
-  } else {
-    s <- strsplit(row[["target_id"]], ".", fixed = TRUE)[[1]]
-    paste(s[[1]],".",s[[2]],".","NovelGroup",sep="")
-  }
-}
-  }
-
-t2g_augment$collapsed_target_id <- apply(t2g_augment,1,collapse_transcripts)
-# remove duplicated target_id entries becos there can be overlapping genes
-t2g_augment <- t2g_augment[!duplicated(t2g_augment[c('target_id')]),]
-
-write.csv(t2g_augment, file=paste(out_collapsed), row.names=FALSE)
-
-lgr$info("Collapsed t2g dataframe saved at: %s", paste(out_collapsed))
-lgr$remove_appender("snakemake_file_log")
+write.csv(t2g_final, file = out_collapsed, row.names = FALSE)
+lgr$info("Collapsed T2G saved.")

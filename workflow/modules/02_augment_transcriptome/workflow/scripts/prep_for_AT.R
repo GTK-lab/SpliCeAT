@@ -25,11 +25,17 @@ suppressMessages({
 lgr$info("CONSTRUCTING GTF: Processing merged Stringtie GTF file...")
 gtf_raw <- rtracklayer::import(stringtie_gtf)
 
-mcols(gtf_raw)$transcript_id <- gsub("transcript:", "", as.character(mcols(gtf_raw)$transcript_id))
-mcols(gtf_raw)$gene_id       <- gsub("gene:", "", as.character(mcols(gtf_raw)$gene_id))
+clean_ids <- function(x) {
+  x <- gsub("transcript:|gene:", "", as.character(x))
+  x <- ifelse(grepl("^MSTRG", x), x, sub("\\..*$", "", x))
+  return(x)
+}
+
+mcols(gtf_raw)$transcript_id <- clean_ids(mcols(gtf_raw)$transcript_id)
+mcols(gtf_raw)$gene_id       <- clean_ids(mcols(gtf_raw)$gene_id)
 
 if ("ref_gene_id" %in% colnames(mcols(gtf_raw))) {
-    mcols(gtf_raw)$ref_gene_id <- gsub("gene:", "", as.character(mcols(gtf_raw)$ref_gene_id))
+    mcols(gtf_raw)$ref_gene_id <- clean_ids(mcols(gtf_raw)$ref_gene_id)
 }
 
 # Keep only features with valid strands for TxDb construction
@@ -40,22 +46,39 @@ txdb             <- txdbmaker::makeTxDbFromGRanges(gtf_clean)
 gtf_introns_grl  <- GenomicFeatures::intronsByTranscript(txdb, use.names=TRUE)
 gtf_introns_flat <- unlist(gtf_introns_grl)
 
-lgr$info("CONSTRUCTING GTF: Matching Consensus Events to Introns...")
+gtf_exons <- gtf_clean[gtf_clean$type == "exon"]
+
+lgr$info("CONSTRUCTING GTF: Matching Consensus Events...")
 consensus_matrix <- fread(consensus_events) %>% as.data.frame()
 
-consensus_gr <- makeGRangesFromDataFrame(
-  consensus_matrix,
-  keep.extra.columns = TRUE,
-  seqnames.field     = "chr",
-  start.field        = "start",
-  end.field          = "end"
+# Splice Junctions (start/end match)
+junctions_gr <- makeGRangesFromDataFrame(
+    consensus_matrix[grepl("junction", consensus_matrix$majiq_type) |
+                     grepl("junction", consensus_matrix$whippet_type) |
+                     grepl("junction", consensus_matrix$leaf_type), ],
+    keep.extra.columns = TRUE, seqnames.field = "chr"
 )
 
-# Find introns that match our validated junctions exactly
-hits <- findOverlaps(gtf_introns_flat, consensus_gr, type="equal", maxgap=1)
-overlapping_tx_ids <- unique(names(gtf_introns_flat[queryHits(hits)]))
+hits_introns <- findOverlaps(gtf_introns_flat, junctions_gr, type="equal", maxgap=1)
+tx_by_junctions <- unique(names(gtf_introns_flat[queryHits(hits_introns)]))
+novel_tx_junc <- tx_by_junctions[grepl("MSTRG", tx_by_junctions)]
+lgr$info("CONSTRUCTING GTF: Junction Validation Complete. Filtered %d transcripts", length(novel_tx_junc))
 
-# Extract novel 'MSTRG' transcripts that passed the consensus check
+
+# Nodes/IR (Overlap match)
+nodes_gr <- makeGRangesFromDataFrame(
+    consensus_matrix[grepl("exon_node|intron_retention", consensus_matrix$majiq_type) |
+                     grepl("exon_node|intron_retention", consensus_matrix$whippet_type), ],
+    keep.extra.columns = TRUE, seqnames.field = "chr"
+)
+
+hits_exons <- findOverlaps(gtf_exons, nodes_gr, type="any")
+tx_by_nodes <- unique(mcols(gtf_exons[queryHits(hits_exons)])$transcript_id)
+novel_tx_node <- tx_by_nodes[grepl("MSTRG", tx_by_nodes)]
+lgr$info("CONSTRUCTING GTF: Node Validation Complete. Filtered %d transcripts", length(novel_tx_node))
+
+# Find introns that match our validated junctions exactly
+overlapping_tx_ids <- unique(c(tx_by_junctions, tx_by_nodes))
 novel_supported_tx <- overlapping_tx_ids[grepl("MSTRG", overlapping_tx_ids)]
 
 lgr$info("CONSTRUCTING GTF: Isolating novel isoforms...")
