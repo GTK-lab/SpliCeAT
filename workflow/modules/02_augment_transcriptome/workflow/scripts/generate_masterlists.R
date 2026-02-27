@@ -87,7 +87,11 @@ majiq <- majiq_raw %>%
 		 tool = "Majiq",
 		 feature_type = ifelse(lsv_type_rest == "i", "intron_retention", "splice_junction"),
          lsv_id = paste0(seqid, ":", start, "-", end, ":", strand)) %>%
-  dplyr::select(gene_id, chr = seqid, strand, start, end, tool, feature_type, lsv_id, dpsi = mean_dpsi_per_lsv_junction, prob = probability_changing)
+  group_by(gene_id, seqid, strand, start, end, lsv_id, feature_type) %>%
+  slice_max(order_by = abs(mean_dpsi_per_lsv_junction), n = 1, with_ties = FALSE) %>%
+  ungroup() %>%
+  dplyr::select(gene_id, chr = seqid, strand, start, end, tool, feature_type, lsv_id,
+                dpsi = mean_dpsi_per_lsv_junction, prob = probability_changing)
 
 lgr$info(sprintf("MAJIQ: Filtering Complete. %d entries present.", nrow(majiq)))
 
