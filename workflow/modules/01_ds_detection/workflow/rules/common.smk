@@ -5,10 +5,26 @@ import yaml
 import configparser
 from pathlib import Path
 
+
+# forcing leafcutter group order to match config file
+group_order = config["experiment"]["groups"]
+sample_file_df['group'] = pd.Categorical(
+    sample_file_df['group'],
+    categories=group_order,
+    ordered=True
+)
+sample_file_df = sample_file_df.sort_values("group")
+
 leafcutter_grouppath = Path(os.path.join(LC_DIR,'leafcutter_groups.tsv'))
 leafcutter_grouppath.parent.mkdir(parents=True, exist_ok=True)
 
-sample_file_df.to_csv(leafcutter_grouppath,sep="\t",header=False,columns=["sample_name","group"],index=False)
+sample_file_df.to_csv(
+    leafcutter_grouppath,
+    sep="\t",
+    header=False,
+    columns=["sample_name", "group"],
+    index=False
+)
 
 def leafcutter_output():
 	if config['leafcutter']['activate']:
