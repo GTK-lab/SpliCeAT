@@ -21,7 +21,7 @@ rule generate_masterlists:
 	script:
 		"../scripts/generate_masterlists.R"
 
-rule get_gene_overlap:
+rule gene_consensus:
 	input:
 		whippet_ms = os.path.join(ML_DIR, "whippet_lsvs_final.tsv"),
 		majiq_ms = os.path.join(ML_DIR, "majiq_lsvs_final.tsv"),
@@ -36,7 +36,7 @@ rule get_gene_overlap:
 	script:
 		"../scripts/gene_consensus.R"
 
-rule get_granges_overlap:
+rule granges_consensus:
 	input:
 		consensus_events = os.path.join(ML_DIR, "Consensus_Gene_LSVs.tsv")
 	output:
@@ -47,17 +47,18 @@ rule get_granges_overlap:
 	conda:
 		"../../../../envs/for_R.yaml"
 	script:
-		"../scripts/LSV_consensus.R"
+		"../scripts/granges_consensus.R"
 
-rule prep_for_AT:
+rule gtf_consensus:
 	input:
 		consensus_events_LSVs = os.path.join(ML_DIR, "Consensus_GRanges_LSVs.tsv"),
-		stringtie_gtf=os.path.join(ST_DIR,"merged_stringtie_assembly.gtf")
+		stringtie_gtf=os.path.join(ST_DIR,"merged_stringtie_assembly.gtf"),
+		reference_gtf=gtf_file_path(filtered=False,gz=False) #.gtf
 	output:
 		merged_filtered_gtf=os.path.join(MG_DIR,"stringtie_filtered_novel_exons.gtf"),
 		merged_fil_withRef_gtf=os.path.join(MG_DIR,"stringtie_filtered_with_reference.gtf")
 	log:
-		"logs/prep_for_AT.log"
+		"logs/gtf_consensus.log"
 	conda:
 		"../../../../envs/for_R.yaml"
 	params:
@@ -65,7 +66,7 @@ rule prep_for_AT:
 	threads:
 		4
 	script:
-		"../scripts/prep_for_AT.R"
+		"../scripts/gtf_consensus.R"
 
 
 rule collapse_transcripts:

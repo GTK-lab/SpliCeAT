@@ -2,7 +2,7 @@ configfile: "../../../config/config.yaml"
 include: "../../../common_rules/utils.smk"
 include: "../../../common_rules/ref.smk"
 include: "rules/stringtie.smk"
-include: "rules/prep_for_AT.smk"
+include: "rules/augmentation.smk"
 include: "rules/kallisto_index.smk"
 
 rule all:

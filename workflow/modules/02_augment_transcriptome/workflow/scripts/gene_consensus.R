@@ -25,13 +25,23 @@ leafcutter_df <- fread(snakemake@input[["leafcutter_ms"]]) %>% as.data.frame()
 
 lgr$info("Aggregating gene-level detections across tools...")
 
-all_events <- bind_rows(majiq_df, whippet_df, leafcutter_df) %>%
+# Filter majiq by LSV to remove double-counted events, keeping highest absolute dPSI
+majiq_filtered <- majiq_df %>%
+  group_by(lsv_id) %>%
+  slice_max(order_by = abs(dpsi), n = 1, with_ties = FALSE) %>%
+  ungroup()
+
+all_events <- bind_rows(majiq_filtered, whippet_df, leafcutter_df) %>%
   separate_rows(gene_id, sep = ",") %>%
   mutate(gene_id = str_trim(gene_id)) %>%
   group_by(tool, gene_id, lsv_id, strand) %>%
   slice_max(order_by = abs(dpsi), n = 1, with_ties = FALSE) %>%
   ungroup() %>%
   distinct()
+
+lgr$info(sprintf("%d Splice Junctions", sum(all_events$feature_type == "splice_junction")))
+lgr$info(sprintf("%d Exon Nodes", sum(all_events$feature_type == "exon_node")))
+lgr$info(sprintf("%d Introns Retained", sum(all_events$feature_type == "intron_retention")))
 
 gene_consensus <- all_events %>%
 	filter(!is.na(gene_id)) %>%

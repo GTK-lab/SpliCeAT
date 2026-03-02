@@ -63,17 +63,11 @@ e_ends   <- GRanges(seqnames(e_gr), IRanges(end(e_gr), width=1), strand(e_gr))
 h_start <- as.data.frame(findOverlaps(j_starts, e_ends,   maxgap=1))
 h_end   <- as.data.frame(findOverlaps(j_ends,   e_starts, maxgap=1))
 
-strict_junctions <- h_start %>%
-  mutate(exon_tool = exons$tool[subjectHits]) %>%
-  dplyr::inner_join(h_end %>% mutate(exon_tool = exons$tool[subjectHits]),
-  			by = c("queryHits", "exon_tool"), relationship = "many-to-many")
-
-# For Exons: Join on Exon ID (subjectHits) AND the Junction Tool (tool)
-strict_exons <- h_end %>%
-  mutate(junction_tool = junctions$tool[queryHits]) %>%
-  dplyr::inner_join(h_start %>% mutate(junction_tool = junctions$tool[queryHits]),
-    			by = c("subjectHits", "junction_tool"), relationship = "many-to-many"
-  )
+strict_junctions <- bind_rows(
+  h_start %>% mutate(exon_tool = exons$tool[subjectHits]),
+  h_end   %>% mutate(exon_tool = exons$tool[subjectHits])
+) %>%
+  distinct(queryHits, exon_tool)
 
 # 2.3. IR vs Leafcutter Splice Junction
 lgr$info("Matching IR events against Leafcutter Splice Junctions...")
@@ -94,7 +88,6 @@ evidence_list <- list()
 if(nrow(hits_j) > 0)  evidence_list[[1]] <- data.frame(idx = junctions$row_idx[hits_j$queryHits], other_tool = junctions$tool[hits_j$subjectHits])
 if(nrow(hits_ir) > 0) evidence_list[[2]] <- data.frame(idx = ir_events$row_idx[hits_ir$queryHits], other_tool = ir_events$tool[hits_ir$subjectHits])
 if(nrow(strict_junctions) > 0) evidence_list[[3]] <- data.frame(idx = junctions$row_idx[strict_junctions$queryHits], other_tool = strict_junctions$exon_tool)
-if(nrow(strict_exons) > 0)     evidence_list[[4]] <- data.frame(idx = exons$row_idx[strict_exons$subjectHits], other_tool = strict_exons$junction_tool)
 if(nrow(ir_leaf_val) > 0) {
   evidence_list[[5]] <- data.frame(idx = ir_leaf_val$ir_row, other_tool = "Leafcutter")
   evidence_list[[6]] <- data.frame(idx = ir_leaf_val$lc_row, other_tool = ir_leaf_val$ir_tool)
