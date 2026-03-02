@@ -68,7 +68,6 @@ rule gtf_consensus:
 	script:
 		"../scripts/gtf_consensus.R"
 
-
 rule collapse_transcripts:
 	input:
 		gtf_merged=os.path.join(ST_DIR,"merged_stringtie_assembly.gtf"),
@@ -105,4 +104,4 @@ rule get_novel_sequence:
 		4
 	shell:
 		"gffread -w {output.novel} -g {params.genome} {input} && "
-		"cat {params.transcripts} {output.novel} > {output.merged} > /dev/null 2> {log}"
+		"cat {params.transcripts} {output.novel} > {output.merged} 2>> {log}"
