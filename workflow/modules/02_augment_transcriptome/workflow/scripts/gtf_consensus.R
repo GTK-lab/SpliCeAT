@@ -23,9 +23,9 @@ suppressMessages({
     library(dplyr)
 })
 
-# Helper to clean IDs
+# Remove ensembl version numbers and clean metadata columns for matching with LSV file
 clean_ids <- function(x) {
-    #x <- gsub("transcript:|gene:", "", as.character(x))
+    x <- gsub("transcript:|gene:", "", as.character(x))
     x <- ifelse(grepl("^MSTRG", x), x, sub("\\..*$", "", x))
     return(x) }
 
@@ -47,13 +47,6 @@ safe_ranges <- unique(c(ref_introns, consensus_ranges))
 # 2. STRINGTIE GTF
 lgr$info("STRINGTIE: Building TxDb and extracting introns...")
 gtf_raw <- rtracklayer::import(stringtie_gtf)
-
-mcols(gtf_raw)$transcript_id <- clean_ids(mcols(gtf_raw)$transcript_id)
-mcols(gtf_raw)$gene_id       <- clean_ids(mcols(gtf_raw)$gene_id)
-
-if ("ref_gene_id" %in% colnames(mcols(gtf_raw))) {
-    mcols(gtf_raw)$ref_gene_id <- clean_ids(mcols(gtf_raw)$ref_gene_id)
-}
 
 gtf_clean <- gtf_raw[strand(gtf_raw) %in% c("+", "-")]
 
