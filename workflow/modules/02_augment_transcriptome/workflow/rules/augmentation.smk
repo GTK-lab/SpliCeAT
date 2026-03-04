@@ -56,7 +56,8 @@ rule gtf_consensus:
 		reference_gtf=gtf_file_path(filtered=False,gz=False) #.gtf
 	output:
 		merged_filtered_gtf=os.path.join(MG_DIR,"stringtie_filtered_novel_exons.gtf"),
-		merged_fil_withRef_gtf=os.path.join(MG_DIR,"stringtie_filtered_with_reference.gtf")
+		merged_fil_withRef_gtf=os.path.join(MG_DIR,"stringtie_filtered_with_reference.gtf"),
+		validated_lsv_tsv= os.path.join(ML_DIR, "Consensus_GTF_LSVs.tsv")
 	log:
 		"logs/gtf_consensus.log"
 	conda:

@@ -24,16 +24,11 @@ sink(log_con, append = FALSE, type = "message")
 
 lgr$info("Loading and cleaning GTFs...")
 
-# Helper to strip prefixes and version decimals
+# Remove ensembl version numbers and clean metadata columns for matching with LSV file
 clean_ids <- function(x) {
-  x <- gsub("transcript:|gene:", "", as.character(x))
-  x <- ifelse(grepl("^MSTRG", x),
-              # For MSTRG: Keep the FULL ID (MSTRG.123.1) so it stays unique for gffread
-              x,
-              # For Ensembl: Strip the version (ENSMUST000.14 -> ENSMUST000)
-              sub("\\..*$", "", x)
-  )
-  return(x)
+	x <- gsub("transcript:|gene:", "", as.character(x))
+	x <- ifelse(grepl("^MSTRG", x), x, sub("\\..*$", "", x))
+	return(x)
 }
 
 stringtie_gtf_df <- as.data.frame(rtracklayer::import(gtf_merged)) %>%
