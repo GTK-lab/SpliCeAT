@@ -27,8 +27,8 @@ rule gene_consensus:
 		majiq_ms = os.path.join(ML_DIR, "majiq_lsvs_final.tsv"),
 		leafcutter_ms = os.path.join(ML_DIR, "leafcutter_lsvs_final.tsv")
 	output:
-		gene_consensus = os.path.join(ML_DIR, "Consensus_Genes_count.tsv"),
-		consensus_events = os.path.join(ML_DIR, "Consensus_Gene_LSVs.tsv")
+		gene_consensus = os.path.join(ML_DIR, "consensus_genes_count.tsv"),
+		consensus_events = os.path.join(ML_DIR, "consensus_genes_LSV.tsv")
 	log:
 		"logs/gene_consensus.log"
 	conda:
@@ -38,10 +38,10 @@ rule gene_consensus:
 
 rule granges_consensus:
 	input:
-		consensus_events = os.path.join(ML_DIR, "Consensus_Gene_LSVs.tsv")
+		consensus_events = os.path.join(ML_DIR, "consensus_genes_LSV.tsv")
 	output:
-		consensus_events_counts = os.path.join(ML_DIR, "Consensus_GRanges_count.tsv"),
-		consensus_events_LSVs = os.path.join(ML_DIR, "Consensus_GRanges_LSVs.tsv")
+		consensus_events_counts = os.path.join(ML_DIR, "consensus_granges_count.tsv"),
+		consensus_events_LSVs = os.path.join(ML_DIR, "consensus_granges_LSV.tsv")
 	log:
 		"logs/granges_consensus.log"
 	conda:
@@ -51,13 +51,13 @@ rule granges_consensus:
 
 rule gtf_consensus:
 	input:
-		consensus_events_LSVs = os.path.join(ML_DIR, "Consensus_GRanges_LSVs.tsv"),
-		stringtie_gtf=os.path.join(ST_DIR,"merged_stringtie_assembly.gtf"),
+		consensus_events_LSVs = os.path.join(ML_DIR, "consensus_granges_LSV.tsv"),
+		stringtie_gtf=os.path.join(ST_DIR,"stringtie_assembly.gtf"),
 		reference_gtf=gtf_file_path(filtered=False,gz=False) #.gtf
 	output:
-		merged_filtered_gtf=os.path.join(MG_DIR,"stringtie_filtered_novel_exons.gtf"),
-		merged_fil_withRef_gtf=os.path.join(MG_DIR,"stringtie_filtered_with_reference.gtf"),
-		validated_lsv_tsv= os.path.join(ML_DIR, "Consensus_GTF_LSVs.tsv")
+		novel_gtf=os.path.join(AT_DIR,"consensus_novel_transcripts.gtf"),
+		augmented_gtf=os.path.join(AT_DIR,"augmented_transcriptome.gtf"),
+		validated_lsv_tsv= os.path.join(ML_DIR, "consensus_gtf_LSV.tsv")
 	log:
 		"logs/gtf_consensus.log"
 	conda:
@@ -71,11 +71,11 @@ rule gtf_consensus:
 
 rule collapse_transcripts:
 	input:
-		gtf_merged=os.path.join(ST_DIR,"merged_stringtie_assembly.gtf"),
-		gtf_filtered=os.path.join(MG_DIR,"stringtie_filtered_novel_exons.gtf")
+		gtf_stringtie=os.path.join(ST_DIR,"stringtie_assembly.gtf"),
+		gtf_novel_only=os.path.join(AT_DIR,"consensus_novel_transcripts.gtf")
 	output:
-		uncollapsed=os.path.join(AT_DIR,"t2g_augment_uncollapsed.csv"),
-		collapsed=os.path.join(AT_DIR,"t2g_augment_collapsed.csv")
+		uncollapsed=os.path.join(TM_DIR,"t2g_augment_uncollapsed.csv"),
+		collapsed=os.path.join(TM_DIR,"t2g_augment_collapsed.csv")
 	log:
 		"logs/collapse_transcripts.log"
 	conda:
@@ -90,10 +90,10 @@ rule collapse_transcripts:
 
 rule get_novel_sequence:
 	input:
-		os.path.join(MG_DIR,"stringtie_filtered_novel_exons.gtf")
+		os.path.join(AT_DIR,"consensus_novel_transcripts.gtf")
 	output:
-		novel=os.path.join(AT_DIR,"merged_stringtie_assembly_novel_exon_filtered.fa"),
-		merged=os.path.join(AT_DIR,"augmented_transcripts.fa")
+		novel=os.path.join(TM_DIR,"consensus_novel_transcripts.fa"),
+		merged=os.path.join(TM_DIR,"augmented_transcripts.fa")
 	log:
 		"logs/get_novel_sequence.log"
 	params:

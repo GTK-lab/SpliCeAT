@@ -2,9 +2,9 @@ import os
 
 rule kallisto_index:
 	input:
-		os.path.join(AT_DIR,"augmented_transcripts.fa")
+		os.path.join(TM_DIR,"augmented_transcripts.fa")
 	output:
-		os.path.join(AT_DIR,"kallisto_index_augmented_transcriptome")
+		os.path.join(TM_DIR,"kallisto_index_augmented_transcriptome")
 	log:
 		"logs/kallisto_index.log"
 	conda:

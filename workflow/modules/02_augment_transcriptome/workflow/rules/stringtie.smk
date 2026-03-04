@@ -25,7 +25,7 @@ rule stringtie_merge:
 		expand(os.path.join(ST_DIR,"{sample}_ref_guided_assembly.gtf"), sample=SAMPLES),
 		ref_gtf=gtf_file_path(filtered=True,gz=False) #.gtf
 	output:
-		os.path.join(ST_DIR,"merged_stringtie_assembly.gtf")
+		os.path.join(ST_DIR,"stringtie_assembly.gtf")
 	threads:
 		config["stringtie"]["threads"]
 	conda:

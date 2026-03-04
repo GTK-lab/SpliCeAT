@@ -1,6 +1,6 @@
 # SNAKEMAKE PARAMS
-gtf_merged   <- snakemake@input[["gtf_merged"]]
-gtf_filtered <- snakemake@input[["gtf_filtered"]]
+gtf_stringtie   <- snakemake@input[["gtf_stringtie"]]
+gtf_novel_only <- snakemake@input[["gtf_novel_only"]]
 organism     <- snakemake@params[["organism"]]
 ensembl_ver  <- snakemake@params[["ensembl"]] # Renamed to avoid conflict with biomaRt object
 out_uncollapsed <- snakemake@output[["uncollapsed"]]
@@ -31,10 +31,10 @@ clean_ids <- function(x) {
 	return(x)
 }
 
-stringtie_gtf_df <- as.data.frame(rtracklayer::import(gtf_merged)) %>%
+stringtie_gtf_df <- as.data.frame(rtracklayer::import(gtf_stringtie)) %>%
   mutate(across(c(transcript_id, gene_id, ref_gene_id), clean_ids))
 
-filtered_gtf_df <- as.data.frame(rtracklayer::import(gtf_filtered)) %>%
+filtered_gtf_df <- as.data.frame(rtracklayer::import(gtf_novel_only)) %>%
   mutate(across(c(transcript_id, gene_id), clean_ids))
 
 lgr$info("Mapping MSTRG to Ensembl Gene IDs...")

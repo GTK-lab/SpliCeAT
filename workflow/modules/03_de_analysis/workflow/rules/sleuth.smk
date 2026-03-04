@@ -1,8 +1,8 @@
 import os
 rule sleuth:
 	input:
-		t2g_aug_collapsed=os.path.join(AT_DIR,"t2g_augment_collapsed.csv"),
-		t2g_aug_uncollapsed=os.path.join(AT_DIR,"t2g_augment_uncollapsed.csv"),
+		t2g_aug_collapsed=os.path.join(TM_DIR,"t2g_augment_collapsed.csv"),
+		t2g_aug_uncollapsed=os.path.join(TM_DIR,"t2g_augment_uncollapsed.csv"),
 		kallisto_tsv=expand(os.path.join(KQ_DIR,"{sample_name}/abundance.tsv"), sample_name = SAMPLES)
 	output:
 		result_collapsed_tpm=os.path.join(SL_DIR,"collapsed_differential_transcript_analysis_tpm.csv"),

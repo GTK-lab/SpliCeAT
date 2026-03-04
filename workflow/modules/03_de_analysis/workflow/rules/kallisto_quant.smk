@@ -7,7 +7,7 @@ rule kallisto_quant:
 	output:
 		os.path.join(KQ_DIR,"{sample}/abundance.tsv")
 	params:
-		INDEX =  os.path.join(AT_DIR,"kallisto_index_augmented_transcriptome"),
+		INDEX =  os.path.join(TM_DIR,"kallisto_index_augmented_transcriptome"),
 		OUT_FILE = os.path.join(KQ_DIR,"{sample}"),
 		STRAND = lambda wildcards: "--rf-stranded" if config["experiment"]["strandedness"] == "reverse" else "--fr-stranded",
 		BOOTSTRAPS = config["kallisto"]["bootstraps"],

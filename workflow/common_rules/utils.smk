@@ -121,7 +121,7 @@ ds_det_output = [
 
 # for augment_transcriptome
 AT_DIR = os.path.join(R2_AT, "augmented_transcriptome")
-MG_DIR = os.path.join(R2_AT, "merged_assembly")
+TM_DIR = os.path.join(R2_AT, "transcript_mapping")
 ST_DIR = os.path.join(R2_AT, "stringtie_assemblies")
 ML_DIR = os.path.join(R2_AT, "masterlists")
 

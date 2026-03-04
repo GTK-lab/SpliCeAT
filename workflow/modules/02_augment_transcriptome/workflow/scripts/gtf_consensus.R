@@ -4,8 +4,8 @@ stringtie_gtf    <- snakemake@input[["stringtie_gtf"]]
 reference_gtf    <- snakemake@input[["reference_gtf"]]
 
 species                <- snakemake@params[["species"]]
-merged_filtered_gtf    <- snakemake@output[["merged_filtered_gtf"]]
-merged_fil_withRef_gtf <- snakemake@output[["merged_fil_withRef_gtf"]]
+novel_gtf    <- snakemake@output[["novel_gtf"]]
+augmented_gtf          <- snakemake@output[["augmented_gtf"]]
 consensus_GTF_LSVs     <- snakemake@output[["validated_lsv_tsv"]]
 
 log_file               <- snakemake@log[[1]]
@@ -163,8 +163,8 @@ lgr$info(sprintf("EXPORT: Consensus Matrix Complete. File Saved at %s",consensus
 # 4.2.1. Novel transcripts only (filtered StringTie)
 lgr$info("EXPORT: Generating validated consensus matrix (supported by StringTie)...")
 gtf_novel_only <- gtf_clean[mcols(gtf_clean)$transcript_id %in% valid_tx_names]
-rtracklayer::export(gtf_novel_only, merged_filtered_gtf, format="gtf")
-lgr$info(sprintf("EXPORT: Novel-only GTF Construction Complete. File Saved at %s",merged_filtered_gtf))
+rtracklayer::export(gtf_novel_only, novel_gtf, format="gtf")
+lgr$info(sprintf("EXPORT: Novel-only GTF Construction Complete. File Saved at %s",novel_gtf))
 
 # 4.2.2. Augmented GTF (Ref + Validated Novel)
 ref_pattern <- ifelse(species == "Mus_musculus", "ENSMUST", "ENST")
@@ -172,5 +172,5 @@ gtf_with_ref <- c(
     gtf_clean[grepl(ref_pattern, as.character(mcols(gtf_clean)$transcript_id))],
     gtf_novel_only
 )
-rtracklayer::export(gtf_with_ref, merged_fil_withRef_gtf, format="gtf")
-lgr$info(sprintf("EXPORT: Augmented GTF Construction Complete. File Saved at %s", merged_fil_withRef_gtf))
+rtracklayer::export(gtf_with_ref, augmented_gtf, format="gtf")
+lgr$info(sprintf("EXPORT: Augmented GTF Construction Complete. File Saved at %s", augmented_gtf))
