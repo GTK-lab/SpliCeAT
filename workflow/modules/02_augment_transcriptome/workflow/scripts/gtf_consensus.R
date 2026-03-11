@@ -33,7 +33,8 @@ clean_ids <- function(x) {
 
 # 1. TRUTH SET (Ref + ds_detection consensus)
 lgr$info("TRUTH SET: Processing Reference GTF and Granges Consensus File...")
-ref_txdb <- txdbmaker::makeTxDbFromGFF(reference_gtf)
+official_ref <- rtracklayer::import(reference_gtf)
+ref_txdb <- txdbmaker::makeTxDbFromGRanges(official_ref)
 ref_introns <- GenomicFeatures::intronsByTranscript(ref_txdb) %>% unlist() %>% unique()
 
 consensus_matrix <- fread(consensus_events) %>% as.data.frame()
@@ -167,9 +168,10 @@ rtracklayer::export(gtf_novel_only, novel_gtf, format="gtf")
 lgr$info(sprintf("EXPORT: Novel-only GTF Construction Complete. File Saved at %s",novel_gtf))
 
 # 4.2.2. Augmented GTF (Ref + Validated Novel)
-ref_pattern <- ifelse(species == "Mus_musculus", "ENSMUST", "ENST")
+# ref_pattern <- ifelse(species == "Mus_musculus", "ENSMUST", "ENST")
 gtf_with_ref <- c(
-    gtf_clean[grepl(ref_pattern, as.character(mcols(gtf_clean)$transcript_id))],
+    official_ref,
+	# gtf_clean[grepl(ref_pattern, as.character(mcols(gtf_clean)$transcript_id))],
     gtf_novel_only
 )
 rtracklayer::export(gtf_with_ref, augmented_gtf, format="gtf")

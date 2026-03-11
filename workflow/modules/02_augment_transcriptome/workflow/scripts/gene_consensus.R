@@ -31,6 +31,10 @@ majiq_filtered <- majiq_df %>%
   slice_max(order_by = abs(dpsi), n = 1, with_ties = FALSE) %>%
   ungroup()
 
+majiq_filtered  <- majiq_filtered  %>% mutate(chr = as.character(chr))
+whippet_df      <- whippet_df      %>% mutate(chr = as.character(chr))
+leafcutter_df   <- leafcutter_df   %>% mutate(chr = as.character(chr))
+
 all_events <- bind_rows(majiq_filtered, whippet_df, leafcutter_df) %>%
   separate_rows(gene_id, sep = ",") %>%
   mutate(gene_id = str_trim(gene_id)) %>%
