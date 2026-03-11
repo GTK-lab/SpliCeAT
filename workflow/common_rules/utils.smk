@@ -36,26 +36,31 @@ original_df=pd.read_csv(original_design_path, sep="\t", dtype=str, comment="#")
 star_active = config.get('STAR', {}).get('activate', False)
 samples_full_path = os.path.join(RESULTS_DIR, "samples.tsv")
 
+def cleanup_metadata():
+    if os.path.exists(samples_full_path):
+        os.remove(samples_full_path)
+
 if os.path.exists(samples_full_path):
 	sample_file_df = pd.read_csv(samples_full_path, sep="\t", dtype=str, comment="#")
 else:
 	sample_file_df = original_df.copy()
-	if star_active and 'bam_file' not in sample_file_df.columns:
+	if star_active and 'bam_file' not in original_df.columns:
 		sample_file_df['bam_file'] = [
 			os.path.join(STR_DIR, "aligned_BAM", f"{s}_Aligned.sortedByCoord.out.bam")
 			for s in sample_file_df['sample_name']
 		]
 
-	if not star_active and 'bam_file' not in sample_file_df.columns:
+	if not star_active and 'bam_file' not in original_df.columns:
+		cleanup_metadata()
 		raise ValueError(
 		"\n[Metadata Error]: Inonsistent input files- STAR is disabled ('activate: false') in config.yaml, but design.tsv is missing the required 'bam_file' column. Please provide paths or enable STAR."
 		)
 
-	if star_active and 'bam_file' in sample_file_df.columns:
+	if star_active and 'bam_file' in original_df.columns:
+		cleanup_metadata()
 		raise ValueError(
 		"\n[Metadata Error]: Inonsistent input files- STAR is enabled ('activate: true'), but the 'bam_file' column already exists in design.tsv. To use your own BAMs please disable STAR in the config. To use STAR, remove the 'bam_file' column."
 	)
-
 	os.makedirs(RESULTS_DIR, exist_ok=True)
 	sample_file_df.to_csv(samples_full_path, sep="\t", index=False)
 
