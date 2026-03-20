@@ -44,12 +44,15 @@ def whippet_output():
 		return rules.whippet.input
 
 def leafcutter_strandedness(strandedness=config["experiment"]["strandedness"]):
+	val = str(strandedness).lower()
 	lookup = {
-		"rf": "RF",
-		"reverse": "RF",
+		"yes": "FR",
 		"forward": "FR",
 		"fr": "FR",
-		"unstranded": "XS",
-		"yes": "FR"
+		"rf": "RF",
+		"reverse": "RF",
+		"none" : "XS",
+		"no" : "XS",
+		"unstranded": "XS"
 	}
-	return lookup[strandedness]
+	return lookup.get(val,"XS")

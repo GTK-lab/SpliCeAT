@@ -19,11 +19,25 @@ grouped_bam_names = samples.groupby("group")["bam_name"].agg(",".join).to_dict()
 
 majiq_config = configparser.ConfigParser()
 
+def majiq_strandedness(strandedness=snakemake.config["experiment"]["strandedness"]):
+	val = str(strandedness).lower()
+	lookup = {
+		"yes": "forward",
+		"forward": "forward",
+		"fr": "forward",
+		"rf": "reverse",
+		"reverse": "reverse",
+		"none" : "none",
+		"no" : "none",
+		"unstranded": "none"
+	}
+	return lookup.get(val, "none")
+
 majiq_config['info'] = {
 		"experiment" : snakemake.config["experiment"]["name"],
 		"genome" : snakemake.config["ref"]["build"],
 		"bamdirs" : ",".join(bam_dirs),
-		"strandedness" : snakemake.config["experiment"]["strandedness"]
+		"strandedness" : majiq_strandedness()
 	}
 
 majiq_config['experiments'] = grouped_bam_names

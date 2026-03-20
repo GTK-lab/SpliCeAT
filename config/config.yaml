@@ -1,7 +1,7 @@
 name: config
 
 pipeline_dir: "/mnt/mbi/home/e1353064/meg_thesis/SpliCeAT" #path to SpliCeAT directory
-results_dir: "/mnt/gtklab01/megha/SP_results_260129" #path to results directory
+results_dir: "/mnt/gtklab01/megha/SP_results_200329" #path to results directory
 
 ref:
   species: "Mus_musculus" #Homo_sapiens
@@ -15,7 +15,7 @@ experiment:
   name: "spliceat_replication"
   biotype: "protein_coding"
   max_transcript_support_level: 3
-  strandedness: "reverse"
+  strandedness: "reverse" # forward, reverse or none
   readlen: 150
   groups: [ "control", "treated" ]
 
@@ -48,7 +48,6 @@ whippet:
 stringtie:
   activate: True
   threads: 4
-  strand: rf
   min_juncs: 20
 
 kallisto:

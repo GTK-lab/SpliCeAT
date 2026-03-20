@@ -1,4 +1,19 @@
 import os
+
+def stringtie_strandedness(strandedness=config["experiment"]["strandedness"]):
+	val = str(strandedness).lower()
+	lookup = {
+		"yes": "--fr",
+		"forward": "--fr",
+		"fr": "--fr",
+		"rf": "--rf",
+		"reverse": "--rf",
+		"none" : " ",
+		"no" : " ",
+		"unstranded": " ",
+	}
+	return lookup.get(val, " ")
+
 rule stringtie_assembly:
 	input:
 		get_bam,
@@ -7,7 +22,7 @@ rule stringtie_assembly:
 		os.path.join(ST_DIR,"{sample}_ref_guided_assembly.gtf")
 	params:
 		juncs=config["stringtie"]["min_juncs"],
-		strand=config["stringtie"]["strand"]
+		strand=stringtie_strandedness()
 	conda:
 		"../../../../envs/stringtie.yaml"
 	log:
@@ -16,7 +31,7 @@ rule stringtie_assembly:
 		config["stringtie"]["threads"]
 	shell:
 		"""
-		stringtie {input} -G {input.gtf} -o {output} -j {params.juncs} -p {threads} --{params.strand} -v 2>&1 | tee {log}.raw | grep --line-buffered -Ei "warning|error|critical|invalid|fail" > {log} || true
+		stringtie {input} -G {input.gtf} -o {output} -j {params.juncs} -p {threads} {params.strand} -v 2>&1 | tee {log}.raw | grep --line-buffered -Ei "warning|error|critical|invalid|fail" > {log} || true
 		"""
 	#verbose mode + filter to catch warnings to primary log file
 

@@ -50,13 +50,13 @@ else:
 			for s in sample_file_df['sample_name']
 		]
 
-	if not star_active and 'bam_file' not in original_df.columns:
+	elif not star_active and 'bam_file' not in original_df.columns:
 		cleanup_metadata()
 		raise ValueError(
 		"\n[Metadata Error]: Inonsistent input files- STAR is disabled ('activate: false') in config.yaml, but design.tsv is missing the required 'bam_file' column. Please provide paths or enable STAR."
 		)
 
-	if star_active and 'bam_file' in original_df.columns:
+	elif star_active and 'bam_file' in original_df.columns:
 		cleanup_metadata()
 		raise ValueError(
 		"\n[Metadata Error]: Inonsistent input files- STAR is enabled ('activate: true'), but the 'bam_file' column already exists in design.tsv. To use your own BAMs please disable STAR in the config. To use STAR, remove the 'bam_file' column."
