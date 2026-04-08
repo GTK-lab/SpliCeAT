@@ -33,40 +33,55 @@ clean_ids <- function(x) {
 
 # 1. TRUTH SET (Ref + ds_detection consensus)
 lgr$info("TRUTH SET: Processing Reference GTF and Granges Consensus File...")
+
 official_ref <- rtracklayer::import(reference_gtf)
+mcols(official_ref)$transcript_id <- clean_ids(mcols(official_ref)$transcript_id)
+mcols(official_ref)$gene_id <- clean_ids(mcols(official_ref)$gene_id)
+
 ref_txdb <- txdbmaker::makeTxDbFromGRanges(official_ref)
 ref_introns <- GenomicFeatures::intronsByTranscript(ref_txdb) %>% unlist() %>% unique()
+ref_exons <- official_ref[official_ref$type == "exon"]
+
 
 consensus_matrix <- fread(consensus_events) %>% as.data.frame()
 
 lgr$info("TRUTH SET: Collapsing feature types from Granges Consensus File...")
-# Standardizing Feature Type Columns
-collapse_feature_type <- function(m, w, l) {
-  types <- c(as.character(m), as.character(w), as.character(l))
-  types <- gsub("\\[|\\]", "", types)
 
-  # 1. Intron Retention
-  if (any(grepl("intron_retention|IR_sign_match", types, ignore.case = TRUE), na.rm = TRUE)) {
-    return("intron_retention") }
 
-  # 2. Splice Junction
-  if (any(grepl("splice_junction|boundary match", types, ignore.case = TRUE), na.rm = TRUE)) {
-    return("splice_junction")}
+use_granges <- snakemake@params[["overlap_type"]]
 
-  return(NA_character_)
+consensus_matrix <- fread(consensus_events) %>% as.data.frame()
+
+if (use_granges) {
+  # Event Level Consensus
+  lgr$info("TRUTH SET: Collapsing feature types from Granges Consensus File...")
+  collapse_feature_type <- function(m, w, l) {
+    types <- c(as.character(m), as.character(w), as.character(l))
+    types <- gsub("\\[|\\]", "", types)
+    if (any(grepl("intron_retention|IR_sign_match", types, ignore.case = TRUE), na.rm = TRUE)) {
+      return("intron_retention") }
+    if (any(grepl("splice_junction|boundary match", types, ignore.case = TRUE), na.rm = TRUE)) {
+      return("splice_junction")}
+    return(NA_character_)
+  }
+  consensus_matrix <- consensus_matrix %>%
+    rowwise() %>%
+    mutate(event_type = collapse_feature_type(
+      majiq_feature_type,
+      whippet_feature_type,
+      leafcutter_feature_type
+    )) %>%
+    ungroup()
+} else {
+  lgr$info("TRUTH SET: Using gene-level consensus feature types directly...")
+  consensus_matrix <- consensus_matrix %>%
+    rename(event_type = feature_type)
 }
 
-# Apply the function to create the new column
 consensus_matrix <- consensus_matrix %>%
-  rowwise() %>%
-  mutate(event_type = collapse_feature_type(
-    majiq_feature_type,
-    whippet_feature_type,
-    leafcutter_feature_type
-  )) %>%
-  ungroup() %>%
-  select(chr,strand,start,end,gene_ids,gene_names,n_tools,event_type) %>%
+  select(chr, strand, start, end, gene_id, gene_name, event_type) %>%
   filter(!is.na(event_type))
+
 
 lgr$info("TRUTH SET: Extracting ranges from Granges Consensus File...")
 consensus_ranges <- GRanges(
@@ -81,19 +96,30 @@ lgr$info("TRUTH SET: Splice Junctions Extracted.")
 ir_consensus <- consensus_ranges[consensus_ranges$event_type == "intron_retention"]
 lgr$info("TRUTH SET: Intron Retention events Extracted.")
 
+exon_consensus <- consensus_ranges[consensus_ranges$event_type == "exon_node"]
+if(!use_granges) {
+	lgr$info("TRUTH SET: Exon Nodes Extracted.")
+}
+
 # 2. TEST SET (StringTie)
-lgr$info("STRINGTIE: Building TxDb and extracting introns...")
+lgr$info("STRINGTIE: Building TxDb and extracting genomic features...")
 gtf_raw <- rtracklayer::import(stringtie_gtf)
 gtf_clean <- gtf_raw[strand(gtf_raw) %in% c("+", "-")]
+mcols(gtf_clean)$transcript_id <- clean_ids(mcols(gtf_clean)$transcript_id)
+mcols(gtf_clean)$gene_id <- clean_ids(mcols(gtf_clean)$gene_id)
 
 txdb_st <- txdbmaker::makeTxDbFromGRanges(gtf_clean)
 st_introns_grl <- GenomicFeatures::intronsByTranscript(txdb_st, use.names=TRUE)
 st_introns_flat <- unlist(st_introns_grl)
 
+#extracting exons
+st_exons_grl <- GenomicFeatures::exonsBy(txdb_st, by="tx", use.names=TRUE)
+st_exons_flat <- unlist(st_exons_grl)
+
+
 all_st_tx_names <- names(st_introns_grl)
 novel_st_tx_names <- all_st_tx_names[grepl("^MSTRG", all_st_tx_names)]
 
-st_exons_grl <- GenomicFeatures::exonsBy(txdb_st, by="tx", use.names=TRUE)
 
 # 3. FILTERING
 lgr$info("FILTER: Validating Splice Junctions and Intron Retentions...")
@@ -119,6 +145,17 @@ tx_with_ir_support <- unique(names(st_exons_grl[queryHits(matches_ir_validation)
 unsupported_ir_tx <- setdiff(tx_skipping_ref_introns, tx_with_ir_support) #case 1 minus case 2
 lgr$info("FILTER: Intron Retention Validation Complete. Removed %d transcripts with unsupported intron retention events.", length(unsupported_ir_tx))
 
+# 3.1.3 Event is exon node (for gene_overlap input)
+tx_with_exon_support <- character(0)
+
+if (!use_granges) {
+    lgr$info("FILTER: Validating Exon Nodes")
+
+	# identify transcripts with at least one supported exon node
+    matches_exon_lsv <- findOverlaps(st_exons_grl, exon_consensus, type="equal")
+    tx_with_exon_support <- unique(names(st_exons_grl[queryHits(matches_exon_lsv)]))
+}
+
 # COMBINED UNSUPPORTED TRANSCRIPTS
 unsupported_tx_names <- unique(c(unsupported_sj_tx, unsupported_ir_tx))
 lgr$info("FILTER: %d transcripts contains unvalidated events. They have been removed", length(unsupported_tx_names))
@@ -133,7 +170,7 @@ tx_with_sj_support <- unique(names(st_introns_flat[queryHits(matches_sj_lsv)]))
 matches_ir_lsv <- findOverlaps(st_exons_grl, ir_consensus, type="within") #intron spans within long exon
 tx_with_ir_support <- unique(names(st_exons_grl[queryHits(matches_ir_lsv)]))
 
-supported_by_truth <- unique(c(tx_with_sj_support, tx_with_ir_support))
+supported_by_truth <- unique(c(tx_with_sj_support, tx_with_ir_support, tx_with_exon_support))
 
 # 3.3 Combined filters to identify valid transcripts
 valid_tx_names <- intersect(supported_by_truth, setdiff(novel_st_tx_names, unsupported_tx_names))
@@ -152,9 +189,14 @@ st_final_exons <- st_exons_grl[names(st_exons_grl) %in% valid_tx_names]
 valid_sj_idx <- unique(queryHits(findOverlaps(sj_consensus, st_final_introns, type="equal", maxgap=1)))
 valid_ir_idx <- unique(queryHits(findOverlaps(ir_consensus, st_final_exons, type="within")))
 
+valid_exon_idx <- if(!use_granges) {
+    unique(queryHits(findOverlaps(exon_consensus, st_final_exons, type="equal")))
+} else { numeric(0) }
+
 final_consensus_matrix <- rbind(
     consensus_matrix %>% filter(event_type == "splice_junction") %>% slice(valid_sj_idx),
-    consensus_matrix %>% filter(event_type == "intron_retention") %>% slice(valid_ir_idx)
+    consensus_matrix %>% filter(event_type == "intron_retention") %>% slice(valid_ir_idx),
+    consensus_matrix %>% filter(event_type == "exon_node") %>% slice(valid_exon_idx)
 )
 
 fwrite(final_consensus_matrix,consensus_GTF_LSVs, sep="\t")
@@ -171,8 +213,7 @@ lgr$info(sprintf("EXPORT: Novel-only GTF Construction Complete. File Saved at %s
 # ref_pattern <- ifelse(species == "Mus_musculus", "ENSMUST", "ENST")
 gtf_with_ref <- c(
     official_ref,
-	# gtf_clean[grepl(ref_pattern, as.character(mcols(gtf_clean)$transcript_id))],
-    gtf_novel_only
+	gtf_novel_only
 )
 rtracklayer::export(gtf_with_ref, augmented_gtf, format="gtf")
 lgr$info(sprintf("EXPORT: Augmented GTF Construction Complete. File Saved at %s", augmented_gtf))

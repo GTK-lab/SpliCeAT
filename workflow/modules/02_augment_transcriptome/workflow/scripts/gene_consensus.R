@@ -16,6 +16,7 @@ suppressMessages({
   library(data.table)
   library(dplyr)
   library(tidyr)
+  library(gtools)
 })
 
 lgr$info("Loading masterlists...")
@@ -47,6 +48,7 @@ lgr$info(sprintf("%d Splice Junctions", sum(all_events$feature_type == "splice_j
 lgr$info(sprintf("%d Exon Nodes", sum(all_events$feature_type == "exon_node")))
 lgr$info(sprintf("%d Introns Retained", sum(all_events$feature_type == "intron_retention")))
 
+## the count file
 gene_consensus <- all_events %>%
 	filter(!is.na(gene_id)) %>%
 	group_by(gene_id) %>%
@@ -61,9 +63,12 @@ gene_consensus <- all_events %>%
 	arrange(desc(n_tools), gene_id)
 
 lgr$info("Retrieving all LSVs from consensus genes...")
+
+## the event file
 consensus_event_list <- all_events %>%
   filter(gene_id %in% gene_consensus$gene_id) %>%
   mutate(start = as.numeric(start)) %>%
+  select(chr, strand, start, end, gene_id, gene_name, tool, feature_type, lsv_id, dpsi, prob, p_adj) %>%
   arrange(chr, start)
 
 consensus_event_list <- consensus_event_list[gtools::mixedorder(consensus_event_list$chr), ]

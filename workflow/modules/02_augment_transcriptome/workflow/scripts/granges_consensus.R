@@ -105,8 +105,8 @@ consensus_matrix <- all_lsvs %>%
   left_join(valid_evidence, by = c("row_idx" = "idx"), relationship = "many-to-many") %>%
   group_by(chr, strand, start, end) %>%
   summarise(
-    gene_ids = clean_paste(gene_id),
-    gene_names = clean_paste(gene_name),
+    gene_id = clean_paste(gene_id),
+    gene_name = clean_paste(gene_name),
 
     # --- MAJIQ ---
     majiq_feature_type = case_when(
@@ -140,21 +140,16 @@ consensus_matrix <- all_lsvs %>%
     .groups = 'drop'
   ) %>%
   filter(n_tools >= 2) %>%
-  select(chr, strand, start, end, gene_ids, gene_names, n_tools,
-         starts_with("majiq"), starts_with("whippet"), starts_with("leafcutter"))
-#   arrange(chr, start)
+  select(chr, strand, start, end, gene_id, gene_name, n_tools,
+         starts_with("majiq"), starts_with("whippet"), starts_with("leafcutter")) %>%
+  arrange(chr, start)
 
-chr_levels <- c(paste0(1:22), "X", "Y", "M", "MT",
-                paste0("chr", 1:22), "chrX", "chrY", "chrM", "chrMT")
-
-# 2. Perform the sort using an explicit factor match
-consensus_matrix <- consensus_matrix %>%
-  mutate(temp_rank = match(as.character(chr), chr_levels)) %>%
-  arrange(temp_rank, start) %>%
-  select(-temp_rank)
+# gtoools sorting
+consensus_matrix <- consensus_matrix[gtools::mixedorder(consensus_matrix$chr), ]
 
 write.table(consensus_matrix, consensus_events, sep="\t", row.names=FALSE, quote=FALSE)
 
+lgr$info("Generating count matrix...")
 # Generate Gene Summary
 gene_summary <- all_lsvs %>%
   filter(row_idx %in% validated_rows$idx) %>%

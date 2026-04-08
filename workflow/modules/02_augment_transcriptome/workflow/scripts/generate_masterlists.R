@@ -35,7 +35,7 @@ suppressMessages({
 lgr$info("LEAFCUTTER: Processing LSVs...")
 leafcutter <- read.table(leafcutter_in, sep = "\t", header = TRUE) %>%
   filter(p.adjust < 0.05 & abs(deltapsi) >= 0.2) %>%
-  mutate(clean_id = str_remove(genes, "^gene:"),
+  mutate(clean_id = sub("\\.[0-9]+$", "", str_remove(genes, "^gene:")),
          clean_id = ifelse(clean_id == "" | genes == ".", NA_character_, clean_id),
 		 start = as.numeric(start),
          end = as.numeric(end),
@@ -91,7 +91,8 @@ majiq <- majiq_raw %>%
   slice_max(order_by = abs(mean_dpsi_per_lsv_junction), n = 1, with_ties = FALSE) %>%
   ungroup() %>%
   dplyr::select(gene_id, chr = seqid, strand, start, end, tool, feature_type, lsv_id,
-                dpsi = mean_dpsi_per_lsv_junction, prob = probability_changing)
+                dpsi = mean_dpsi_per_lsv_junction, prob = probability_changing) %>%
+		mutate(gene_id = sub("\\.[0-9]+$", "", gene_id))
 
 lgr$info(sprintf("MAJIQ: Filtering Complete. %d entries present.", nrow(majiq)))
 

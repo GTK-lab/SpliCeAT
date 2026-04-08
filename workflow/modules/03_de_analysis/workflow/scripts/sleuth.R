@@ -1,22 +1,22 @@
 # sleuth for differential transcript expression analysis
 
 # SNAKEMAKE PARAMS
-kallisto_input <- snakemake@input[["kallisto_tsv"]]
-t2g_collapsed <- snakemake@input[["t2g_aug_collapsed"]]
+kallisto_input  <- snakemake@input[["kallisto_tsv"]]
+t2g_collapsed   <- snakemake@input[["t2g_aug_collapsed"]]
 t2g_uncollapsed <- snakemake@input[["t2g_aug_uncollapsed"]]
 
-kq_out <- snakemake@params[["kallisto_quant_out"]]
+kq_out        <- snakemake@params[["kallisto_quant_out"]]
 design_matrix <- snakemake@params[["design_matrix"]]
 
-result_collapsed_tpm <- snakemake@output[["result_collapsed_tpm"]]
-result_collapsed <- snakemake@output[["result_collapsed"]]
+result_collapsed_tpm   <- snakemake@output[["result_collapsed_tpm"]]
+result_collapsed       <- snakemake@output[["result_collapsed"]]
 result_uncollapsed_tpm <- snakemake@output[["result_uncollapsed_tpm"]]
-result_uncollapsed <- snakemake@output[["result_uncollapsed"]]
+result_uncollapsed     <- snakemake@output[["result_uncollapsed"]]
 
 # LOGGER SETUP
 library(lgr)
 log_file <- snakemake@log[[1]]
-log_con <- file(log_file, open = "a")
+log_con  <- file(log_file, open = "a")
 
 sink(log_con, append = FALSE)
 sink(log_con, append = FALSE, type = "message")
@@ -30,67 +30,91 @@ options(lgr.log_messages = TRUE)
 options(lgr.log_warnings = TRUE)
 options(warn = 1)
 
-
 # LIBRARIES
-lgr$info("Loading libraries...")
+lgr$info("PREP: Loading libraries...")
 suppressMessages({
 library(rhdf5)
 library(yaml)
 library(tidyverse)
 library(sleuth)
 })
-lgr$info("Done.")
 
-# configuring h5 files to get rid of trailing transcript info - required if using Gencode annotations.
-# If using Ensembl annotations, skip this part
-lgr$info("Configuring h5 files to get rid of trailing transcript info...")
+# configuring h5 files to get rid of trailing transcript info (both pipe and Ensembl version numbers)
+lgr$info("PREP: Copying h5 files to get rid of trailing transcript info...")
 files <- list.files(paste(kq_out),
                     pattern=".h5",
                     recursive=TRUE,
                     full.names=TRUE)
 
-for (currentFile in files) {
-  oldids <- h5read(currentFile, "/aux/ids")
-  newids <- gsub("\\|.*", "", oldids)
-  h5write(newids, currentFile, "/aux/ids")
+
+clean_kq_out <- paste0(trimws(kq_out, which = "right", whitespace = "/"), "_cleaned")
+
+if (!dir.exists(clean_kq_out)) {
+  dir.create(clean_kq_out, recursive = TRUE)
+  lgr$info(sprintf("PREP: Creating new directory for cleaned H5 files: %s", clean_kq_out))
 }
 
-lgr$info("Loading t2g dataframes...")
+for (currentFile in files) {
+	# extract sample names
+	path_parts <- unlist(strsplit(currentFile, .Platform$file.sep))
+    sample_name <- path_parts[length(path_parts) - 1]
+	sample_dir <- file.path(clean_kq_out, sample_name)
+	if (!dir.exists(sample_dir)) dir.create(sample_dir, recursive = TRUE)
+
+	new_h5_path <- file.path(sample_dir, "abundance.h5")
+	file.copy(currentFile, new_h5_path, overwrite = TRUE)
+
+	oldids <- h5read(new_h5_path, "/aux/ids")
+	newids <- gsub("\\|.*", "", oldids)
+	newids <- ifelse(grepl("^ENS", newids),
+					 gsub("\\..*", "", newids),
+					 newids)
+	h5write(newids, currentFile, "/aux/ids")
+
+	lgr$info(sprintf("PREP: Cleaned copy created for sample: %s", sample_name))
+}
+
+lgr$info(sprintf("PREP: Abundance Files Updated."))
+
+lgr$info("PREP: Loading t2g dataframes...")
 t2g_augment_uncollapsed <- read.csv(paste(t2g_uncollapsed, sep=""))
 t2g_augment_collapsed <- read.csv(paste(t2g_collapsed, sep=""))
 
-############## ANALYSIS 1 - NO COLLAPSING ################
-
-lgr$info("==== Begin Analysis 1: NO collapsing ====")
-
-lgr$info("Configuring experimental design...")
-
-sample_ids <- dir(file.path(paste(kq_out)))
-lgr$info("Check that your samples are correct:")
+lgr$info("PREP: Configuring experimental design...")
+sample_ids <- dir(file.path(paste(clean_kq_out)))
+lgr$info("PREP: Loading Sample IDs... ")
 sample_ids
 
-kal_dirs <- file.path(paste(kq_out), sample_ids, "abundance.h5")
-lgr$info("Check that your h5 file paths are correct:")
+kal_dirs <- file.path(paste(clean_kq_out), sample_ids, "abundance.h5")
+lgr$info("PREP: Loading Abundance file paths... ")
 kal_dirs
 
-lgr$info("Loading in experimental design...")
+lgr$info("PREP: Loading in experimental design...")
 metadf <- read.table(paste(design_matrix, sep=""), sep = '\t', header = TRUE, colClasses = c("character"))
 metadf$sample <- metadf$sample_name
 
 metadf <- metadf[order(metadf$sample, decreasing=FALSE),]
 metadf <- dplyr::mutate(metadf, path = kal_dirs)
-lgr$info("Check that the pairing for each sample is correct:")
+lgr$info("PREP: Loading pairing for each sample...")
 metadf
 
 metadf$group <- as.factor(metadf$group)
 metadf$group <- relevel(metadf$group, "control")
 lvls <- levels(metadf$group)
-lgr$info("Detected groups: %s", paste(lvls, collapse = ", "))
+lgr$info("PREP: Detected groups- %s", paste(lvls, collapse = ", "))
 
-lgr$info("Starting sleuth analysis...")
+n_samples    <- nrow(metadf)
+lgr$info("Total samples: %d", n_samples)
 
-so <- sleuth_prep(metadf, ~group, extra_bootstrap_summary = TRUE,
-                  gene_mode=FALSE, transformation_function = function(x) log2(x + 0.5)) %>%
+############## ANALYSIS 1 - NO COLLAPSING ################
+lgr$info("SLEUTH UNCOLLAPSED: Begin Analysis...")
+
+so <- sleuth_prep(metadf,
+				  ~group,
+				  extra_bootstrap_summary = TRUE,
+				  gene_mode               = FALSE,
+				  transformation_function = function(x) log2(x + 0.5)
+				) %>%
       sleuth_fit(~1, 'reduced') %>%
       sleuth_fit(~group, 'full') %>%
       sleuth_lrt('reduced', 'full') %>%
@@ -126,23 +150,27 @@ colnames(sleuth_tx_wald) <- c("target_id",
 
 sleuth_tx_lrt_sleuth_tx_wald_join <- full_join(sleuth_tx_lrt,sleuth_tx_wald,by=c("target_id"))
 
-lgr$info("Finished sleuth analysis, saving results...")
+lgr$info("SLEUTH UNCOLLAPSED: Finished analysis.")
+lgr$info("SLEUTH UNCOLLAPSED: Saving results...")
 
-write.csv(sleuth_tx_lrt_sleuth_tx_wald_join,paste( result_uncollapsed))
+write.csv(sleuth_tx_lrt_sleuth_tx_wald_join,paste(result_uncollapsed))
 
 sleuth_matrix <- sleuth_to_matrix(so, 'obs_norm', 'tpm')
 sleuth_matrix <- as.data.frame(sleuth_matrix)
 write.csv(sleuth_matrix, paste(result_uncollapsed_tpm))
-lgr$info("==== End Analysis 1 ====")
+lgr$info("SLEUTH UNCOLLAPSED: Complete.")
+paste0("--------------------------------------------------------------------------------------------------------------------------------------------")
 
 ############## ANALYSIS 2 - WITH COLLAPSING ################
-
-lgr$info("==== Begin Analysis 2: WITH collapsing ====")
-lgr$info("Starting sleuth analysis...")
-
-so <- sleuth_prep(metadf, ~group, target_mapping = t2g_augment_collapsed,
-                  aggregation_column = 'collapsed_target_id', extra_bootstrap_summary = TRUE,
-                  gene_mode=TRUE, transformation_function = function(x) log2(x + 0.5)) %>%
+lgr$info("SLEUTH COLLAPSED: Begin Analysis...")
+so <- sleuth_prep(metadf,
+                  ~group,
+				  target_mapping = t2g_augment_collapsed,
+                  aggregation_column = 'collapsed_target_id',
+				  extra_bootstrap_summary = TRUE,
+                  gene_mode=TRUE,
+				  transformation_function = function(x) log2(x + 0.5)
+				) %>%
       sleuth_fit(~1, 'reduced') %>%
       sleuth_fit(~group, 'full') %>%
       sleuth_lrt('reduced', 'full') %>%
@@ -183,12 +211,13 @@ colnames(sleuth_gene_mode_wald) <- c("ens_gene",
 sleuth_gene_mode_lrt_sleuth_gene_mode_wald_join <- full_join(sleuth_gene_mode_lrt,sleuth_gene_mode_wald,
                                                              by=c("ens_gene", "ext_gene","target_id"))
 
-lgr$info("Finished sleuth analysis, saving results...")
+lgr$info("SLEUTH COLLAPSED: Finished analysis.")
+lgr$info("SLEUTH COLLAPSED: Saving results...")
 write.csv(sleuth_gene_mode_lrt_sleuth_gene_mode_wald_join, paste(result_collapsed, sep=""))
 
 sleuth_matrix <- sleuth_to_matrix(so, 'obs_norm', 'tpm')
 sleuth_matrix <- as.data.frame(sleuth_matrix)
 
 write.csv(sleuth_matrix, paste(result_collapsed_tpm, sep=""))
-lgr$info("==== End Analysis 2 ====")
+lgr$info("SLEUTH UNCOLLAPSED: Complete.")
 lgr$remove_appender("snakemake_file_log")

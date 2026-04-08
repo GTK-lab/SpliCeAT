@@ -1,6 +1,13 @@
 #transcriptome augmentation
 import os
 
+def get_consensus_input(wildcards):
+    if config["experiment"].get("event_overlap", True):
+        return rules.granges_consensus.output.consensus_events_LSVs #event level consensus
+    else:
+        return rules.gene_consensus.output.consensus_events #gene level consensus
+
+
 rule generate_masterlists:
 	input:
 		majiq_in = os.path.join(MJ_DIR,f"majiq_expanded_{'-'.join(GROUPS)}.deltapsi.tsv"),
@@ -51,13 +58,15 @@ rule granges_consensus:
 
 rule gtf_consensus:
 	input:
-		consensus_events_LSVs = os.path.join(ML_DIR, "consensus_granges_LSV.tsv"),
+		consensus_events_LSVs = get_consensus_input,
 		stringtie_gtf=os.path.join(ST_DIR,"stringtie_assembly.gtf"),
 		reference_gtf=gtf_file_path(filtered=False,gz=False) #.gtf
 	output:
 		novel_gtf=os.path.join(AT_DIR,"consensus_novel_transcripts.gtf"),
 		augmented_gtf=os.path.join(AT_DIR,"augmented_transcriptome.gtf"),
 		validated_lsv_tsv= os.path.join(ML_DIR, "consensus_gtf_LSV.tsv")
+	params:
+		overlap_type = config["experiment"].get("event_overlap", True)
 	log:
 		"logs/gtf_consensus.log"
 	conda:
