@@ -7,3 +7,5 @@ include: "rules/STAR_align.smk"
 rule all:
 	input:
 		gtf_file_path(filtered=False,gz=False),gtf_file_path(filtered=True,gz=False), genome_file_path(gz=False,dna=True), genome_file_path(gz=False,dna=False), STAR_output()
+	output:
+		touch(os.path.join(R0_REF,".done"))

@@ -1,7 +1,7 @@
 name: config
 
 pipeline_dir: "/mnt/mbi/home/e1353064/meg_thesis/SpliCeAT" #path to SpliCeAT directory
-results_dir: "/mnt/gtklab01/megha/SP_results_260401" #path to results directory
+results_dir: "/mnt/gtklab01/megha/SpliCeAT_260409" #path to results directory
 
 ref:
   species: "Mus_musculus" #Homo_sapiens
@@ -18,10 +18,10 @@ experiment:
   strandedness: "reverse" # forward, reverse or none
   readlen: 150
   groups: [ "control", "treated" ]
-  event_overlap: True
+  event_overlap: False #false for gene-level, true for event-level
 
 STAR:
-  activate: False
+  activate: True
   threads: 16
   index_extra: ""
   align_extra: "--twopassMode Basic"

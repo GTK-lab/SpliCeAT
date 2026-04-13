@@ -13,3 +13,5 @@ rule all:
 		result_collapsed=os.path.join(SL_DIR,"collapsed_differential_transcript_analysis.csv"),
 		result_uncollapsed_tpm=os.path.join(SL_DIR,"uncollapsed_differential_transcript_analysis_tpm.csv"),
 		result_uncollapsed=os.path.join(SL_DIR,"uncollapsed_differential_transcript_analysis.csv")
+	output:
+		touch(os.path.join(R3_DE,".done"))

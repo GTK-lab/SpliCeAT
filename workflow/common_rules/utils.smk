@@ -9,11 +9,14 @@ PROJECT_ROOT = config["pipeline_dir"]
 results_base = config.get("results_dir") or PROJECT_ROOT
 RESULTS_DIR = os.path.join(results_base, "results")
 
+# in augment_transcriptome Snakefile
+OVERLAP_MODE = "_event_mode" if config["experiment"]["event_overlap"] else "_gene_mode"
+
 # result directories
 R0_REF = os.path.join(RESULTS_DIR, "r0_get_ref")
 R1_DS = os.path.join(RESULTS_DIR, "r1_ds_detection")
-R2_AT = os.path.join(RESULTS_DIR, "r2_augment_transcriptome")
-R3_DE = os.path.join(RESULTS_DIR, "r3_de_analysis")
+R2_AT = os.path.join(RESULTS_DIR, f"r2_augment_transcriptome_{OVERLAP_MODE}")
+R3_DE = os.path.join(RESULTS_DIR, f"r3_de_analysis_{OVERLAP_MODE}")
 
 # for reference files
 RF_DIR = os.path.join(R0_REF, config['ref']['species'])

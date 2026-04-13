@@ -20,3 +20,5 @@ rule all:
 		os.path.join(TM_DIR,"kallisto_index_augmented_transcriptome"),
 		os.path.join(TM_DIR,"t2g_augment_uncollapsed.csv"),
 		os.path.join(TM_DIR,"t2g_augment_collapsed.csv")
+	output:
+		touch(os.path.join(R2_AT,".done"))

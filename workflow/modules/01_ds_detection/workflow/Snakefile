@@ -17,3 +17,5 @@ rule all:
 			whippet_output(),
  #		   "results/stringtie/merged.gtf"
 		] if f is not None ]
+	output:
+		touch(os.path.join(R1_DS,".done"))
