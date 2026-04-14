@@ -66,7 +66,7 @@ for (currentFile in files) {
 
 	oldids <- h5read(new_h5_path, "/aux/ids")
 	newids <- gsub("\\|.*", "", oldids)
-	newids <- ifelse(grepl("^ENS", newids),
+	newids <- ifelse(!grepl("^MSTRG", newids),
 					 gsub("\\..*", "", newids),
 					 newids)
 	h5write(newids, currentFile, "/aux/ids")
