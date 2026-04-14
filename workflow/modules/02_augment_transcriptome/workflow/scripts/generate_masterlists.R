@@ -59,7 +59,7 @@ colnames(whippet_df) <- c("Gene", "Node", "Coord", "Strand", "Type", "Psi_A", "P
 whippet <- whippet_df %>%
   filter(grepl("^-?[0-9.]+", DeltaPsi) & grepl("^[0-9.]+", Probability)) %>%
   mutate(across(c(DeltaPsi, Probability), as.numeric)) %>%
-  filter(abs(DeltaPsi) >= 0.2 & Probability >= 0.95 & Type %in% c("CE","AA","AD","RI")) %>%
+  filter(abs(DeltaPsi) >= 0.2 & Probability >= 0.95 & Type %in% c("CE","AA","AD","RI","TS","TE","AF","AL")) %>%
   separate(Coord, into = c("chr", "coords"), sep = ":") %>%
   separate(coords, into = c("start", "end"), sep = "-") %>%
   mutate(start = as.numeric(start),
