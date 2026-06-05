@@ -1,0 +1,56 @@
+name: config
+
+pipeline_dir: "/mnt/mbi/home/e1353064/meg_thesis/SpliCeAT" #path to SpliCeAT directory
+results_dir: "/mnt/gtklab01/megha/SpliCeAT_260409" #path to results directory
+
+ref:
+  species: "Mus_musculus" #Homo_sapiens
+  build: "GRCm39" #GRCh38
+  ensembl_release: 115
+  flavor: "chr" #check ensembl for other options
+
+samples: "design.tsv"
+
+experiment:
+  name: "spliceat_replication"
+  biotype: "protein_coding"
+  max_transcript_support_level: 3
+  strandedness: "reverse" # forward, reverse or none
+  readlen: 150
+  groups: [ "control", "treated" ]
+  event_overlap: False #false for gene-level, true for event-level
+
+STAR:
+  activate: True
+  threads: 16
+  index_extra: ""
+  align_extra: "--twopassMode Basic"
+
+bgzip:
+  threads: 4
+
+leafcutter:
+  activate: True
+  max_intron_length: 500000
+  min_samples_per_group: 2
+  cluster_support_min: 50
+
+majiq:
+  activate: True
+  license: "/mnt/gtklab01/megha/SpliCeAT_add/majiq_license_academic_official.lic"
+  build_extra: ""
+
+whippet:
+  activate: True
+  bam_groups:
+  - "treated"
+  bam_min_reads: 20
+
+stringtie:
+  activate: True
+  threads: 4
+  min_juncs: 20
+
+kallisto:
+  bootstraps: 100
+  threads: 4

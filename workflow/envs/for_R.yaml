@@ -1,0 +1,21 @@
+name: spliceat-for_R
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base
+  - r-lgr
+  - r-yaml
+  - r-stringr
+  - r-data.table
+  - r-tidyverse
+  - r-conflicted
+  - r-igraph
+  - r-gtools
+  - bioconductor-rtracklayer
+  - bioconductor-venndetail
+  - bioconductor-genomicranges
+  - bioconductor-genomicfeatures
+  - bioconductor-txdbmaker
+  - bioconductor-biomart
+  - bioconductor-plyranges

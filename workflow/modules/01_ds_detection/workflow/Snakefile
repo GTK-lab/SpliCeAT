@@ -1,0 +1,21 @@
+configfile: "../../../config/config.yaml"
+include: "../../../common_rules/utils.smk"
+include: "../../../common_rules/ref.smk"
+include: "rules/common.smk"
+include: "rules/leafcutter.smk"
+include: "rules/majiq.smk"
+include: "rules/whippet.smk"
+
+container: "docker://condaforge/miniforge3:latest"
+
+rule all:
+	input:
+		[ f for f in [
+			#gff3_file_path(filtered=True,gz=False),
+			majiq_output(),
+			leafcutter_output(),
+			whippet_output(),
+ #		   "results/stringtie/merged.gtf"
+		] if f is not None ]
+	output:
+		touch(os.path.join(R1_DS,".done"))

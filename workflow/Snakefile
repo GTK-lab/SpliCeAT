@@ -1,0 +1,47 @@
+# SpliCeAT/Snakefile
+import os
+
+configfile: "config/config.yaml"
+include: "common_rules/utils.smk"
+
+# Module directories
+MOD0 = "workflow/modules/00_get_ref"
+MOD1 = "workflow/modules/01_ds_detection"
+MOD2 = "workflow/modules/02_augment_transcriptome"
+MOD3 = "workflow/modules/03_de_analysis"
+
+SKIP_GET_REF = True
+
+rule all:
+    input:
+        os.path.join(R3_DE, ".done")
+
+rule run_get_ref:
+    output:
+        touch(os.path.join(R0_REF, ".done"))
+    shell:
+        "cd {MOD0} && snakemake --use-conda --cores 24"
+
+rule run_ds_detection:
+    input:
+        os.path.join(R0_REF, ".done")
+    output:
+        touch(os.path.join(R1_DS, ".done"))
+    shell:
+        "cd {MOD1} && snakemake --use-conda --cores 24"
+
+rule run_augment_transcriptome:
+    input:
+        os.path.join(R1_DS, ".done")
+    output:
+        touch(os.path.join(R2_AT, ".done"))
+    shell:
+        "cd {MOD2} && snakemake --use-conda --cores 24"
+
+rule run_de_analysis:
+    input:
+        os.path.join(R2_AT, ".done")
+    output:
+        touch(os.path.join(R3_DE, ".done"))
+    shell:
+        "cd {MOD3} && snakemake --use-conda --cores 24"

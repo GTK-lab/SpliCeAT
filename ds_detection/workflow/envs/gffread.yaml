@@ -1,8 +1,0 @@
-name: spliceat-gffread
-channels:
-  - conda-forge
-  - bioconda
-  - nodefaults
-dependencies:
-  - gffread >= 0.12.7
-
