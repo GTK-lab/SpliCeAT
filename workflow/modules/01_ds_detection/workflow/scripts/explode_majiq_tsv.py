@@ -1,5 +1,5 @@
 import pandas as pd
-from snakemake.script import snakemake # type: ignore
+# from snakemake.script import snakemake # type: ignore
 import logging
 import sys
 
