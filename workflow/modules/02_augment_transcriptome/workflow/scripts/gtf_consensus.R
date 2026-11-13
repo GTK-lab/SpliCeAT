@@ -140,8 +140,10 @@ matches_ref_skipping <- findOverlaps(st_exons_grl, ref_introns, type="within")
 tx_skipping_ref_introns <- unique(names(st_exons_grl[queryHits(matches_ref_skipping)]))
 
 # case 2: intron retention in stringtie matched DS output
-matches_ir_validation <- findOverlaps(st_exons_grl, ir_consensus, type="within")
-tx_with_ir_support <- unique(names(st_exons_grl[queryHits(matches_ir_validation)]))
+# matches_ir_validation <- findOverlaps(st_exons_grl, ir_consensus, type="within")
+# tx_with_ir_support <- unique(names(st_exons_grl[queryHits(matches_ir_validation)]))
+matches_ir_validation <- findOverlaps(ir_consensus, st_exons_grl, type="within")
+tx_with_ir_support <- unique(names(st_exons_grl)[subjectHits(matches_ir_validation)])
 
 unsupported_ir_tx <- setdiff(tx_skipping_ref_introns, tx_with_ir_support) #case 1 minus case 2
 lgr$info("FILTER: Intron Retention Validation Complete. Removed %d transcripts with unsupported intron retention events.", length(unsupported_ir_tx))
@@ -168,8 +170,10 @@ matches_sj_lsv <- findOverlaps(st_introns_flat, sj_consensus, type="equal", maxg
 tx_with_sj_support <- unique(names(st_introns_flat[queryHits(matches_sj_lsv)]))
 
 # 3.2.2 Event is intron retention
-matches_ir_lsv <- findOverlaps(st_exons_grl, ir_consensus, type="within") #intron spans within long exon
-tx_with_ir_support <- unique(names(st_exons_grl[queryHits(matches_ir_lsv)]))
+# matches_ir_lsv <- findOverlaps(st_exons_grl, ir_consensus, type="within") # intron spans within long exon
+# tx_with_ir_support <- unique(names(st_exons_grl[queryHits(matches_ir_lsv)]))
+matches_ir_lsv <- findOverlaps(ir_consensus, st_exons_grl, type="within")
+tx_with_ir_support <- unique(names(st_exons_grl)[subjectHits(matches_ir_lsv)])
 
 supported_by_truth <- unique(c(tx_with_sj_support, tx_with_ir_support, tx_with_exon_support))
 
