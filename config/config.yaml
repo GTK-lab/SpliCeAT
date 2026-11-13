@@ -46,6 +46,14 @@ whippet:
   - "treated"
   bam_min_reads: 20
 
+irfinder:
+  activate: True
+  cnn_validation: True
+  min_irratio: 0.05
+  warning_level: 1
+  padj: 0.05
+  min_delta_irratio: 0.2
+
 stringtie:
   activate: True
   threads: 4

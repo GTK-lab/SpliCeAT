@@ -27,6 +27,7 @@ LC_DIR = os.path.join(R1_DS, "leafcutter")
 RT_DIR = os.path.join(R1_DS, "regtools")
 MJ_DIR = os.path.join(R1_DS, "majiq")
 WP_DIR = os.path.join(R1_DS, "whippet")
+IR_DIR = os.path.join(R1_DS, "irfinder")
 
 # for de_analysis
 KQ_DIR = os.path.join(R3_DE, "kallisto_quant_out")
@@ -124,7 +125,8 @@ def bamstems_for_groups(groups):
 ds_det_output = [
 	os.path.join(MJ_DIR,f"majiq_expanded_{'-'.join(GROUPS)}.deltapsi.tsv"),
 	os.path.join(WP_DIR, "whippet_delta_psi.diff"),
-	os.path.join(LC_DIR, "leafcutter_lsvs.tsv")
+	os.path.join(LC_DIR, "leafcutter_lsvs.tsv"),
+	os.path.join(IR_DIR, "irfinder_lsvs.tsv")
 ]
 
 # for augment_transcriptome

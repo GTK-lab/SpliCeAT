@@ -55,8 +55,8 @@ consensus_matrix <- fread(consensus_events) %>% as.data.frame()
 if (use_granges) {
   # Event Level Consensus
   lgr$info("TRUTH SET: Collapsing feature types from Granges Consensus File...")
-  collapse_feature_type <- function(m, w, l) {
-    types <- c(as.character(m), as.character(w), as.character(l))
+  collapse_feature_type <- function(m, w, l, i) {
+    types <- c(as.character(m), as.character(w), as.character(l), as.character(i))
     types <- gsub("\\[|\\]", "", types)
     if (any(grepl("intron_retention|IR_sign_match", types, ignore.case = TRUE), na.rm = TRUE)) {
       return("intron_retention") }
@@ -69,7 +69,8 @@ if (use_granges) {
     mutate(event_type = collapse_feature_type(
       majiq_feature_type,
       whippet_feature_type,
-      leafcutter_feature_type
+      leafcutter_feature_type,
+      irfinder_feature_type
     )) %>%
     ungroup()
 } else {
