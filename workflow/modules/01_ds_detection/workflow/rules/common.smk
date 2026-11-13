@@ -43,6 +43,10 @@ def whippet_output():
 	if config['whippet']['activate']:
 		return rules.whippet.input
 
+def irfinder_output():
+	if config['irfinder']['activate']:
+		return rules.irfinder_lsvs.output 
+
 def leafcutter_strandedness(strandedness=config["experiment"]["strandedness"]):
 	val = str(strandedness).lower()
 	lookup = {
@@ -56,3 +60,39 @@ def leafcutter_strandedness(strandedness=config["experiment"]["strandedness"]):
 		"unstranded": "XS"
 	}
 	return lookup.get(val,"XS")
+
+# check sample names and make group names safe for IRFinder Diff
+def prepare_irfinder_names(groups, sample_for_group):
+
+    # Check sample names
+    for sample in sample_for_group(groups[0]) + sample_for_group(groups[1]):
+        if "-h" in sample:
+            raise ValueError(
+                f"[IRFinder]: sample name '{sample}' contains '-h', "
+                "which IRFinder Diff reads as its help option."
+            )
+
+    # Check group names 
+    irf_groups = []
+    for group in groups[:2]:
+        name = str(group).lower()
+        safe = "".join(
+            c if (c.isalnum() or c == ".") else "."
+            for c in name
+        )
+        if not safe or not safe[0].isalpha():
+            safe = "g." + safe
+        irf_groups.append(safe)
+
+    # Check that groups are not identical (to avoid being treated as the same group by IRFinder Diff)
+    if irf_groups[0] == irf_groups[1]:
+        raise ValueError(
+            f"[IRFinder]: groups '{groups[0]}' and '{groups[1]}' "
+            f"both become '{irf_groups[0]}'."
+        )
+
+    return irf_groups
+
+# build list of IRFinder result files for a given group
+def irfinder_group_files(group):
+	return " ".join(os.path.join("quant", s, IRF_RESULT) for s in sample_for_group(group))

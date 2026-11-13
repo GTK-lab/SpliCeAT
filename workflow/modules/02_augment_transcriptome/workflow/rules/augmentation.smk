@@ -12,11 +12,13 @@ rule generate_masterlists:
 	input:
 		majiq_in = os.path.join(MJ_DIR,f"majiq_expanded_{'-'.join(GROUPS)}.deltapsi.tsv"),
 		whippet_in = os.path.join(WP_DIR, "whippet_delta_psi.diff"),
-		leafcutter_in = os.path.join(LC_DIR, "leafcutter_lsvs.tsv")
+		leafcutter_in = os.path.join(LC_DIR, "leafcutter_lsvs.tsv"),
+		irfinder_in = os.path.join(IR_DIR, "irfinder_lsvs.tsv")
 	output:
 		whippet_out = os.path.join(ML_DIR, "whippet_lsvs_final.tsv"),
 		majiq_out = os.path.join(ML_DIR, "majiq_lsvs_final.tsv"),
-		leafcutter_out = os.path.join(ML_DIR, "leafcutter_lsvs_final.tsv")
+		leafcutter_out = os.path.join(ML_DIR, "leafcutter_lsvs_final.tsv"),
+		irfinder_out = os.path.join(ML_DIR, "irfinder_lsvs_final.tsv")
 	params:
 		masterlist_dir = ML_DIR,
 		species = config["ref"]["species"],
@@ -32,7 +34,8 @@ rule gene_consensus:
 	input:
 		whippet_ms = os.path.join(ML_DIR, "whippet_lsvs_final.tsv"),
 		majiq_ms = os.path.join(ML_DIR, "majiq_lsvs_final.tsv"),
-		leafcutter_ms = os.path.join(ML_DIR, "leafcutter_lsvs_final.tsv")
+		leafcutter_ms = os.path.join(ML_DIR, "leafcutter_lsvs_final.tsv"),
+		irfinder_ms = os.path.join(ML_DIR, "irfinder_lsvs_final.tsv")
 	output:
 		gene_consensus = os.path.join(ML_DIR, "consensus_genes_count.tsv"),
 		consensus_events = os.path.join(ML_DIR, "consensus_genes_LSV.tsv")

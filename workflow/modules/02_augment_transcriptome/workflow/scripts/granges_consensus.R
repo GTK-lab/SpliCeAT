@@ -136,15 +136,24 @@ consensus_matrix <- all_lsvs %>%
     leafcutter_dpsi = clean_paste(dpsi[tool == "Leafcutter"]),
 	leafcutter_p_adj = clean_paste(p_adj[tool == "Leafcutter"]),
 
+    # --- IRFINDER ---
+    irfinder_feature_type = case_when(
+        "IRFinder" %in% tool ~ feature_type[tool == "IRFinder"][1],
+        "IRFinder" %in% other_tool ~ "(IR_match)",
+        TRUE ~ NA_character_
+    )[1],
+      irfinder_dpsi = clean_paste(dpsi[tool == "IRFinder"]),
+    irfinder_p_adj = clean_paste(p_adj[tool == "IRFinder"]),
+
     n_tools = n_distinct(c(tool, other_tool), na.rm = TRUE),
     .groups = 'drop'
   ) %>%
   filter(n_tools >= 2) %>%
   select(chr, strand, start, end, gene_id, gene_name, n_tools,
-         starts_with("majiq"), starts_with("whippet"), starts_with("leafcutter")) %>%
+         starts_with("majiq"), starts_with("whippet"), starts_with("leafcutter"), starts_with("irfinder")) %>%
   arrange(chr, start)
 
-# gtoools sorting
+# gtools sorting
 consensus_matrix <- consensus_matrix[gtools::mixedorder(consensus_matrix$chr), ]
 
 write.table(consensus_matrix, consensus_events, sep="\t", row.names=FALSE, quote=FALSE)
