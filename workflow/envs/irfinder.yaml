@@ -1,0 +1,18 @@
+name: spliceat-irfinder
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - star =2.7.11b=h43eeafb_0 # same as the one for module 0
+  - samtools >=1.10 
+  - bedtools >=2.30
+  - perl            
+  - gawk    
+  - r-base >=4.1
+  - bioconductor-deseq2
+  - r-ggplot2         
+  - wget
+  - cxx-compiler
+  - libboost-devel
+  - zlib

@@ -23,6 +23,7 @@ lgr$info("Loading masterlists...")
 majiq_df      <- fread(snakemake@input[["majiq_ms"]]) %>% as.data.frame()
 whippet_df    <- fread(snakemake@input[["whippet_ms"]]) %>% as.data.frame()
 leafcutter_df <- fread(snakemake@input[["leafcutter_ms"]]) %>% as.data.frame()
+irfinder_df   <- fread(snakemake@input[["irfinder_ms"]]) %>% as.data.frame()
 
 lgr$info("Aggregating gene-level detections across tools...")
 
@@ -35,8 +36,9 @@ majiq_filtered <- majiq_df %>%
 majiq_filtered  <- majiq_filtered  %>% mutate(chr = as.character(chr))
 whippet_df      <- whippet_df      %>% mutate(chr = as.character(chr))
 leafcutter_df   <- leafcutter_df   %>% mutate(chr = as.character(chr))
+irfinder_df     <- irfinder_df     %>% mutate(chr = as.character(chr))
 
-all_events <- bind_rows(majiq_filtered, whippet_df, leafcutter_df) %>%
+all_events <- bind_rows(majiq_filtered, whippet_df, leafcutter_df, irfinder_df) %>%
   separate_rows(gene_id, sep = ",") %>%
   mutate(gene_id = str_trim(gene_id)) %>%
   group_by(tool, gene_id, lsv_id, strand) %>%
@@ -74,7 +76,8 @@ consensus_event_list <- all_events %>%
 consensus_event_list <- consensus_event_list[gtools::mixedorder(consensus_event_list$chr), ]
 
 lgr$info(sprintf("Consensus Analysis Complete."))
-lgr$info(sprintf("Genes found by all 3 tools: %d", sum(gene_consensus$n_tools == 3)))
+lgr$info(sprintf("Genes found by all 4 tools: %d", sum(gene_consensus$n_tools == 4)))
+lgr$info(sprintf("Genes found by exactly 3 tools: %d", sum(gene_consensus$n_tools == 3)))
 lgr$info(sprintf("Genes found by exactly 2 tools: %d", sum(gene_consensus$n_tools == 2)))
 
 # 5. Save the output

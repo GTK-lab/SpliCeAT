@@ -2,7 +2,7 @@
 
 import sys
 import gffutils
-from snakemake.script import snakemake # type: ignore
+# from snakemake.script import snakemake # type: ignore
 
 sys.stderr = open(snakemake.log[0], "w")
 

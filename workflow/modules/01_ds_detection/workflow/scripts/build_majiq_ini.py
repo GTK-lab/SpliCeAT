@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import configparser
-from snakemake.script import snakemake # type: ignore
+# from snakemake.script import snakemake # type: ignore
 import sys
 import pandas as pd
 from pathlib import Path

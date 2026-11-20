@@ -3,6 +3,7 @@
 majiq_in       <- snakemake@input[["majiq_in"]]
 whippet_in     <- snakemake@input[["whippet_in"]]
 leafcutter_in  <- snakemake@input[["leafcutter_in"]]
+irfinder_in  <- snakemake@input[["irfinder_in"]]
 
 species        <- snakemake@params[["species"]][[1]] #e.g. Mus_musculus
 version        <- snakemake@params[["ensembl"]][[1]]
@@ -13,6 +14,7 @@ if (!dir.exists(masterlist_dir)) dir.create(masterlist_dir, recursive = TRUE)
 whippet_out     <- snakemake@output[["whippet_out"]]
 majiq_out       <- snakemake@output[["majiq_out"]]
 leafcutter_out  <- snakemake@output[["leafcutter_out"]]
+irfinder_out  <- snakemake@output[["irfinder_out"]]
 
 # Logger Setup
 log_file  <- snakemake@log[[1]]
@@ -96,11 +98,28 @@ majiq <- majiq_raw %>%
 
 lgr$info(sprintf("MAJIQ: Filtering Complete. %d entries present.", nrow(majiq)))
 
+# IRFINDER: only intron retention
+lgr$info("IRFINDER: Processing LSVs...")
+irfinder <- read.table(irfinder_in, sep = "\t", header = TRUE, stringsAsFactors = FALSE, colClasses = c(chr = "character")) %>%
+  filter(
+    !is.na(padj) & padj < snakemake@config[["irfinder"]][["padj"]] & 
+    abs(delta_irratio) >= snakemake@config[["irfinder"]][["min_delta_irratio"]]) %>%
+      mutate(gene_id = sub("\\.[0-9]+$", "", str_remove(gene_id, "^gene:")),
+             gene_id = dplyr::if_else(gene_id == "" | gene_id == ".", NA_character_, gene_id),
+             start = as.numeric(start),
+             end = as.numeric(end),
+             tool = "IRFinder",
+             feature_type = "intron_retention",
+             lsv_id = paste0(chr, ":", start, "-", end, ":", strand),
+             p_adj = as.numeric(padj)) %>%
+        dplyr::select(gene_id, chr, strand, start, end, tool, feature_type, lsv_id, dpsi = delta_irratio, p_adj)
+  lgr$info(sprintf("IRFINDER: Filtering Complete. %d entries present.", nrow(irfinder)))
+
 # ENSEMBL: Gene name fetching
 
 lgr$info("ENSEMBL: Fetch Gene Names...")
 
-all_ids <- unique(na.omit(c(leafcutter$gene_id, whippet$gene_id, majiq$gene_id)))
+all_ids <- unique(na.omit(c(leafcutter$gene_id, whippet$gene_id, majiq$gene_id, irfinder$gene_id)))
 
 target_dataset <- switch(
   species,
@@ -170,6 +189,7 @@ finalize_and_save <- function(df, out_path, tool_name) {
 finalize_and_save(leafcutter, leafcutter_out, "Leafcutter")
 finalize_and_save(whippet, whippet_out, "Whippet")
 finalize_and_save(majiq, majiq_out, "Majiq")
+finalize_and_save(irfinder, irfinder_out, "IRFinder")
 
 lgr$info(sprintf("MASTERLISTS generated at %s.", masterlist_dir))
 

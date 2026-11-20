@@ -2,7 +2,7 @@
 import sys
 import gffutils
 import gzip
-from snakemake.script import snakemake # type: ignore
+# from snakemake.script import snakemake # type: ignore
 
 sys.stderr = open(snakemake.log[0], "w")
 transcript_type = snakemake.config["experiment"]["biotype"]
